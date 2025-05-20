@@ -1,11 +1,14 @@
 pre-push:
-  jobs:
-    - name: check compile
+  parallel: true
+  commands:
+    build:
       run: bun run build
+    check:
+      run: bun check
 
 pre-commit:
   commands:
-    check:
+    lint:
       glob: "*.{js,ts,cjs,mjs,json,jsonc,svelte}"
       run: bun biome check --write --no-errors-on-unmatched {staged_files}
       stage_fixed: true

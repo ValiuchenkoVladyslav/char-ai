@@ -6,7 +6,7 @@
 	"packageManager": "bun@1.2.11",
 	"scripts": {
 		"dev": "bun scripts.ts dev",
-		"build": "bun check && vite build",
+		"build": "vite build",
 		"preview": "vite preview",
 		"postinstall": "lefthook install && svelte-kit sync",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
