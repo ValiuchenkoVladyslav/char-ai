@@ -58,7 +58,9 @@ export async function verifyToken(token: string) {
 			return undefined;
 		}
 
-		return payload as typeof payload & { sub: string };
+		const { sub, ...rest } = payload;
+
+		return { sub: Number(sub), ...rest };
 	} catch {
 		return undefined;
 	}

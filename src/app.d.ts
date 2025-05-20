@@ -3,7 +3,7 @@
 declare global {
 	namespace App {
 		interface Locals {
-			user?: string;
+			user?: number;
 		}
 	}
 }

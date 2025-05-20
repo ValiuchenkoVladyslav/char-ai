@@ -40,7 +40,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 			event.locals.user = user.sub;
 
-			throw redirect(302, "/discover");
+			if (!event.url.pathname.startsWith("/auth/success")) {
+				throw redirect(302, "/discover");
+			}
 		}
 	} else if (event.url.pathname === "/user-banned") {
 		const user = token && (await verifyToken(token));
