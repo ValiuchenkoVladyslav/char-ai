@@ -11,33 +11,62 @@
 	--color-fg: var(--color-fg);
 }
 
-/* default improvements */
-* {
-  @apply border-fg/20;
+@layer components {
+  .light {
+    @apply text-bg bg-fg;
+  }
+
+  .dark {
+    @apply text-fg bg-bg;
+  }
+
+  .btn {
+    @apply flex gap-2 items-center justify-center rounded-md font-semibold py-1.5 px-2;
+  }
+
+  .input {
+    @apply focus:outline-none py-2 px-3 rounded-md;
+  }
 }
 
-button:hover {
-  @apply cursor-pointer;
-}
+@layer base {
+  * {
+    @apply border-fg/20;
+  }
 
-/* custom scrollbar on pc */
-@media (hover: hover) and (pointer: fine) {
-  /* firefox only */
-  @-moz-document url-prefix() {
-    html {
-      scrollbar-width: thin;
+  /* headings */
+  h1 {
+    @apply text-2xl font-bold;
+  }
+
+  h2 {
+    @apply text-xl font-bold;
+  }
+
+  /* general button fix */
+  button:hover {
+    @apply cursor-pointer;
+  }
+
+  /* custom scrollbar on pc */
+  @media (hover: hover) and (pointer: fine) {
+    /* firefox only */
+    @-moz-document url-prefix() {
+      html {
+        scrollbar-width: thin;
+      }
     }
-  }
 
-  ::-webkit-scrollbar {
-    width: var(--scrollbar-width);
-  }
+    ::-webkit-scrollbar {
+      width: var(--scrollbar-width);
+    }
 
-  ::-webkit-scrollbar-track {
-    background: none;
-  }
+    ::-webkit-scrollbar-track {
+      background: none;
+    }
 
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-fg);
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-fg);
+    }
   }
 }
