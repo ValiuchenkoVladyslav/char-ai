@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLInputAttributes } from "svelte/elements";
 
-  interface InputProps extends Omit<HTMLInputAttributes, "id"> {
+  interface Props extends Omit<HTMLInputAttributes, "id"> {
     dark?: boolean;
     class?: string;
     error?: string;
@@ -9,7 +9,7 @@
     name: string;
   }
 
-  const { label, error, class: _class, dark, ...props }: InputProps = $props();
+  const { label, error, class: _class, dark, ...props }: Props = $props();
 </script>
 
 <section class="flex flex-col gap-2">
