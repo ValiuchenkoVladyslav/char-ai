@@ -6,8 +6,10 @@
   import { injectSpeedInsights } from "@vercel/speed-insights/sveltekit";
   import { injectAnalytics } from "@vercel/analytics/sveltekit";
 
-  injectSpeedInsights();
-  injectAnalytics({ mode: dev ? "development" : "production" });
+  if (!dev) {
+    injectSpeedInsights();
+    injectAnalytics({ mode: "production" });
+  }
 
 	const { children } = $props();
 </script>
