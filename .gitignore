@@ -1,0 +1,20 @@
+# Deps
+node_modules/
+
+# Output
+.vercel/
+.svelte-kit/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env*
+!.env.example
+
+# Vite
+vite.config.*.timestamp-*
+
+# Keys
+*.pem

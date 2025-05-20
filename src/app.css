@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+	--color-bg: oklch(0.145 0 0);
+	--color-fg: oklch(0.985 0 0);
+  --scrollbar-width: 6px;
+}
+
+@theme inline {
+	--color-bg: var(--color-bg);
+	--color-fg: var(--color-fg);
+}
+
+/* default improvements */
+* {
+  @apply border-fg/20;
+}
+
+button:hover {
+  @apply cursor-pointer;
+}
+
+/* custom scrollbar on pc */
+@media (hover: hover) and (pointer: fine) {
+  /* firefox only */
+  @-moz-document url-prefix() {
+    html {
+      scrollbar-width: thin;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+  }
+
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-fg);
+  }
+}

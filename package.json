@@ -1,0 +1,46 @@
+{
+	"name": "char-ai-sv",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"packageManager": "bun@1.2.11",
+	"scripts": {
+		"dev": "bun scripts.ts dev",
+		"build": "bun check && vite build",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"db:push": "drizzle-kit push",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio",
+		"keygen:private": "bun scripts.ts key --private",
+		"keygen:public": "bun scripts.ts key --public"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-vercel": "^5.7.2",
+		"@sveltejs/vite-plugin-svelte": "^5.0.0",
+		"@tailwindcss/vite": "^4.0.0",
+		"drizzle-kit": "^0.30.2",
+		"svelte-check": "^4.0.0",
+		"tailwindcss": "^4.0.0",
+		"typescript": "^5.0.0",
+		"vite": "^6.2.6"
+	},
+	"dependencies": {
+		"@neondatabase/serverless": "^0.10.4",
+		"@node-rs/argon2": "^2.0.2",
+		"@sveltejs/kit": "^2.16.0",
+		"@upstash/redis": "^1.34.9",
+		"@vercel/analytics": "^1.5.0",
+		"@vercel/functions": "^2.1.0",
+		"@vercel/speed-insights": "^1.2.0",
+		"drizzle-orm": "^0.40.0",
+		"jose": "^6.0.11",
+		"lucide-svelte": "^0.511.0",
+		"resend": "^4.5.1",
+		"svelte": "^5.0.0",
+		"tailwind-merge": "^3.3.0",
+		"zod": "^3.25.3"
+	}
+}
