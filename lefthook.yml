@@ -1,0 +1,11 @@
+pre-push:
+  jobs:
+    - name: check compile
+      run: bun run build
+
+pre-commit:
+  commands:
+    check:
+      glob: "*.{js,ts,cjs,mjs,json,jsonc,svelte}"
+      run: bun biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true

@@ -8,7 +8,7 @@
 		"dev": "bun scripts.ts dev",
 		"build": "bun check && vite build",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync",
+		"postinstall": "lefthook install && svelte-kit sync",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"db:push": "drizzle-kit push",
@@ -18,10 +18,12 @@
 		"keygen:public": "bun scripts.ts key --public"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
 		"@sveltejs/adapter-vercel": "^5.7.2",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/vite": "^4.0.0",
 		"drizzle-kit": "^0.30.2",
+		"lefthook": "^1.11.13",
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^4.0.0",
 		"typescript": "^5.0.0",

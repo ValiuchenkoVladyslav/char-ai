@@ -1,0 +1,55 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"ignore": ["*.css", ".vscode/settings.json"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"style": {
+				"useTemplate": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+
+	"overrides": [
+		{
+			"include": ["*.svelte"],
+			"formatter": {
+				// disable formatting for svelte files cuz it removes tabs in script tags
+				"enabled": false
+			},
+			"organizeImports": {
+				// this also breaks formatting
+				"enabled": false
+			}
+
+			// "linter": {
+			//   "rules": {
+			//     "style": {
+			//       "useConst": "off"
+			//     }
+			//   }
+			// }
+		}
+	]
+}
