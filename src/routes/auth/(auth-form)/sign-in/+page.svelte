@@ -9,7 +9,7 @@
   import { getIssue } from "$lib/utils";
 
   const { form } = $props();
-  const issues = $derived(form?.issues);
+  let issues = $derived(form?.issues);
   const error = $derived(form?.error);
 </script>
 

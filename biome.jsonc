@@ -41,15 +41,15 @@
 			"organizeImports": {
 				// this also breaks formatting
 				"enabled": false
-			}
+			},
 
-			// "linter": {
-			//   "rules": {
-			//     "style": {
-			//       "useConst": "off"
-			//     }
-			//   }
-			// }
+			"linter": {
+				"rules": {
+					"style": {
+						"useConst": "off"
+					}
+				}
+			}
 		}
 	]
 }
