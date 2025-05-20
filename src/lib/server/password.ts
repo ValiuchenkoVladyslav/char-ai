@@ -1,10 +1,10 @@
+import { env } from "$env/dynamic/private";
 import {
 	type Algorithm as ArgonAlgorithm,
 	type Options as ArgonOptions,
 	hash,
 	verify,
 } from "@node-rs/argon2";
-import { env } from "$env/dynamic/private";
 
 const passwordHashParams: Omit<ArgonOptions, "salt"> = {
 	algorithm: 2 satisfies ArgonAlgorithm,

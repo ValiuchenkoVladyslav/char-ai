@@ -5,7 +5,7 @@
     noindex?: boolean;
   }
 
-  let props: Props = $props();
+  const props: Props = $props();
 </script>
 
 <svelte:head>

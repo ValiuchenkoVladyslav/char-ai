@@ -9,7 +9,7 @@
   injectSpeedInsights();
   injectAnalytics({ mode: dev ? "development" : "production" });
 
-	let { children } = $props();
+	const { children } = $props();
 </script>
 
 {@render children()}

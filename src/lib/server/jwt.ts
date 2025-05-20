@@ -2,8 +2,8 @@ import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
 import { importPKCS8, importSPKI } from "jose/key/import";
 
-import { type Cookies } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
+import type { Cookies } from "@sveltejs/kit";
 
 /** jwt secret encryption algorithm */
 const JWT_ALG = "RS256";
@@ -25,30 +25,26 @@ export async function setAuthorizationCookie(cookies: Cookies, userId: number) {
 	const jwt = await new SignJWT()
 		.setExpirationTime(`${JWT_EXPIRY_SECONDS}s`)
 		.setProtectedHeader({ alg: JWT_ALG })
-    .setSubject(String(userId))
+		.setSubject(String(userId))
 		.sign(encodeKey);
 
-	cookies.set(
-    "Authorization",
-    `Bearer ${jwt}`,
-    {
-		  path: "/",
-		  secure: true,
-		  httpOnly: true,
-		  sameSite: "strict",
-		  maxAge: JWT_EXPIRY_SECONDS,
-	  },
-  );
+	cookies.set("Authorization", `Bearer ${jwt}`, {
+		path: "/",
+		secure: true,
+		httpOnly: true,
+		sameSite: "strict",
+		maxAge: JWT_EXPIRY_SECONDS,
+	});
 }
 
 /** get jwt token from `Authorization` cookie */
 export function getToken(cookies: Cookies) {
-  return cookies.get("Authorization")?.split(" ")[1];
+	return cookies.get("Authorization")?.split(" ")[1];
 }
 
 /** verify jwt token */
 export async function verifyToken(token: string) {
-  const decodeKey = await importSPKI(
+	const decodeKey = await importSPKI(
 		fixKey(env.JWT_SECRET_DECODE satisfies string),
 		JWT_ALG,
 	);
@@ -58,9 +54,9 @@ export async function verifyToken(token: string) {
 			algorithms: [JWT_ALG],
 		});
 
-    if (!payload.sub) {
-      return undefined;
-    }
+		if (!payload.sub) {
+			return undefined;
+		}
 
 		return payload as typeof payload & { sub: string };
 	} catch {
