@@ -20,7 +20,10 @@ jobs:
       - uses: oven-sh/setup-bun@v1
 
       - name: Setup envs
-        run: grep -v '^\s*#' .env.example | grep -v '^\s*$' >> $GITHUB_ENV
+        run: |
+          grep -v '^\s*#' .env.example | grep -v '^\s*$' | while IFS= read -r line; do
+            echo "$line" >> "$GITHUB_ENV"
+          done
 
       - name: Install bun dependencies
         run: bun install
