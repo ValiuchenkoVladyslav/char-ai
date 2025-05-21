@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["*.css", ".vscode/settings.json"]
+		"ignore": ["*.css", ".vscode/settings.json", ".drizzle/"]
 	},
 	"formatter": {
 		"enabled": true,
