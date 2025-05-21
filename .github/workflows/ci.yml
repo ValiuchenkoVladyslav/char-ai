@@ -1,0 +1,32 @@
+name: Code quality check
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # install bun
+      - uses: oven-sh/setup-bun@v1
+
+      - name: Install bun dependencies
+        run: bun install
+
+      - name: Check types
+        run: bun check
+
+      - name: Check linting
+        run: bun biome check
+      
+      - name: Check compile
+        run: bun run build
