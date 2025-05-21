@@ -1,6 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db, redis } from "./index";
-import { users } from "./schema";
+import { db, redis, users } from "./db";
 
 const BANNED_USERS_KEY = "banned-users";
 

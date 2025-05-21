@@ -1,7 +1,7 @@
 // testing showed that server hooks run on both nodejs and edge
 // looks like it's just a thin wrapper around actual code
 
-import { isUserBanned } from "$lib/server/db/bans";
+import { isUserBanned } from "$lib/server/bans";
 import { getToken, verifyToken } from "$lib/server/jwt";
 import { type Handle, redirect } from "@sveltejs/kit";
 
