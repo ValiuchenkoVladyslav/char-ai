@@ -4,13 +4,13 @@
   import type { SubmitFunction } from "@sveltejs/kit";
   import type { HTMLFormAttributes } from "svelte/elements";
 
-  interface AuthFormProps extends HTMLFormAttributes {
+  interface Props extends HTMLFormAttributes {
     onSubmit: (...params: Parameters<SubmitFunction>) => void;
     children: Snippet;
     heading: string;
   }
 
-  const { children, onSubmit, heading, ...props }: AuthFormProps = $props();
+  const { children, onSubmit, heading, ...props }: Props = $props();
 </script>
 
 <form
