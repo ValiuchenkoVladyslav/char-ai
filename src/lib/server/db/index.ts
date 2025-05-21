@@ -10,3 +10,5 @@ export const redis = new Redis({
 	url: env.REDIS_URL satisfies string,
 	token: env.REDIS_TOKEN satisfies string,
 });
+
+export * from "./schema";
