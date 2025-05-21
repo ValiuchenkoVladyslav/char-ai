@@ -19,6 +19,9 @@ jobs:
       # install bun
       - uses: oven-sh/setup-bun@v1
 
+      - name: Setup envs
+        run: cat .env.example >> $GITHUB_ENV
+
       - name: Install bun dependencies
         run: bun install
 
