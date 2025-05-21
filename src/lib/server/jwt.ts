@@ -16,7 +16,7 @@ function fixKey(key: string) {
 	return key.replaceAll("\\n", "\n");
 }
 
-export async function setAuthorizationCookie(cookies: Cookies, userId: number) {
+export async function setAuthCookie(cookies: Cookies, userId: number) {
 	const encodeKey = await importPKCS8(
 		fixKey(env.JWT_SECRET_ENCODE satisfies string),
 		JWT_ALG,
