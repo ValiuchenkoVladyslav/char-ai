@@ -9,6 +9,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm/sql";
 
+export enum RegisterMethod {
+	EmailAndPassword = 0,
+	GoogleId = 1,
+	Both = 2,
+}
+
 export const users = pgTable("User", {
 	id: serial("id").primaryKey(),
 	displayName: varchar("displayName", { length: 32 }).notNull(),

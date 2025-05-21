@@ -1,11 +1,5 @@
 import { z } from "zod/v4";
 
-export enum RegisterMethod {
-	EmailAndPassword = 0,
-	GoogleId = 1,
-	Both = 2,
-}
-
 /** user schema to extract / extend from */
 export const userSchema = z.object({
 	displayName: z

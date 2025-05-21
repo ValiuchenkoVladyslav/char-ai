@@ -1,8 +1,6 @@
-import { db, redis } from "$lib/server/db";
-import { users } from "$lib/server/db/schema";
+import { RegisterMethod, db, redis, users } from "$lib/server/db";
 import { sendEmail } from "$lib/server/email";
 import { verifyPassword } from "$lib/server/password";
-import { RegisterMethod } from "$lib/validators";
 import type { Config } from "@sveltejs/adapter-vercel";
 import { fail, redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
@@ -22,7 +20,7 @@ export const actions = {
 			return fail(400, { issues: res.error.issues });
 		}
 
-		const parsedUser = res.data;
+		const parsedData = res.data;
 
 		const selectedUser = await db
 			.select({
@@ -32,7 +30,7 @@ export const actions = {
 				banned: users.banned,
 			})
 			.from(users)
-			.where(eq(users.email, parsedUser.email))
+			.where(eq(users.email, parsedData.email))
 			.then((res) => res.at(0));
 
 		if (
@@ -47,7 +45,7 @@ export const actions = {
 		}
 
 		const passwordRes = await verifyPassword(
-			parsedUser.password,
+			parsedData.password,
 			// biome-ignore lint/style/noNonNullAssertion: we checked registerMethod above
 			selectedUser.passwordHash!,
 		);
@@ -57,12 +55,12 @@ export const actions = {
 		}
 
 		const signInToken = crypto.randomUUID() + crypto.randomUUID();
-		await redis.setex(signInToken, 60 * 60 * 2, selectedUser.id);
+		await redis.setex(signInToken, 60 * 60, selectedUser.id);
 
-		sendEmail([parsedUser.email], "Confirm Sign-In", SignInEmail, {
+		sendEmail(parsedData.email, "Confirm Sign-In", SignInEmail, {
 			signInToken,
 		});
 
-		redirect(303, "/auth/sign-in/email-sent?to=" + parsedUser.email);
+		redirect(303, "/auth/sign-in/email-sent?to=" + parsedData.email);
 	},
 } satisfies Actions;
