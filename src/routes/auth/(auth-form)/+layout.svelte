@@ -29,7 +29,7 @@
 </div>
 
 <div class="flex flex-col gap-2 w-[min(400px,100%)] *:rounded-lg">
-  <section class="p-1 flex gap-1 bg-fg/15 *:w-1/2 *:rounded-md *:font-semibold *:text-center *:py-1">
+  <nav class="p-1 flex gap-1 bg-fg/15 *:w-1/2 *:rounded-md *:font-semibold *:text-center *:py-1">
     {#snippet tabLink(href: string, text: string)}
       <a {href} class={page.url.pathname === href ? "bg-bg" : "text-fg/70"}>
         {text}
@@ -38,7 +38,7 @@
 
     {@render tabLink("/auth/sign-in", "Sign In")}
     {@render tabLink("/auth/sign-up", "Sign Up")}
-  </section>
+  </nav>
 
   <button
     class="light h-[40px] flex items-center justify-center gap-2 font-semibold"
