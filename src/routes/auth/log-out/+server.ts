@@ -1,1 +1,12 @@
-// TODO
+import { deleteAuthCookie } from "$lib/server/jwt";
+import type { RequestHandler } from "@sveltejs/kit";
+
+// auth cookie is httpOnly so it has to be this way
+export const GET: RequestHandler = async ({ locals, cookies }) => {
+	if (!locals.user) {
+		return new Response(null, { status: 401 });
+	}
+
+	deleteAuthCookie(cookies);
+	return new Response(null, { status: 200 });
+};

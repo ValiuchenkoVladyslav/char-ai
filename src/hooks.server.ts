@@ -40,8 +40,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 			event.locals.user = user.sub;
 
-			// if user is logged in, tries to access auth page:
-			if (!path.startsWith("/auth/success")) {
+			// if user is logged in, tries to access auth (not api) pages:
+			if (!["/auth/success", "/auth/log-out", "/auth/get-me"].includes(path)) {
 				throw redirect(302, "/discover");
 			}
 		} else if (path === "/auth/success") {
