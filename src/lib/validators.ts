@@ -10,7 +10,7 @@ export const userSchema = z.object({
 	username: z
 		.string({ error: "Invalid username!" })
 		.min(3, { error: "Must be at laest 3 characters!" })
-		.max(16, { error: "Must be at most 16 characters!" })
+		.max(24, { error: "Must be at most 24 characters!" })
 		.transform((val) => (val[0] === "@" ? val.slice(1) : val)),
 
 	pfp: z.url({ error: "Invalid url!" }).optional().nullable(),
