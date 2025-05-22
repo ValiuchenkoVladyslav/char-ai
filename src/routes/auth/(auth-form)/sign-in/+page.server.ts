@@ -1,5 +1,6 @@
 import { RegisterMethod, db, redis, users } from "$lib/server/db";
 import { sendEmail } from "$lib/server/email";
+import { setAuthCookie } from "$lib/server/jwt";
 import { verifyPassword } from "$lib/server/password";
 import type { Config } from "@sveltejs/adapter-vercel";
 import { fail, redirect } from "@sveltejs/kit";
@@ -13,7 +14,7 @@ export const config: Config = {
 };
 
 export const actions = {
-	async default({ request }) {
+	async default({ request, cookies }) {
 		const res = validateSignInFormData(await request.formData());
 
 		if (res.error) {
@@ -41,6 +42,7 @@ export const actions = {
 		}
 
 		if (selectedUser.banned) {
+			await setAuthCookie(cookies, selectedUser.id);
 			redirect(303, "/user-banned");
 		}
 
