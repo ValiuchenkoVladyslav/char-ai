@@ -32,7 +32,7 @@ export async function setAuthCookie(cookies: Cookies, userId: number) {
 		path: "/",
 		secure: true,
 		httpOnly: true,
-		sameSite: "strict",
+		sameSite: "lax",
 		maxAge: JWT_EXPIRY_SECONDS,
 	});
 }
