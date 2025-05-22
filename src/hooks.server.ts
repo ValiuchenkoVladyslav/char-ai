@@ -6,12 +6,12 @@ import { getToken, verifyToken } from "$lib/server/jwt";
 import { type Handle, redirect } from "@sveltejs/kit";
 
 export const handle: Handle = async ({ event, resolve }) => {
+	const path = event.url.pathname;
+
 	// https://chromium.googlesource.com/devtools/devtools-frontend/+/main/docs/ecosystem/automatic_workspace_folders.md
 	// biome-ignore lint/correctness/noUnusedLabels: see vite.config.ts
 	// biome-ignore lint/suspicious/noConfusingLabels: see vite.config.ts
-	DEV: if (
-		event.url.pathname === "/.well-known/appspecific/com.chrome.devtools.json"
-	) {
+	DEV: if (path === "/.well-known/appspecific/com.chrome.devtools.json") {
 		return new Response(null, { status: 204 });
 	}
 
@@ -30,7 +30,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 		// set user in locals for all protected routes
 		event.locals.user = user.sub;
-	} else if (event.url.pathname.startsWith("/auth")) {
+	} else if (path.startsWith("/auth")) {
 		const user = token && (await verifyToken(token));
 
 		if (user) {
@@ -40,11 +40,17 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 			event.locals.user = user.sub;
 
-			if (!event.url.pathname.startsWith("/auth/success")) {
+			// if user is logged in, tries to access auth page:
+			if (!path.startsWith("/auth/success")) {
 				throw redirect(302, "/discover");
 			}
+		} else if (path === "/auth/success") {
+			// if user is not logged in, tries to access auth success page:
+			throw redirect(302, "/auth/sign-in");
 		}
-	} else if (event.url.pathname === "/user-banned") {
+	} else if (path === "/user-banned") {
+		// not banned and not logged in users should not see this page
+
 		const user = token && (await verifyToken(token));
 
 		if (!user) {
