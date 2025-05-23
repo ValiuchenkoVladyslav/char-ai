@@ -25,8 +25,7 @@ export const actions = {
 
 		if (user) {
 			const passwordResetToken = crypto.randomUUID() + crypto.randomUUID();
--			await redis.setex(passwordResetToken, 60 * 60, user.id);
-+			await redis.setex(passwordResetToken, 60 * 60, parsedData.email);
+			await redis.setex(passwordResetToken, 60 * 60, parsedData.email);
 
 			sendEmail(parsedData.email, "Reset Your Password", PasswordResetEmail, {
 				passwordResetToken,
