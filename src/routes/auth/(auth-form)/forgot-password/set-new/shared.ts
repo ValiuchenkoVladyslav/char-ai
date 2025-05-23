@@ -1,6 +1,5 @@
 import { userSchema } from "$lib/validators";
 
-export const signInSchema = userSchema.pick({
-	email: true,
+export const changePasswordSchema = userSchema.pick({
 	password: true,
 });

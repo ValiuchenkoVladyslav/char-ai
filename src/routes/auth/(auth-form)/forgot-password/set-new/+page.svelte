@@ -1,19 +1,18 @@
 <script lang="ts">
-  import AuthForm from "../auth-form.svelte";
-  import { signInSchema } from "./shared";
-  import { Btn, Input, HeadMeta, ErrorBanner } from "$lib/components";
+  import AuthForm from "../../auth-form.svelte";
+  import { Btn, ErrorBanner, HeadMeta, Input } from "$lib/components";
+  import { changePasswordSchema } from "./shared";
   import LogIn from "lucide-svelte/icons/log-in";
-  import { getIssue } from "$lib/utils";
 
   const { form } = $props();
   let issues = $derived(form?.issues);
 </script>
 
-<HeadMeta title="Sign In"/>
+<HeadMeta title="Change Password" noindex />
 
 <AuthForm
-  heading="Sign In"
-  schema={signInSchema}
+  heading="Change Password"
+  schema={changePasswordSchema}
   onsubmit={({ cancel }, parseResult) => {
     if (!parseResult.error) return;
 
@@ -22,18 +21,9 @@
   }}
 >
   <Input
-    label="Email"
-    placeholder="johndoe@gmail.com"
-    type="email"
-    error={getIssue(issues, "email")}
-    name="email"
-  />
-
-  <Input
-    label="Password"
+    label="New Password"
     placeholder="********"
     type="password"
-    error={getIssue(issues, "password")}
     name="password"
   />
 
@@ -42,6 +32,6 @@
   <Btn class="self-end mt-5">
     <LogIn />
 
-    Continue
+    Set Password
   </Btn>
 </AuthForm>

@@ -26,8 +26,7 @@ export function sendEmail<
 ) {
 	async function renderAndSendTask() {
 		const output = render(template, { props: templateProps });
-		console.log("OUTPUT", output.body);
-		console.log("OUTPUT::HEAD", output.head);
+
 		const res = await resend.emails.send({
 			from: "Char Ai <onboarding@resend.dev>",
 			to,

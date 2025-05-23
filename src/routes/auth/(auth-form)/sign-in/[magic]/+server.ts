@@ -3,7 +3,7 @@ import { setAuthCookie } from "$lib/server/jwt";
 import { redirect } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
-export const GET: RequestHandler = async ({ params, cookies, locals }) => {
+export const GET: RequestHandler = async ({ params, cookies }) => {
 	const sub = await redis.getdel<number>(params.magic);
 
 	if (!sub) {
@@ -11,7 +11,5 @@ export const GET: RequestHandler = async ({ params, cookies, locals }) => {
 	}
 
 	await setAuthCookie(cookies, sub);
-	locals.user = sub;
-
 	redirect(303, "/auth/success");
 };

@@ -8,8 +8,8 @@
 <HeadMeta title="Email Sent" noindex />
 
 <EmailSent
-  title="You're almost there!"
-	description="But we want to verify it's really you."
-	action="We sent a verification link to"
+  title="Password Reset Request"
+	description="Request created successfully."
+	action="We sent password reset link to"
   email={page.url.searchParams.get("to") ?? "..."}
 />

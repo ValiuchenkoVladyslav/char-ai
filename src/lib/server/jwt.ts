@@ -11,6 +11,8 @@ const JWT_ALG = "RS256";
 /** 3 days (60 * 60 * 24 * 3) */
 const JWT_EXPIRY_SECONDS = 259200 as const;
 
+const AUTH_COOKIE = "Authorization";
+
 /** fix key after env file */
 function fixKey(key: string) {
 	return key.replaceAll("\\n", "\n");
@@ -25,18 +27,22 @@ export async function setAuthCookie(cookies: Cookies, userId: number) {
 		.setSubject(String(userId))
 		.sign(encodeKey);
 
-	cookies.set("Authorization", `Bearer ${jwt}`, {
+	cookies.set(AUTH_COOKIE, `Bearer ${jwt}`, {
 		path: "/",
 		secure: true,
 		httpOnly: true,
-		sameSite: "strict",
+		sameSite: "lax",
 		maxAge: JWT_EXPIRY_SECONDS,
 	});
 }
 
+export function deleteAuthCookie(cookies: Cookies) {
+	cookies.delete(AUTH_COOKIE, { path: "/" });
+}
+
 /** get jwt token from `Authorization` cookie */
 export function getToken(cookies: Cookies) {
-	return cookies.get("Authorization")?.split(" ")[1];
+	return cookies.get(AUTH_COOKIE)?.split(" ")[1];
 }
 
 /** verify jwt token */

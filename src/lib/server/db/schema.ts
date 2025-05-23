@@ -7,7 +7,6 @@ import {
 	timestamp,
 	varchar,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm/sql";
 
 export enum RegisterMethod {
 	EmailAndPassword = 0,
@@ -18,7 +17,7 @@ export enum RegisterMethod {
 export const users = pgTable("User", {
 	id: serial("id").primaryKey(),
 	displayName: varchar("displayName", { length: 32 }).notNull(),
-	username: varchar("username", { length: 16 }).notNull().unique(),
+	username: varchar("username", { length: 24 }).notNull().unique(),
 	pfp: varchar("pfp", { length: 255 }),
 
 	email: varchar("email", { length: 32 }).unique(),
@@ -29,9 +28,10 @@ export const users = pgTable("User", {
 	banned: boolean("banned").notNull().default(false),
 
 	createdAt: timestamp("createdAt").notNull().defaultNow(),
-	updatedAt: timestamp("updatedAt")
+	updatedAt: timestamp("updatedAt", { withTimezone: true })
 		.notNull()
-		.$onUpdate(() => sql`(now() AT TIME ZONE 'utc'::text)`),
+		// https://github.com/drizzle-team/drizzle-orm/issues/2388
+		.$onUpdate(() => new Date()),
 });
 
 export const characters = pgTable("Character", {
@@ -45,9 +45,10 @@ export const characters = pgTable("Character", {
 	likesCount: integer("likesCount").notNull().default(0),
 
 	createdAt: timestamp("createdAt").notNull().defaultNow(),
-	updatedAt: timestamp("updatedAt")
+	updatedAt: timestamp("updatedAt", { withTimezone: true })
 		.notNull()
-		.$onUpdate(() => sql`(now() AT TIME ZONE 'utc'::text)`),
+		// https://github.com/drizzle-team/drizzle-orm/issues/2388
+		.$onUpdate(() => new Date()),
 
 	creatorId: integer("creatorId").references(() => users.id, {
 		onDelete: "set null",

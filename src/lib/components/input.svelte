@@ -28,7 +28,7 @@
   </div>
 
   <input
-    class={["input", dark ? "dark" : "light", _class]}
+    class={["input", dark ? "dark placeholder:text-fg/70" : "light placeholder:text-bg/70", _class]}
     id={props.name}
     {...props}
   />

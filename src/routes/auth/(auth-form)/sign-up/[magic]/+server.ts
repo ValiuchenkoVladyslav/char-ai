@@ -1,32 +1,29 @@
 import { RegisterMethod, db, redis, users } from "$lib/server/db";
 import { setAuthCookie } from "$lib/server/jwt";
 import { hashPassword } from "$lib/server/password";
-import type { Config } from "@sveltejs/adapter-vercel";
+import { nodeRuntime } from "$lib/utils";
 import { redirect } from "@sveltejs/kit";
 import type { SignUpData } from "../shared";
 import type { RequestHandler } from "./$types";
 
-export const config: Config = {
-	runtime: "nodejs20.x", // sadly argon is not supported on edge yet
-};
+// sadly argon is not supported on edge yet
+export const config = nodeRuntime;
 
-export const GET: RequestHandler = async ({ params, cookies, locals }) => {
-	const strData = await redis.getdel<string>(params.magic);
+export const GET: RequestHandler = async ({ params, cookies }) => {
+	const data = await redis.getdel<SignUpData>(params.magic);
 
-	if (!strData) {
+	if (!data) {
 		redirect(303, "/auth/sign-up");
 	}
 
-	const parsedData: SignUpData = JSON.parse(strData);
-
-	const passwordHash = await hashPassword(parsedData.password);
+	const passwordHash = await hashPassword(data.password);
 
 	const res = await db
 		.insert(users)
 		.values({
-			displayName: parsedData.displayName,
-			username: parsedData.username,
-			email: parsedData.email,
+			displayName: data.displayName,
+			username: data.username,
+			email: data.email,
 			passwordHash,
 			registerMethod: RegisterMethod.EmailAndPassword,
 		})
@@ -39,7 +36,5 @@ export const GET: RequestHandler = async ({ params, cookies, locals }) => {
 	}
 
 	await setAuthCookie(cookies, res.id);
-	locals.user = res.id;
-
 	redirect(303, "/auth/success");
 };

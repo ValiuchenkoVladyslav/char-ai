@@ -1,7 +1,7 @@
 <script lang="ts">
   import AuthForm from "../auth-form.svelte";
-  import { signInSchema } from "./shared";
-  import { Btn, Input, HeadMeta, ErrorBanner } from "$lib/components";
+  import { forgotPasswordSchema } from "./shared";
+  import { Btn, Input, HeadMeta } from "$lib/components";
   import LogIn from "lucide-svelte/icons/log-in";
   import { getIssue } from "$lib/utils";
 
@@ -9,11 +9,11 @@
   let issues = $derived(form?.issues);
 </script>
 
-<HeadMeta title="Sign In"/>
+<HeadMeta title="Forgot Password"/>
 
 <AuthForm
-  heading="Sign In"
-  schema={signInSchema}
+  heading="Forgot Password"
+  schema={forgotPasswordSchema}
   onsubmit={({ cancel }, parseResult) => {
     if (!parseResult.error) return;
 
@@ -21,6 +21,10 @@
     issues = parseResult.error.issues;
   }}
 >
+  <p class="opacity-70">
+    — No problem! We can send password reset link to your email.
+  </p>
+
   <Input
     label="Email"
     placeholder="johndoe@gmail.com"
@@ -28,16 +32,6 @@
     error={getIssue(issues, "email")}
     name="email"
   />
-
-  <Input
-    label="Password"
-    placeholder="********"
-    type="password"
-    error={getIssue(issues, "password")}
-    name="password"
-  />
-
-  <ErrorBanner error={form?.error} />
 
   <Btn class="self-end mt-5">
     <LogIn />

@@ -2,7 +2,7 @@
   import { page } from "$app/state";
 
   import HeadMeta from "$lib/components/head-meta.svelte";
-  import EmailSent from "../../../email-sent.svelte";
+  import EmailSent from "../../email-sent.svelte";
 </script>
 
 <HeadMeta title="Email Sent" noindex />
