@@ -1,5 +1,4 @@
 import { waitUntil } from "@vercel/functions";
-import { type CreateEmailOptions, Resend } from "resend";
 
 import type {
 	Component,
@@ -11,15 +10,13 @@ import { render } from "svelte/server";
 
 import { RESEND_API } from "$env/static/private";
 
-const resend = new Resend(RESEND_API);
-
 /** send email without execution blocking */
 export function sendEmail<
 	// biome-ignore lint/suspicious/noExplicitAny: exact type needed
 	Comp extends Component<any>,
 >(
-	to: CreateEmailOptions["to"],
-	subject: CreateEmailOptions["subject"],
+	to: string | string[],
+	subject: string,
 	// biome-ignore lint/suspicious/noExplicitAny: exact type needed
 	template: Comp extends SvelteComponent<any> ? ComponentType<Comp> : Comp,
 	templateProps: ComponentProps<Comp>,
@@ -27,15 +24,26 @@ export function sendEmail<
 	async function renderAndSendTask() {
 		const output = render(template, { props: templateProps });
 
-		const res = await resend.emails.send({
-			from: "Char Ai <onboarding@resend.dev>",
-			to,
-			subject,
-			html: output.body,
-		});
+		try {
+			const res = await fetch("https://api.resend.com/emails", {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${RESEND_API}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					from: "Char Ai <onboarding@resend.dev>",
+					to: Array.isArray(to) ? to : [to],
+					subject,
+					html: output.body,
+				}),
+			});
 
-		if (res.error) {
-			console.error("FAILED TO SEND EMAIL:", res.error);
+			if (!res.ok) {
+				console.error("FAILED TO SEND EMAIL:", res.statusText, res.text());
+			}
+		} catch (e) {
+			console.error("FAILED TO SEND EMAIL:", e);
 		}
 	}
 
