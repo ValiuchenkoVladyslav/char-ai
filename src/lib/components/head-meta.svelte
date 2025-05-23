@@ -10,10 +10,7 @@
 
 <svelte:head>
   <title>{"CharAi | " + props.title}</title>
-
-  {#if props.description}
-    <meta name="description" content={props.description}/>
-  {/if}
+  <meta name="description" content={props.description ?? "CharAi — Build and discover ai personalities from any universe!"}/>
 
   {#if props.noindex}
     <meta name="robots" content="noindex"/>
