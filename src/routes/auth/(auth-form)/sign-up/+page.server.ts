@@ -8,44 +8,44 @@ import { type SignUpData, signUpSchema } from "./shared";
 import SignUpEmail from "./sign-up.email.svelte";
 
 export const actions = {
-	async default({ request }) {
-		const res = parseFormData(await request.formData(), signUpSchema);
+  async default({ request }) {
+    const res = parseFormData(await request.formData(), signUpSchema);
 
-		if (res.error) {
-			return fail(400, { issues: res.error.issues });
-		}
+    if (res.error) {
+      return fail(400, { issues: res.error.issues });
+    }
 
-		const parsedData = res.data;
+    const parsedData = res.data;
 
-		const taken = await db
-			.select({ username: users.username, email: users.email })
-			.from(users)
-			.where(
-				or(
-					eq(users.email, parsedData.email),
-					eq(users.username, parsedData.username),
-				),
-			)
-			.then((res) => res.at(0));
+    const taken = await db
+      .select({ username: users.username, email: users.email })
+      .from(users)
+      .where(
+        or(
+          eq(users.email, parsedData.email),
+          eq(users.username, parsedData.username),
+        ),
+      )
+      .then((res) => res.at(0));
 
-		if (taken) {
-			return fail(400, {
-				error:
-					parsedData.email === taken.email
-						? "Email already taken"
-						: "Username already taken",
-			});
-		}
+    if (taken) {
+      return fail(400, {
+        error:
+          parsedData.email === taken.email
+            ? "Email already taken"
+            : "Username already taken",
+      });
+    }
 
-		const signUpToken = crypto.randomUUID() + crypto.randomUUID();
-		const parsedDataStr = JSON.stringify(parsedData satisfies SignUpData);
+    const signUpToken = crypto.randomUUID() + crypto.randomUUID();
+    const parsedDataStr = JSON.stringify(parsedData satisfies SignUpData);
 
-		await redis.setex(signUpToken, 60 * 60, parsedDataStr);
+    await redis.setex(signUpToken, 60 * 60, parsedDataStr);
 
-		sendEmail(parsedData.email, "Confirm Sign-Up", SignUpEmail, {
-			signUpToken,
-		});
+    sendEmail(parsedData.email, "Confirm Sign-Up", SignUpEmail, {
+      signUpToken,
+    });
 
-		redirect(303, "/auth/sign-in/email-sent#" + parsedData.email);
-	},
+    redirect(303, "/auth/sign-in/email-sent#" + parsedData.email);
+  },
 } satisfies Actions;

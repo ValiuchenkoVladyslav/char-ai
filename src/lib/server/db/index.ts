@@ -4,16 +4,16 @@ import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
 
 export const db = drizzle({
-	connection: {
-		url: DB_URL,
-		authToken: DB_TOKEN,
-	},
-	schema,
+  connection: {
+    url: DB_URL,
+    authToken: DB_TOKEN,
+  },
+  schema,
 });
 
 export const redis = new Redis({
-	url: REDIS_URL,
-	token: REDIS_TOKEN,
+  url: REDIS_URL,
+  token: REDIS_TOKEN,
 });
 
 export * from "./schema";

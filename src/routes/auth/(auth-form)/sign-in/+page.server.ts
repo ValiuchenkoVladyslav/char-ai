@@ -10,55 +10,55 @@ import { signInSchema } from "./shared";
 import SignInEmail from "./sign-in.email.svelte";
 
 export const actions = {
-	async default({ request, cookies }) {
-		const res = parseFormData(await request.formData(), signInSchema);
+  async default({ request, cookies }) {
+    const res = parseFormData(await request.formData(), signInSchema);
 
-		if (res.error) {
-			return fail(400, { issues: res.error.issues });
-		}
+    if (res.error) {
+      return fail(400, { issues: res.error.issues });
+    }
 
-		const parsedData = res.data;
+    const parsedData = res.data;
 
-		const selectedUser = await db
-			.select({
-				id: users.id,
-				passwordHash: users.passwordHash,
-				registerMethod: users.registerMethod,
-				banned: users.banned,
-			})
-			.from(users)
-			.where(eq(users.email, parsedData.email))
-			.then((res) => res.at(0));
+    const selectedUser = await db
+      .select({
+        id: users.id,
+        passwordHash: users.passwordHash,
+        registerMethod: users.registerMethod,
+        banned: users.banned,
+      })
+      .from(users)
+      .where(eq(users.email, parsedData.email))
+      .then((res) => res.at(0));
 
-		if (
-			!selectedUser ||
-			selectedUser.registerMethod === RegisterMethod.GoogleId
-		) {
-			return fail(400, { error: "Invalid email or password" });
-		}
+    if (
+      !selectedUser ||
+      selectedUser.registerMethod === RegisterMethod.GoogleId
+    ) {
+      return fail(400, { error: "Invalid email or password" });
+    }
 
-		if (selectedUser.banned) {
-			await setAuthCookie(cookies, selectedUser.id);
-			redirect(303, "/user-banned");
-		}
+    if (selectedUser.banned) {
+      await setAuthCookie(cookies, selectedUser.id);
+      redirect(303, "/user-banned");
+    }
 
-		const passwordRes = await verifyPassword(
-			parsedData.password,
-			// biome-ignore lint/style/noNonNullAssertion: we checked registerMethod above
-			selectedUser.passwordHash!,
-		);
+    const passwordRes = await verifyPassword(
+      parsedData.password,
+      // biome-ignore lint/style/noNonNullAssertion: we checked registerMethod above
+      selectedUser.passwordHash!,
+    );
 
-		if (!passwordRes) {
-			return fail(400, { error: "Invalid email or password" });
-		}
+    if (!passwordRes) {
+      return fail(400, { error: "Invalid email or password" });
+    }
 
-		const signInToken = crypto.randomUUID() + crypto.randomUUID();
-		await redis.setex(signInToken, 60 * 60, selectedUser.id);
+    const signInToken = crypto.randomUUID() + crypto.randomUUID();
+    await redis.setex(signInToken, 60 * 60, selectedUser.id);
 
-		sendEmail(parsedData.email, "Confirm Sign-In", SignInEmail, {
-			signInToken,
-		});
+    sendEmail(parsedData.email, "Confirm Sign-In", SignInEmail, {
+      signInToken,
+    });
 
-		redirect(303, "/auth/sign-in/email-sent#" + parsedData.email);
-	},
+    redirect(303, "/auth/sign-in/email-sent#" + parsedData.email);
+  },
 } satisfies Actions;

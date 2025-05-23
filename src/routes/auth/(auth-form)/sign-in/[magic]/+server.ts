@@ -7,12 +7,12 @@ import type { RequestHandler } from "./$types";
 export const config = edgeRuntime;
 
 export const GET: RequestHandler = async ({ params, cookies }) => {
-	const sub = await redis.getdel<number>(params.magic);
+  const sub = await redis.getdel<number>(params.magic);
 
-	if (!sub) {
-		redirect(303, "/auth/sign-in");
-	}
+  if (!sub) {
+    redirect(303, "/auth/sign-in");
+  }
 
-	await setAuthCookie(cookies, sub);
-	redirect(303, "/auth/success");
+  await setAuthCookie(cookies, sub);
+  redirect(303, "/auth/success");
 };

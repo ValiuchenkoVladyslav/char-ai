@@ -15,53 +15,53 @@ const AUTH_COOKIE = "Authorization";
 
 /** fix key after env file */
 function fixKey(key: string) {
-	return key.replaceAll("\\n", "\n");
+  return key.replaceAll("\\n", "\n");
 }
 
 export async function setAuthCookie(cookies: Cookies, userId: number) {
-	const encodeKey = await importPKCS8(fixKey(JWT_SECRET_ENCODE), JWT_ALG);
+  const encodeKey = await importPKCS8(fixKey(JWT_SECRET_ENCODE), JWT_ALG);
 
-	const jwt = await new SignJWT()
-		.setExpirationTime(`${JWT_EXPIRY_SECONDS}s`)
-		.setProtectedHeader({ alg: JWT_ALG })
-		.setSubject(String(userId))
-		.sign(encodeKey);
+  const jwt = await new SignJWT()
+    .setExpirationTime(`${JWT_EXPIRY_SECONDS}s`)
+    .setProtectedHeader({ alg: JWT_ALG })
+    .setSubject(String(userId))
+    .sign(encodeKey);
 
-	cookies.set(AUTH_COOKIE, `Bearer ${jwt}`, {
-		path: "/",
-		secure: true,
-		httpOnly: true,
-		sameSite: "lax",
-		maxAge: JWT_EXPIRY_SECONDS,
-	});
+  cookies.set(AUTH_COOKIE, `Bearer ${jwt}`, {
+    path: "/",
+    secure: true,
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: JWT_EXPIRY_SECONDS,
+  });
 }
 
 export function deleteAuthCookie(cookies: Cookies) {
-	cookies.delete(AUTH_COOKIE, { path: "/" });
+  cookies.delete(AUTH_COOKIE, { path: "/" });
 }
 
 /** get jwt token from `Authorization` cookie */
 export function getToken(cookies: Cookies) {
-	return cookies.get(AUTH_COOKIE)?.split(" ")[1];
+  return cookies.get(AUTH_COOKIE)?.split(" ")[1];
 }
 
 /** verify jwt token */
 export async function verifyToken(token: string) {
-	const decodeKey = await importSPKI(fixKey(JWT_SECRET_DECODE), JWT_ALG);
+  const decodeKey = await importSPKI(fixKey(JWT_SECRET_DECODE), JWT_ALG);
 
-	try {
-		const { payload } = await jwtVerify(token, decodeKey, {
-			algorithms: [JWT_ALG],
-		});
+  try {
+    const { payload } = await jwtVerify(token, decodeKey, {
+      algorithms: [JWT_ALG],
+    });
 
-		if (!payload.sub) {
-			return undefined;
-		}
+    if (!payload.sub) {
+      return undefined;
+    }
 
-		const { sub, ...rest } = payload;
+    const { sub, ...rest } = payload;
 
-		return { sub: Number(sub), ...rest };
-	} catch {
-		return undefined;
-	}
+    return { sub: Number(sub), ...rest };
+  } catch {
+    return undefined;
+  }
 }

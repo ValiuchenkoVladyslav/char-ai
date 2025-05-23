@@ -8,31 +8,31 @@ import PasswordResetEmail from "./forgot-password.email.svelte";
 import { forgotPasswordSchema } from "./shared";
 
 export const actions = {
-	async default({ request }) {
-		const res = parseFormData(await request.formData(), forgotPasswordSchema);
+  async default({ request }) {
+    const res = parseFormData(await request.formData(), forgotPasswordSchema);
 
-		if (res.error) {
-			return fail(400, { issues: res.error.issues });
-		}
+    if (res.error) {
+      return fail(400, { issues: res.error.issues });
+    }
 
-		const parsedData = res.data;
+    const parsedData = res.data;
 
-		const user = await db
-			.select({ id: users.id })
-			.from(users)
-			.where(eq(users.email, parsedData.email))
-			.then((res) => res.at(0));
+    const user = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.email, parsedData.email))
+      .then((res) => res.at(0));
 
-		if (user) {
-			const passwordResetToken = crypto.randomUUID() + crypto.randomUUID();
-			await redis.setex(passwordResetToken, 60 * 60, parsedData.email);
+    if (user) {
+      const passwordResetToken = crypto.randomUUID() + crypto.randomUUID();
+      await redis.setex(passwordResetToken, 60 * 60, parsedData.email);
 
-			sendEmail(parsedData.email, "Reset Your Password", PasswordResetEmail, {
-				passwordResetToken,
-			});
-		}
+      sendEmail(parsedData.email, "Reset Your Password", PasswordResetEmail, {
+        passwordResetToken,
+      });
+    }
 
-		// no errors if email not found to prevent email enumeration
-		redirect(303, "/auth/forgot-password/email-sent?to=" + parsedData.email);
-	},
+    // no errors if email not found to prevent email enumeration
+    redirect(303, "/auth/forgot-password/email-sent?to=" + parsedData.email);
+  },
 } satisfies Actions;

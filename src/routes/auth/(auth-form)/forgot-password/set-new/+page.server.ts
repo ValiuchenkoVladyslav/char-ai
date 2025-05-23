@@ -8,38 +8,38 @@ import type { Actions } from "./$types";
 import { changePasswordSchema } from "./shared";
 
 export const actions = {
-	async default({ request, cookies }) {
-		const res = parseFormData(await request.formData(), changePasswordSchema);
+  async default({ request, cookies }) {
+    const res = parseFormData(await request.formData(), changePasswordSchema);
 
-		if (res.error) {
-			return fail(400, { issues: res.error.issues });
-		}
+    if (res.error) {
+      return fail(400, { issues: res.error.issues });
+    }
 
-		const resetToken = new URL(request.url).searchParams.get("token");
-		if (!resetToken) {
-			return fail(400, { error: "Invalid reset token!" });
-		}
+    const resetToken = new URL(request.url).searchParams.get("token");
+    if (!resetToken) {
+      return fail(400, { error: "Invalid reset token!" });
+    }
 
-		const email = await redis.getdel<string>(resetToken);
-		if (!email) {
-			return fail(400, { error: "Invalid or expired reset token!" });
-		}
+    const email = await redis.getdel<string>(resetToken);
+    if (!email) {
+      return fail(400, { error: "Invalid or expired reset token!" });
+    }
 
-		const passwordHash = await hashPassword(res.data.password);
+    const passwordHash = await hashPassword(res.data.password);
 
-		const user = await db
-			.update(users)
-			.set({ passwordHash })
-			.where(eq(users.email, email))
-			.returning({ id: users.id })
-			.then((res) => res.at(0));
+    const user = await db
+      .update(users)
+      .set({ passwordHash })
+      .where(eq(users.email, email))
+      .returning({ id: users.id })
+      .then((res) => res.at(0));
 
-		if (!user) {
-			console.error("Failed to update password");
-			return fail(500, { error: "Failed to update password: User not found" });
-		}
+    if (!user) {
+      console.error("Failed to update password");
+      return fail(500, { error: "Failed to update password: User not found" });
+    }
 
-		await setAuthCookie(cookies, user.id);
-		redirect(303, "/auth/success");
-	},
+    await setAuthCookie(cookies, user.id);
+    redirect(303, "/auth/success");
+  },
 } satisfies Actions;
