@@ -3,3 +3,5 @@
 </script>
 
 <HeadMeta title="Discover Characters" />
+
+<h1>discover page</h1>

@@ -26,7 +26,7 @@
     return (res) => applyAction(res.result);
   }}
   novalidate
-  class="card"
+  class="card dark"
   {...props}
 >
   <header class="flex justify-between items-center">
