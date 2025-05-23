@@ -22,7 +22,11 @@
         client_id: env.PUBLIC_OAUTH2_CLIENT_ID,
         scope: "openid email profile",
         async callback(tokenRes) {
-          const res = await fetch("/auth/google/" + tokenRes.access_token);
+          const res = await fetch("/auth/google", {
+            headers: {
+              GoogleAccessToken: tokenRes.access_token,
+            },
+          });
 
           if (res.status === 200) {
             goto("/auth/success");

@@ -22,12 +22,16 @@ type GoogleUserInfoRes = {
 	email_verified: boolean;
 };
 
-export const GET: RequestHandler = async ({ params, cookies }) => {
+export const GET: RequestHandler = async ({ cookies, request }) => {
+	const token = request.headers.get("GoogleAccessToken");
+	if (!token) {
+		error(400, { message: "Invalid data" });
+	}
+
 	let userInfoRes: Response;
 	try {
 		userInfoRes = await fetch(
-			"https://www.googleapis.com/oauth2/v3/userinfo?access_token=" +
-				params.token,
+			"https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + token,
 		);
 	} catch (e) {
 		console.error("Error fetching user info from Google:", e);
