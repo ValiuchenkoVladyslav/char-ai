@@ -1,7 +1,7 @@
 import { RegisterMethod, db, users } from "$lib/server/db";
 import { setAuthCookie } from "$lib/server/jwt";
 import { edgeRuntime } from "$lib/utils";
-import { fakerEN } from "@faker-js/faker";
+import { randUserName } from "@ngneat/falso";
 import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import type { RequestHandler } from "./$types";
@@ -74,7 +74,7 @@ export const GET: RequestHandler = async ({ cookies, request }) => {
   if (!existingUser) {
     let generatedUsername: string | undefined;
     while (true) {
-      generatedUsername = fakerEN.internet.username();
+      generatedUsername = randUserName({ withAccents: false }).substring(0, 24);
 
       const existingUser = await db
         .select({ id: users.id })
