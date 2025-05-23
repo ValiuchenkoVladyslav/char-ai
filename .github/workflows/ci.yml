@@ -26,6 +26,7 @@ jobs:
         run: bun check
         env:
           DB_URL: ${{ secrets.DB_URL }}
+          DB_TOKEN: ${{ secrets.DB_TOKEN }}
           PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL }}
           ARGON2_SECRET: ${{ secrets.ARGON2_SECRET }}
           JWT_SECRET_DECODE: ${{ secrets.JWT_SECRET_DECODE }}
@@ -42,6 +43,7 @@ jobs:
         run: bun run build
         env:
           DB_URL: ${{ secrets.DB_URL }}
+          DB_TOKEN: ${{ secrets.DB_TOKEN }}
           PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL }}
           ARGON2_SECRET: ${{ secrets.ARGON2_SECRET }}
           JWT_SECRET_DECODE: ${{ secrets.JWT_SECRET_DECODE }}
