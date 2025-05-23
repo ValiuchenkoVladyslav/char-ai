@@ -18,7 +18,7 @@ export const actions = {
 			return fail(400, { issues: res.error.issues });
 		}
 
-		const resetToken = request.url.split("?token=").at(1);
+		const resetToken = new URL(request.url).searchParams.get("token");
 		if (!resetToken) {
 			return fail(400, { error: "Invalid reset token!" });
 		}
