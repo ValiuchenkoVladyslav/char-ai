@@ -11,8 +11,11 @@ export default {
 		},
 
 		adapter: vercelAdapter({
-			runtime: "edge",
+			runtime: "nodejs20.x",
 			regions: ["fra1"],
+			isr: {
+				expiration: false,
+			},
 		}),
 	},
 };

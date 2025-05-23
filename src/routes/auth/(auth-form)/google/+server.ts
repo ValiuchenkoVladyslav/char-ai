@@ -1,9 +1,12 @@
 import { RegisterMethod, db, users } from "$lib/server/db";
 import { setAuthCookie } from "$lib/server/jwt";
+import { edgeRuntime } from "$lib/utils";
 import { fakerEN } from "@faker-js/faker";
 import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import type { RequestHandler } from "./$types";
+
+export const config = edgeRuntime;
 
 // google response example
 // {

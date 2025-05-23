@@ -1,14 +1,11 @@
 import { db, redis, users } from "$lib/server/db";
 import { setAuthCookie } from "$lib/server/jwt";
 import { hashPassword } from "$lib/server/password";
-import { nodeRuntime, parseFormData } from "$lib/utils";
+import { parseFormData } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import type { Actions } from "./$types";
 import { changePasswordSchema } from "./shared";
-
-// sadly argon is not supported on edge yet
-export const config = nodeRuntime;
 
 export const actions = {
 	async default({ request, cookies }) {

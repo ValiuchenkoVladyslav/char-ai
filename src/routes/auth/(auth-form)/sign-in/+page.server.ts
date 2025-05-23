@@ -2,15 +2,12 @@ import { RegisterMethod, db, redis, users } from "$lib/server/db";
 import { sendEmail } from "$lib/server/email";
 import { setAuthCookie } from "$lib/server/jwt";
 import { verifyPassword } from "$lib/server/password";
-import { nodeRuntime, parseFormData } from "$lib/utils";
+import { parseFormData } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import type { Actions } from "./$types";
 import { signInSchema } from "./shared";
 import SignInEmail from "./sign-in.email.svelte";
-
-// sadly argon is not supported on edge yet
-export const config = nodeRuntime;
 
 export const actions = {
 	async default({ request, cookies }) {
@@ -62,6 +59,6 @@ export const actions = {
 			signInToken,
 		});
 
-		redirect(303, "/auth/sign-in/email-sent?to=" + parsedData.email);
+		redirect(303, "/auth/sign-in/email-sent#" + parsedData.email);
 	},
 } satisfies Actions;

@@ -1,13 +1,9 @@
 import { RegisterMethod, db, redis, users } from "$lib/server/db";
 import { setAuthCookie } from "$lib/server/jwt";
 import { hashPassword } from "$lib/server/password";
-import { nodeRuntime } from "$lib/utils";
 import { redirect } from "@sveltejs/kit";
 import type { SignUpData } from "../shared";
 import type { RequestHandler } from "./$types";
-
-// sadly argon is not supported on edge yet
-export const config = nodeRuntime;
 
 export const GET: RequestHandler = async ({ params, cookies }) => {
 	const data = await redis.getdel<SignUpData>(params.magic);

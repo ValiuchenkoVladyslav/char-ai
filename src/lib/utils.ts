@@ -1,9 +1,11 @@
 import type { Config } from "@sveltejs/adapter-vercel";
 import type { ZodIssue, ZodObject } from "zod/v4";
 
-/** nodejs 20 runtime endpoint config */
-export const nodeRuntime: Config = {
-	runtime: "nodejs20.x",
+/** edge runtime endpoint config */
+export const edgeRuntime: Config = {
+	runtime: "edge",
+	// @ts-expect-error: used to rewrite main config
+	isr: undefined,
 };
 
 /** parse & validate `FormData` using provided schema */

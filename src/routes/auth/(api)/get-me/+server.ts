@@ -1,6 +1,9 @@
 import { db, users } from "$lib/server/db";
+import { edgeRuntime } from "$lib/utils";
 import { type RequestHandler, json } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
+
+export const config = edgeRuntime;
 
 export const GET: RequestHandler = async ({ locals }) => {
 	if (!locals.user) {

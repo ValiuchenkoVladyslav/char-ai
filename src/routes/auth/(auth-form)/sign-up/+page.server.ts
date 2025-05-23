@@ -46,6 +46,6 @@ export const actions = {
 			signUpToken,
 		});
 
-		redirect(303, "/auth/sign-in/email-sent?to=" + parsedData.email);
+		redirect(303, "/auth/sign-in/email-sent#" + parsedData.email);
 	},
 } satisfies Actions;
