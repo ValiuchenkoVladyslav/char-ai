@@ -1,12 +1,10 @@
+import { sql } from "drizzle-orm";
 import {
-	boolean,
 	integer,
-	pgTable,
 	primaryKey,
-	serial,
-	timestamp,
-	varchar,
-} from "drizzle-orm/pg-core";
+	sqliteTable,
+	text,
+} from "drizzle-orm/sqlite-core";
 
 export enum RegisterMethod {
 	EmailAndPassword = 0,
@@ -14,40 +12,42 @@ export enum RegisterMethod {
 	Both = 2,
 }
 
-export const users = pgTable("User", {
-	id: serial("id").primaryKey(),
-	displayName: varchar("displayName", { length: 32 }).notNull(),
-	username: varchar("username", { length: 24 }).notNull().unique(),
-	pfp: varchar("pfp", { length: 255 }),
+export const users = sqliteTable("User", {
+	id: integer("id").primaryKey(),
+	displayName: text("displayName", { length: 32 }).notNull(),
+	username: text("username", { length: 24 }).notNull().unique(),
+	pfp: text("pfp", { length: 255 }),
 
-	email: varchar("email", { length: 32 }).unique(),
-	passwordHash: varchar("passwordHash", { length: 255 }),
-	googleId: varchar("googleId", { length: 255 }).unique(),
+	email: text("email", { length: 32 }).unique(),
+	passwordHash: text("passwordHash", { length: 255 }),
+	googleId: text("googleId", { length: 255 }).unique(),
 	registerMethod: integer("registerMethod").notNull(),
 
-	banned: boolean("banned").notNull().default(false),
+	banned: integer("banned", { mode: "boolean" }).notNull().default(false),
 
-	createdAt: timestamp("createdAt").notNull().defaultNow(),
-	updatedAt: timestamp("updatedAt", { withTimezone: true })
+	createdAt: integer("createdAt", { mode: "timestamp" })
 		.notNull()
-		// https://github.com/drizzle-team/drizzle-orm/issues/2388
+		.default(sql`(unixepoch())`),
+	updatedAt: integer("updatedAt", { mode: "timestamp" })
+		.notNull()
 		.$onUpdate(() => new Date()),
 });
 
-export const characters = pgTable("Character", {
-	id: serial("id").primaryKey(),
-	name: varchar("name", { length: 32 }).notNull(),
-	description: varchar("description", { length: 256 }),
-	masterPrompt: varchar("masterPrompt", { length: 512 }).notNull(),
-	image: varchar("image", { length: 255 }).notNull(),
-	pfp: varchar("pfp", { length: 255 }).notNull(),
+export const characters = sqliteTable("Character", {
+	id: integer("id").primaryKey(),
+	name: text("name", { length: 32 }).notNull(),
+	description: text("description", { length: 256 }),
+	masterPrompt: text("masterPrompt", { length: 512 }).notNull(),
+	image: text("image", { length: 255 }).notNull(),
+	pfp: text("pfp", { length: 255 }).notNull(),
 
 	likesCount: integer("likesCount").notNull().default(0),
 
-	createdAt: timestamp("createdAt").notNull().defaultNow(),
-	updatedAt: timestamp("updatedAt", { withTimezone: true })
+	createdAt: integer("createdAt", { mode: "timestamp" })
 		.notNull()
-		// https://github.com/drizzle-team/drizzle-orm/issues/2388
+		.default(sql`(unixepoch())`),
+	updatedAt: integer("updatedAt", { mode: "timestamp" })
+		.notNull()
 		.$onUpdate(() => new Date()),
 
 	creatorId: integer("creatorId").references(() => users.id, {
@@ -55,7 +55,7 @@ export const characters = pgTable("Character", {
 	}),
 });
 
-export const likes = pgTable(
+export const likes = sqliteTable(
 	"Like",
 	{
 		characterId: integer("characterId")
