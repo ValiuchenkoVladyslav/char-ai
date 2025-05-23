@@ -6,6 +6,7 @@
   const { children } = $props();
 
   let tokenClient: google.accounts.oauth2.TokenClient | undefined;
+  let googleError = $state<App.Error>();
 </script>
 
 <div>
@@ -16,12 +17,20 @@
     onload={() => {
       // i spent 1.5 hours digging inside some react lib, @types/some-google-shit,
       // reading google docs, debating with gpt hallucination and reading stack overflow
-      // to find this solution 
+      // to find this solution
       tokenClient = window?.google.accounts.oauth2.initTokenClient({
         client_id: env.PUBLIC_OAUTH2_CLIENT_ID,
         scope: "openid email profile",
-        callback(res) {
-          goto("/auth/google/" + res.access_token);
+        async callback(tokenRes) {
+          const res = await fetch("/auth/google/" + tokenRes.access_token);
+
+          if (res.status === 200) {
+            goto("/auth/success");
+          } else if (res.status === 403) {
+            goto("/user-banned");
+          } else if (res.status === 400 || res.status === 500) {
+            googleError = await res.json();
+          }
         },
       });
     }}
@@ -52,7 +61,11 @@
       <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
     </svg>
 
-    Continue with Google
+    {#if googleError}
+      ❌ {googleError.message}
+    {:else}
+      Continue with Google
+    {/if}
   </button>
 
   {@render children()}

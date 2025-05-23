@@ -1,7 +1,7 @@
 import { RegisterMethod, db, users } from "$lib/server/db";
 import { setAuthCookie } from "$lib/server/jwt";
 import { fakerEN } from "@faker-js/faker";
-import { redirect } from "@sveltejs/kit";
+import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import type { RequestHandler } from "./$types";
 
@@ -19,19 +19,30 @@ type GoogleUserInfoRes = {
 	name: string;
 	picture: string;
 	email: string;
+	email_verified: boolean;
 };
 
 export const GET: RequestHandler = async ({ params, cookies }) => {
-	const userInfoRes = await fetch(
-		"https://www.googleapis.com/oauth2/v3/userinfo?access_token=" +
-			params.token,
-	);
+	let userInfoRes: Response;
+	try {
+		userInfoRes = await fetch(
+			"https://www.googleapis.com/oauth2/v3/userinfo?access_token=" +
+				params.token,
+		);
+	} catch (e) {
+		console.error("Error fetching user info from Google:", e);
+		error(500, { message: "Unknown error occurred" });
+	}
 
 	if (!userInfoRes.ok) {
-		redirect(303, "/auth/sign-in");
+		error(400, { message: "Invalid data" });
 	}
 
 	const userInfo: GoogleUserInfoRes = await userInfoRes.json();
+
+	if (!userInfo.email_verified) {
+		error(400, { message: "Choose a verified email" });
+	}
 
 	const existingUser = await db
 		.select({
@@ -74,12 +85,12 @@ export const GET: RequestHandler = async ({ params, cookies }) => {
 			.then((res) => res[0]);
 
 		await setAuthCookie(cookies, newUser.id);
-		redirect(303, "/auth/success");
+		return new Response(null, { status: 200 });
 	}
 
 	if (existingUser.banned) {
 		await setAuthCookie(cookies, existingUser.id);
-		redirect(303, "/user-banned");
+		error(403, { message: "User is banned" });
 	}
 
 	if (existingUser.RegisterMethod === RegisterMethod.EmailAndPassword) {
@@ -93,9 +104,9 @@ export const GET: RequestHandler = async ({ params, cookies }) => {
 			.returning({ id: users.id });
 
 		await setAuthCookie(cookies, existingUser.id);
-		redirect(303, "/auth/success");
+		return new Response(null, { status: 200 });
 	}
 
 	await setAuthCookie(cookies, existingUser.id);
-	redirect(303, "/auth/success");
+	return new Response(null, { status: 200 });
 };
