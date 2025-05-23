@@ -2,7 +2,7 @@ import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
 import { importPKCS8, importSPKI } from "jose/key/import";
 
-import { env } from "$env/dynamic/private";
+import { JWT_SECRET_DECODE, JWT_SECRET_ENCODE } from "$env/static/private";
 import type { Cookies } from "@sveltejs/kit";
 
 /** jwt secret encryption algorithm */
@@ -17,10 +17,7 @@ function fixKey(key: string) {
 }
 
 export async function setAuthCookie(cookies: Cookies, userId: number) {
-	const encodeKey = await importPKCS8(
-		fixKey(env.JWT_SECRET_ENCODE satisfies string),
-		JWT_ALG,
-	);
+	const encodeKey = await importPKCS8(fixKey(JWT_SECRET_ENCODE), JWT_ALG);
 
 	const jwt = await new SignJWT()
 		.setExpirationTime(`${JWT_EXPIRY_SECONDS}s`)
@@ -44,10 +41,7 @@ export function getToken(cookies: Cookies) {
 
 /** verify jwt token */
 export async function verifyToken(token: string) {
-	const decodeKey = await importSPKI(
-		fixKey(env.JWT_SECRET_DECODE satisfies string),
-		JWT_ALG,
-	);
+	const decodeKey = await importSPKI(fixKey(JWT_SECRET_DECODE), JWT_ALG);
 
 	try {
 		const { payload } = await jwtVerify(token, decodeKey, {

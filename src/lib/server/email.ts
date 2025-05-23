@@ -9,9 +9,9 @@ import type {
 } from "svelte";
 import { render } from "svelte/server";
 
-import { env } from "$env/dynamic/private";
+import { RESEND_API } from "$env/static/private";
 
-const resend = new Resend(env.RESEND_API satisfies string);
+const resend = new Resend(RESEND_API);
 
 /** send email without execution blocking */
 export function sendEmail<

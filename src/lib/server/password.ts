@@ -1,4 +1,4 @@
-import { env } from "$env/dynamic/private";
+import { ARGON2_SECRET } from "$env/static/private";
 import {
 	type Algorithm as ArgonAlgorithm,
 	type Options as ArgonOptions,
@@ -8,7 +8,7 @@ import {
 
 const passwordHashParams: Omit<ArgonOptions, "salt"> = {
 	algorithm: 2 satisfies ArgonAlgorithm,
-	secret: new TextEncoder().encode(env.ARGON2_SECRET satisfies string),
+	secret: new TextEncoder().encode(ARGON2_SECRET),
 };
 
 export function hashPassword(password: string) {
