@@ -24,7 +24,7 @@
         async callback(tokenRes) {
           const res = await fetch("/auth/google", {
             headers: {
-              Authorization: tokenRes.access_token,
+              Authorization: "Bearer " + tokenRes.access_token,
             },
           });
 
