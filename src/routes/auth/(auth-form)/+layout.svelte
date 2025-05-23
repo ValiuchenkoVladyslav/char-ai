@@ -11,7 +11,6 @@
 
 <div>
   <script
-    defer
     async
     src="https://accounts.google.com/gsi/client"
     onload={() => {
