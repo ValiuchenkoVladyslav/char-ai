@@ -23,7 +23,7 @@ type GoogleUserInfoRes = {
 };
 
 export const GET: RequestHandler = async ({ cookies, request }) => {
-	const token = request.headers.get("GoogleAccessToken");
+	const token = request.headers.get("Authorization")?.split(" ")[1];
 	if (!token) {
 		error(400, { message: "Invalid data" });
 	}
