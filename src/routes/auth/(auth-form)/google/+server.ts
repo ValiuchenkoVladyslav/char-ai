@@ -42,7 +42,13 @@ export const GET: RequestHandler = async ({ cookies, request }) => {
 		error(400, { message: "Invalid data" });
 	}
 
-	const userInfo: GoogleUserInfoRes = await userInfoRes.json();
+	let userInfo: GoogleUserInfoRes;
+	try {
+		userInfo = await userInfoRes.json();
+	} catch (e) {
+		console.error("Error parsing user info response:", e);
+		error(500, { message: "Unknown error occurred" });
+	}
 
 	if (!userInfo.email_verified) {
 		error(400, { message: "Choose a verified email" });
