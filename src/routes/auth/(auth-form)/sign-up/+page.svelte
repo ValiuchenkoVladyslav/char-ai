@@ -1,6 +1,6 @@
 <script lang="ts">
   import AuthForm from "../auth-form.svelte";
-  import { validateSignUpFormData } from "./shared";
+  import { signUpSchema } from "./shared";
   import { Btn, Input, HeadMeta, ErrorBanner } from "$lib/components";
   import LogIn from "lucide-svelte/icons/log-in";
   import { getIssue } from "$lib/utils";
@@ -13,13 +13,12 @@
 
 <AuthForm
   heading="Sign Up"
-  onSubmit={({ formData, cancel }) => {
-    const res = validateSignUpFormData(formData);
-
-    if (!res.error) return;
+  schema={signUpSchema}
+  onsubmit={({ cancel }, parseResult) => {
+    if (!parseResult.error) return;
 
     cancel();
-    issues = res.error.issues;
+    issues = parseResult.error.issues;
   }}
 >
   <Input

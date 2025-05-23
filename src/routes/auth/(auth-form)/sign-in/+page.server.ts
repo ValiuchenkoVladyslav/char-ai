@@ -2,20 +2,19 @@ import { RegisterMethod, db, redis, users } from "$lib/server/db";
 import { sendEmail } from "$lib/server/email";
 import { setAuthCookie } from "$lib/server/jwt";
 import { verifyPassword } from "$lib/server/password";
-import type { Config } from "@sveltejs/adapter-vercel";
+import { nodeRuntime, parseFormData } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import type { Actions } from "./$types";
-import { validateSignInFormData } from "./shared";
+import { signInSchema } from "./shared";
 import SignInEmail from "./sign-in.email.svelte";
 
-export const config: Config = {
-	runtime: "nodejs20.x", // sadly argon is not supported on edge yet
-};
+// sadly argon is not supported on edge yet
+export const config = nodeRuntime;
 
 export const actions = {
 	async default({ request, cookies }) {
-		const res = validateSignInFormData(await request.formData());
+		const res = parseFormData(await request.formData(), signInSchema);
 
 		if (res.error) {
 			return fail(400, { issues: res.error.issues });

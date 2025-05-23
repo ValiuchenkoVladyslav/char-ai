@@ -1,30 +1,43 @@
-<script lang="ts">
-  import { enhance, applyAction } from "$app/forms";
-  import type { Snippet } from "svelte";
-  import type { SubmitFunction } from "@sveltejs/kit";
+<script lang="ts" generics="Schema extends ZodObject">
   import type { HTMLFormAttributes } from "svelte/elements";
+  import type { SubmitFunction } from "@sveltejs/kit";
+  import type { ZodObject, output, ZodSafeParseResult } from "zod/v4";
+  import { enhance, applyAction } from "$app/forms";
+  import { page } from "$app/state";
+  import { parseFormData } from "$lib/utils";
 
-  interface Props extends HTMLFormAttributes {
-    onSubmit: (...params: Parameters<SubmitFunction>) => void;
-    children: Snippet;
+  interface Props extends Omit<HTMLFormAttributes, "onsubmit"> {
+    schema: Schema;
+    onsubmit: (
+      params: Parameters<SubmitFunction>[number],
+      parseResult: ZodSafeParseResult<output<Schema>>,
+    ) => void;
     heading: string;
   }
 
-  const { children, onSubmit, heading, ...props }: Props = $props();
+  const { children, onsubmit, schema, heading, ...props }: Props = $props();
 </script>
 
 <form
   method="POST"
   use:enhance={(props) => {
-    onSubmit(props);
+    onsubmit(props, parseFormData(props.formData, schema));
 
     return (res) => applyAction(res.result);
   }}
   novalidate
-  class="p-4 border-1 flex flex-col gap-4"
+  class="card"
   {...props}
 >
-  <h2>{heading}</h2>
+  <header class="flex justify-between items-center">
+    <h2>{heading}</h2>
 
-  {@render children()}
+    {#if !page.url.pathname.startsWith("/auth/forgot-password")}
+      <a href="/auth/forgot-password" class="opacity-70 hover:opacity-100 hover:underline">
+        Forgot password?
+      </a>
+    {/if}
+  </header>
+
+  {@render children?.()}
 </form>

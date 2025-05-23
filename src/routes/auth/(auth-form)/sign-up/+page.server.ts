@@ -1,14 +1,15 @@
 import { db, redis, users } from "$lib/server/db";
 import { sendEmail } from "$lib/server/email";
+import { parseFormData } from "$lib/utils";
 import { fail, redirect } from "@sveltejs/kit";
 import { eq, or } from "drizzle-orm";
 import type { Actions } from "./$types";
-import { type SignUpData, validateSignUpFormData } from "./shared";
+import { type SignUpData, signUpSchema } from "./shared";
 import SignUpEmail from "./sign-up.email.svelte";
 
 export const actions = {
 	async default({ request }) {
-		const res = validateSignUpFormData(await request.formData());
+		const res = parseFormData(await request.formData(), signUpSchema);
 
 		if (res.error) {
 			return fail(400, { issues: res.error.issues });
