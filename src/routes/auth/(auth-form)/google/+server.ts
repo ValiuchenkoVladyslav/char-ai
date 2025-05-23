@@ -30,9 +30,11 @@ export const GET: RequestHandler = async ({ cookies, request }) => {
 
 	let userInfoRes: Response;
 	try {
-		userInfoRes = await fetch(
-			"https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + token,
-		);
+		userInfoRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 	} catch (e) {
 		console.error("Error fetching user info from Google:", e);
 		error(500, { message: "Unknown error occurred" });
