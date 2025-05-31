@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 :root {
-	--color-bg: oklch(0.145 0 0);
+	--color-bg: #000;
+  --color-bg-alt: hsl(240 3% 6%);
 	--color-fg: oklch(0.985 0 0);
   --scrollbar-width: 6px;
 }
 
 @theme inline {
 	--color-bg: var(--color-bg);
+  --color-bg-alt: var(--color-bg-alt);
 	--color-fg: var(--color-fg);
 }
 
