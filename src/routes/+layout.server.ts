@@ -1,4 +1,5 @@
 import { db, users } from "$lib/server/db";
+import { AUTH_LOAD_KEY } from "$lib/utils";
 import { eq } from "drizzle-orm";
 
 async function getUser(id?: number) {
@@ -23,8 +24,12 @@ async function getUser(id?: number) {
     });
 }
 
-export function load(params) {
+export function load({ locals, depends }) {
+  // should be invalidated on auth changes
+  // see /auth/success
+  depends(AUTH_LOAD_KEY);
+
   return {
-    user: getUser(params.locals.user),
+    user: getUser(locals.user),
   };
 }

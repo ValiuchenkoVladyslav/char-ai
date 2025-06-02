@@ -3,3 +3,5 @@
 </script>
 
 <HeadMeta title="Create Character" />
+
+create page

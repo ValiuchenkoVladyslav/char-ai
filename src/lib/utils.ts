@@ -17,3 +17,5 @@ export function parseFormData<S extends ZodObject>(data: FormData, schema: S) {
 export function getIssue(issues: ZodIssue[] | undefined, field: string) {
   return issues?.find((issue) => issue.path[0] === field)?.message;
 }
+
+export const AUTH_LOAD_KEY = "app:auth-load";

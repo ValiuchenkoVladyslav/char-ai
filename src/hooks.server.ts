@@ -5,8 +5,8 @@ import { isUserBanned } from "$lib/server/bans";
 import { getToken, verifyToken } from "$lib/server/jwt";
 import { redirect } from "@sveltejs/kit";
 
+import type { RouteId as UserBannedRouteId } from "./routes/(with-footer)/user-banned/$types";
 import type { RouteId as AuthRouteId } from "./routes/auth/$types";
-import type { RouteId as UserBannedRouteId } from "./routes/user-banned/$types";
 
 export async function handle({ event, resolve }) {
   const route = event.route.id;
@@ -18,23 +18,8 @@ export async function handle({ event, resolve }) {
   // https://chromium.googlesource.com/devtools/devtools-frontend/+/main/docs/ecosystem/automatic_workspace_folders.md
   // biome-ignore lint/correctness/noUnusedLabels: see vite.config.ts
   // biome-ignore lint/suspicious/noConfusingLabels: see vite.config.ts
-  DEV: if (
-    event.url.pathname === "/.well-known/appspecific/com.chrome.devtools.json"
-  ) {
+  DEV: if (event.url.pathname.includes("com.chrome.devtools.json")) {
     return new Response(null, { status: 204 });
-  }
-
-  // redirect not authenticated users off protected routes
-  if (route?.includes("/(protected)")) {
-    if (!user) {
-      redirect(302, "/auth/sign-in");
-    }
-
-    if (await isUserBanned(user.sub)) {
-      redirect(302, "/user-banned");
-    }
-
-    return resolve(event);
   }
 
   // redirect authenticated users off auth routes
@@ -57,7 +42,7 @@ export async function handle({ event, resolve }) {
   }
 
   // redirect not banned and not authenticated users off user-banned page
-  if (route === ("/user-banned" satisfies UserBannedRouteId)) {
+  if (route === ("/(with-footer)/user-banned" satisfies UserBannedRouteId)) {
     if (!user) {
       redirect(302, "/auth/sign-in");
     }
