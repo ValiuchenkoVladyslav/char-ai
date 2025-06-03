@@ -1,17 +1,17 @@
 import { characters, db } from "$lib/server/db";
+import { logErr } from "$lib/utils";
 import { sql } from "drizzle-orm";
 import { CHARACTERS_PER_PAGE } from "./shared";
 
-async function getTopCharacters(query: string | null, page: number) {
-  const topCharacters = await db
+function getTopCharacters(query: string | null, page: number) {
+  return db
     .select()
     .from(characters)
     .where(sql`levenshtein(${characters.name}, ${query}) <= 3`)
     .limit(CHARACTERS_PER_PAGE)
     .offset(page * CHARACTERS_PER_PAGE)
-    .execute();
-
-  return topCharacters;
+    .execute()
+    .catch(logErr("Error fetching top characters:"));
 }
 
 export async function load({ url }) {

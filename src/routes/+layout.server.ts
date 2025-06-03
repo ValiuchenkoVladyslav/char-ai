@@ -1,5 +1,5 @@
 import { db, users } from "$lib/server/db";
-import { AUTH_LOAD_KEY } from "$lib/utils";
+import { AUTH_LOAD_KEY, logErr } from "$lib/utils";
 import { eq } from "drizzle-orm";
 
 async function getUser(id?: number) {
@@ -17,11 +17,7 @@ async function getUser(id?: number) {
     .where(eq(users.id, id))
     .limit(1)
     .then((rows) => rows.at(0))
-    .catch((error) => {
-      console.error("Error fetching user data:", error);
-
-      return undefined;
-    });
+    .catch(logErr("Error fetching user data:"));
 }
 
 export function load({ locals, depends }) {

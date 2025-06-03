@@ -12,7 +12,7 @@
     {/each}
   </section>
 {:then topCharacters}
-  {#if topCharacters.length === 0}
+  {#if !topCharacters || topCharacters.length === 0}
     <p class="text-center text-fg/50 text-lg">
       No characters found.
     </p>

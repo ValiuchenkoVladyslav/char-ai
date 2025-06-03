@@ -16,7 +16,7 @@
     data.charactersCount.then((count) => {
       // https://svelte.dev/docs/svelte/$effect#Understanding-dependencies
       // > Values that are read asynchronously — after an await or inside a setTimeout, for example — will not be tracked.
-      maxPage = Math.ceil(count / CHARACTERS_PER_PAGE);
+      maxPage = Math.ceil((count ?? 0) / CHARACTERS_PER_PAGE);
     });
   });
 

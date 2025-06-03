@@ -18,4 +18,12 @@ export function getIssue(issues: ZodIssue[] | undefined, field: string) {
   return issues?.find((issue) => issue.path[0] === field)?.message;
 }
 
+/** log error returning undefined */
+export function logErr(message: string) {
+  return (error: unknown) => {
+    console.error(message, error);
+    return undefined;
+  };
+}
+
 export const AUTH_LOAD_KEY = "app:auth-load";
