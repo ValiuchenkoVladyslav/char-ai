@@ -22,6 +22,17 @@ export async function handle({ event, resolve }) {
     return new Response(null, { status: 204 });
   }
 
+  // redirect unauthenticated users off protected routes
+  if (route?.includes("(protected)")) {
+    if (!user) {
+      redirect(302, "/auth/sign-in");
+    } else if (await isUserBanned(user.sub)) {
+      redirect(302, "/user-banned");
+    }
+
+    return resolve(event);
+  }
+
   // redirect authenticated users off auth routes
   if (route?.startsWith("/auth" satisfies AuthRouteId)) {
     if (user) {
