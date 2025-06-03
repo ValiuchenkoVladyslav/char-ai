@@ -40,7 +40,7 @@
   ></script>
 </div>
 
-<div class="flex flex-col gap-2 w-[min(400px,100%)] *:rounded-lg">
+<div class="flex flex-col gap-2 *:rounded-lg">
   <nav class="p-1 flex gap-1 bg-fg/15 *:w-1/2 *:rounded-md *:font-semibold *:text-center *:py-1">
     {#snippet tabLink(href: string, text: string)}
       <a {href} class={page.url.pathname === href ? "bg-bg" : "text-fg/70"}>

@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 :root {
-	--color-bg: oklch(0.145 0 0);
+	--color-bg: #000;
+  --color-bg-alt: hsl(240 3% 6%);
 	--color-fg: oklch(0.985 0 0);
-  --scrollbar-width: 6px;
 }
 
 @theme inline {
 	--color-bg: var(--color-bg);
+  --color-bg-alt: var(--color-bg-alt);
 	--color-fg: var(--color-fg);
 }
 
@@ -27,8 +28,17 @@
   .input {
     @apply focus:outline-none py-2 px-3 rounded-md;
   }
+
   .card {
     @apply p-4 border flex flex-col gap-4 rounded-lg;
+  }
+
+  .nav-link {
+    @apply px-3 flex items-center text-lg gap-2 h-9 rounded-lg hover:bg-fg/10;
+  }
+
+  .pagination-btn {
+    @apply bg-bg-alt rounded-lg flex items-center justify-center w-12 h-12;
   }
 }
 
@@ -57,11 +67,12 @@
     @-moz-document url-prefix() {
       html {
         scrollbar-width: thin;
+        scrollbar-color: var(--color-fg) transparent;
       }
     }
 
     ::-webkit-scrollbar {
-      width: var(--scrollbar-width);
+      width: 6px;
     }
 
     ::-webkit-scrollbar-track {

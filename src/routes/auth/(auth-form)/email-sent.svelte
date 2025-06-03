@@ -16,7 +16,7 @@
   });
 </script>
 
-<section class="card w-[min(400px,100%)]">
+<section class="card">
   <header>
     <h2>{props.title}</h2>
     <p class="mt-1">{props.description}</p>
