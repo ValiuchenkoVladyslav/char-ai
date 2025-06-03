@@ -21,26 +21,26 @@
     "@biomejs/biome": "^1.9.4",
     "@sveltejs/adapter-vercel": "^5.7.2",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
-    "@tailwindcss/vite": "^4.0.0",
+    "@tailwindcss/vite": "^4.1.8",
     "@types/google.accounts": "^0.0.16",
-    "drizzle-kit": "^0.30.2",
+    "drizzle-kit": "^0.31.1",
     "lefthook": "^1.11.13",
     "svelte-check": "^4.0.0",
-    "tailwindcss": "^4.0.0",
+    "tailwindcss": "^4.1.8",
     "typescript": "^5.0.0",
     "vite": "^6.2.6"
   },
   "dependencies": {
-    "@libsql/client": "^0.15.7",
+    "@libsql/client": "^0.15.8",
     "@ngneat/falso": "^7.3.0",
     "@node-rs/argon2": "^2.0.2",
     "@sveltejs/kit": "^2.16.0",
     "@upstash/redis": "^1.34.9",
     "@vercel/functions": "^2.1.0",
-    "drizzle-orm": "^0.40.0",
+    "drizzle-orm": "^0.44.1",
     "jose": "^6.0.11",
     "lucide-svelte": "^0.511.0",
-    "svelte": "^5.0.0",
-    "zod": "^3.25.3"
+    "svelte": "^5.33.13",
+    "zod": "^3.25.48"
   }
 }
