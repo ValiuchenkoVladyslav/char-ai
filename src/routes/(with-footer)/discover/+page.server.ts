@@ -9,7 +9,7 @@ function getTopCharacters(query: string | null, page: number) {
     .from(characters)
     .where(sql`levenshtein(${characters.name}, ${query}) <= 3`)
     .limit(CHARACTERS_PER_PAGE)
-    .offset(page * CHARACTERS_PER_PAGE)
+    .offset((page - 1) * CHARACTERS_PER_PAGE)
     .execute()
     .catch(logErr("Error fetching top characters:"));
 }
