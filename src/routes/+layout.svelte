@@ -23,11 +23,6 @@
       <Compass size={20} />
       Discover
     </NavLink>
-
-    <NavLink href="/create">
-      <Brush size={20} />
-      Create
-    </NavLink>
   </nav>
 
   <div class="flex items-center gap-2">    
@@ -37,6 +32,11 @@
       </p>
     {:then user}
       {#if user}
+        <NavLink href="/create">
+          Create
+          <Brush size={20} />
+        </NavLink>
+
         <NavLink href="/chats">
           My Chats
           <MessageCircleMore size={20} />
@@ -50,7 +50,7 @@
           {/if}
         </button>
 
-        <div popover id="profile" class="absolute left-auto mr-5 mt-12 rounded-lg border-fg/10 border-2 bg-bg-alt text-fg p-3">
+        <div popover id="profile" class="fixed left-auto mr-5 mt-12 rounded-lg border-fg/10 border-2 bg-bg-alt text-fg p-3">
           testing popover
         </div>
       {:else}
