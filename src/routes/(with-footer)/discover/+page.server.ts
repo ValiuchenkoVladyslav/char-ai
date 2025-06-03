@@ -3,15 +3,23 @@ import { logErr } from "$lib/utils";
 import { sql } from "drizzle-orm";
 import { CHARACTERS_PER_PAGE } from "./shared";
 
+const getTopCharactersError = logErr("Error fetching top characters:");
+
 function getTopCharacters(query: string | null, page: number) {
-  return db
+  const dbQuery = db
     .select()
     .from(characters)
-    .where(sql`levenshtein(${characters.name}, ${query}) <= 3`)
     .limit(CHARACTERS_PER_PAGE)
-    .offset((page - 1) * CHARACTERS_PER_PAGE)
-    .execute()
-    .catch(logErr("Error fetching top characters:"));
+    .offset((page - 1) * CHARACTERS_PER_PAGE);
+
+  if (query && query.trim().length > 0) {
+    return dbQuery
+      .where(sql`levenshtein(${characters.name}, ${query}) <= 3`)
+      .execute()
+      .catch(getTopCharactersError);
+  }
+
+  return dbQuery.execute().catch(getTopCharactersError);
 }
 
 export async function load({ url }) {
