@@ -3,9 +3,9 @@
 </script>
 
 <div class="flex justify-center gap-6 mt-8 md:mt-16">
-  <section class="w-[min(400px,100%)] *:w-[min(400px,100%)]">
+  <main class="w-[min(400px,100%)] *:w-[min(400px,100%)]">
     {@render children()}
-  </section>
+  </main>
 
   <aside class="hidden md:block">
     <h1 class="text-4xl font-bold">Welcome to our App</h1>
