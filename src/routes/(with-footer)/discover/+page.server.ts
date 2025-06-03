@@ -1,15 +1,24 @@
+import { characters, db } from "$lib/server/db";
+import { sql } from "drizzle-orm";
 import { CHARACTERS_PER_PAGE } from "./shared";
 
-async function getTopCharacters(search: string | null, page: number) {
-  return Array.from({ length: CHARACTERS_PER_PAGE }, (_, i) => i);
+async function getTopCharacters(query: string | null, page: number) {
+  const topCharacters = await db
+    .select()
+    .from(characters)
+    .where(sql`levenshtein(${characters.name}, ${query}) <= 3`)
+    .limit(CHARACTERS_PER_PAGE)
+    .offset(page * CHARACTERS_PER_PAGE)
+    .execute();
+
+  return topCharacters;
 }
 
 export async function load({ url }) {
-  const search = url.searchParams.get("q");
-  // "1" handles missing sp, 1 handles NaN result (invalid sp)
+  const query = url.searchParams.get("q");
   const page = Number.parseInt(url.searchParams.get("p") || "1", 10) || 1;
 
   return {
-    topCharacters: getTopCharacters(search, page),
+    topCharacters: getTopCharacters(query, page),
   };
 }
