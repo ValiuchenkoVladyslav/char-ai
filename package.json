@@ -39,7 +39,7 @@
     "@vercel/functions": "^2.1.0",
     "drizzle-orm": "^0.44.1",
     "jose": "^6.0.11",
-    "lucide-svelte": "^0.511.0",
+    "lucide-svelte": "^0.515.0",
     "svelte": "^5.33.18",
     "zod": "^3.25.48"
   }
