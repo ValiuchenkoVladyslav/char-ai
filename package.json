@@ -8,9 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@orpc/client": "^1.6.8",
+    "@orpc/server": "^1.6.8",
+    "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.5"
+    "swr": "^2.3.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.1",
