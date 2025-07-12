@@ -1,1 +1,68 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark *));
+
+@layer theme {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: light-dark(oklch(1 0 0), oklch(.2 0 0));
+  --color-bg-alt: light-dark(oklch(.94 0 0), oklch(.16 0 0));
+  --color-fg: light-dark(oklch(0 0 0), oklch(.96 0 0));
+  --color-active: color-mix(in oklch, var(--color-fg), var(--color-bg) 86%);
+
+  --spacing-header: .64rem 1rem;
+}
+
+@layer base {
+  * {
+    @apply border-fg/20;
+  }
+
+  /* headings */
+  h1 {
+    @apply text-2xl font-bold;
+  }
+
+  h2 {
+    @apply text-xl font-semibold;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+
+  /* button fix */
+  button {
+    @apply cursor-pointer;
+  }
+
+  /* custom scrollbar on pc */
+  @media (hover: hover) and (pointer: fine) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-fg) transparent;
+    }
+  }
+}
+
+@layer components {
+  .btn {
+    @apply flex gap-2 items-center justify-center rounded-md font-semibold py-1.5 px-2;
+  }
+
+  .input {
+    @apply focus:outline-none py-2 px-3 rounded-md;
+  }
+
+  .card {
+    @apply p-4 border flex flex-col gap-4 rounded-lg;
+  }
+}

@@ -8,10 +8,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
-    <html lang="en">
-      <body>
-        {props.children}
-      </body>
+    <html lang="en" className="dark">
+      <head>
+        <script src="apply-theme.js" defer />
+      </head>
+      <body className="bg-bg text-fg">{props.children}</body>
     </html>
   );
 }
