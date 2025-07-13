@@ -1,6 +1,7 @@
 "use client";
 
 import { MoonStar, Sun } from "lucide-react";
+import { MenuBtn } from "~/components/menu";
 
 function switchTheme() {
   const theme = localStorage.getItem("theme") ?? "dark";
@@ -17,13 +18,11 @@ function switchTheme() {
 
 export function ThemeSwitch() {
   return (
-    <button
-      type="button"
-      className="rounded-lg p-1.5 duration-200 hover:bg-active"
-      onClick={switchTheme}
-    >
-      <MoonStar className="not-dark:hidden" />
-      <Sun className="dark:hidden" />
-    </button>
+    <MenuBtn onClick={switchTheme}>
+      <MoonStar className="not-dark:hidden w-5" />
+      <Sun className="dark:hidden w-5" />
+
+      <h4>Theme</h4>
+    </MenuBtn>
   );
 }
