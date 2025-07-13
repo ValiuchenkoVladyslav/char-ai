@@ -1,4 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { ThemeSwitch } from "./_components/theme-switch";
+import Logo from "./favicon.ico";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,11 +13,35 @@ export const metadata: Metadata = {
 
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <script src="apply-theme.js" defer />
       </head>
-      <body className="bg-bg text-fg">{props.children}</body>
+      <body className="bg-bg text-fg">
+        <header className="p-base sticky top-0 bg-bg flex justify-between items-center">
+          <section className="flex items-center gap-4">
+            <Link href="/" className="flex gap-2 items-center">
+              <Image src={Logo} alt="Logo" width={32} height={32} />
+              <h3>CharAi</h3>
+            </Link>
+
+            <nav className="flex gap-3">
+              <Link href="/explore">Explore</Link>
+            </nav>
+          </section>
+
+          <section>
+            <ThemeSwitch />
+            {/* profile menu */}
+          </section>
+        </header>
+
+        <main className="h-[5000px] p-base">{props.children}</main>
+
+        <footer className="p-base">
+          <p>todo footer</p>
+        </footer>
+      </body>
     </html>
   );
 }
