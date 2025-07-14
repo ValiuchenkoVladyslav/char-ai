@@ -4,6 +4,7 @@
     "bun.lock": true,
     ".next/": true,
     "next-env.d.ts": true,
-    ".vercel/": true
+    ".vercel/": true,
+    ".drizzle/": true
   }
 }
