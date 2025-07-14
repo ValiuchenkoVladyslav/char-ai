@@ -17,7 +17,7 @@ export default function RootLayout(props: WithChildren) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <script src="apply-theme.js" defer />
+        <script src="/apply-theme.js" defer />
       </head>
       <body className="bg-bg text-fg min-h-screen flex flex-col">
         <header className="p-base sticky top-0 bg-bg flex justify-between items-center">
