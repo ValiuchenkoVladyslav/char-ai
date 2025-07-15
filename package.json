@@ -13,8 +13,6 @@
   "dependencies": {
     "@ai-sdk/google": "^2.0.0-beta.8",
     "@ai-sdk/react": "^2.0.0-beta.15",
-    "@orpc/client": "^1.6.8",
-    "@orpc/server": "^1.6.8",
     "@szhsin/react-menu": "^4.4.1",
     "@upstash/redis": "^1.35.1",
     "@vercel/postgres": "^0.10.0",
@@ -25,8 +23,7 @@
     "metaphone": "^2.0.1",
     "next": "15.3.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "swr": "^2.3.4"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.1",
