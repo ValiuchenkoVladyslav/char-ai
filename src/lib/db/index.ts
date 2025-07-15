@@ -1,12 +1,18 @@
+import "server-only";
+
+import { Redis } from "@upstash/redis";
 import { createPool } from "@vercel/postgres";
 import { drizzle } from "drizzle-orm/vercel-postgres";
-import * as schema from "./schema";
 
 export const db = drizzle({
   client: createPool({
     connectionString: process.env.DB_URL,
   }),
-  schema,
+});
+
+export const redis = new Redis({
+  url: process.env.REDIS_URL,
+  token: process.env.REDIS_TOKEN,
 });
 
 export * from "./schema";

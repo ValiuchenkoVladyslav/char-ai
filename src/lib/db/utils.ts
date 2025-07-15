@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { PgColumn } from "drizzle-orm/pg-core";
 import { ilike, or, sql } from "drizzle-orm/sql";
 import { metaphone } from "metaphone";
