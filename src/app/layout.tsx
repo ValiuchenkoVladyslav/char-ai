@@ -21,19 +21,19 @@ export default function RootLayout(props: WithChildren) {
       </head>
       <body className="bg-bg text-fg min-h-screen flex flex-col">
         <header className="p-base sticky top-0 bg-bg flex justify-between items-center">
-          <section className="flex items-center gap-8">
+          <section className="flex items-center gap-4 sm:gap-8">
             <Link href="/" className="flex gap-2 items-center">
               <Image src={Logo} alt="Logo" width={32} height={32} />
-              <h3>CharAi</h3>
+              <h3 className="not-sm:hidden">CharAi</h3>
             </Link>
 
             <nav className="flex gap-4">
               <Link href="/explore" className="flex items-center gap-2 text-lg">
-                <Compass className="w-6" />
+                <Compass className="w-5" />
                 Explore
               </Link>
               <Link href="/create" className="flex items-center gap-2 text-lg">
-                <Brush className="w-6" />
+                <Brush className="w-5" />
                 Create
               </Link>
             </nav>

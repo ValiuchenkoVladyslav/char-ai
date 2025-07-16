@@ -1,7 +1,7 @@
 "use client";
 
 import { MoonStar, Sun } from "lucide-react";
-import { MenuBtn } from "~/components/menu";
+import { MenuBtn } from "~/shared/components/menu";
 
 function switchTheme() {
   const theme = localStorage.getItem("theme") ?? "dark";

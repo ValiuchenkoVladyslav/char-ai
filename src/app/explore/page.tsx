@@ -1,6 +1,7 @@
 import { count } from "drizzle-orm/sql";
-import { character, db } from "~/db";
-import { getPhonetics, samePhonetics } from "~/db/utils";
+import { characterTable } from "~/modules/character/lib/table";
+import { getPhonetics, samePhonetics } from "~/modules/character/lib/utils";
+import { db } from "~/shared/lib/db";
 import { Pagination } from "./_components/pagination";
 
 const ITEMS_PER_PAGE = 28;
@@ -10,18 +11,18 @@ async function getCharacters(page: number, phonetics: string) {
 
   const baseQuery = db
     .select({
-      name: character.name,
-      description: character.description,
-      image: character.image,
-      likesCount: character.likesCount,
+      name: characterTable.name,
+      description: characterTable.description,
+      image: characterTable.image,
+      likesCount: characterTable.likesCount,
     })
-    .from(character)
+    .from(characterTable)
     .limit(ITEMS_PER_PAGE)
     .offset((page - 1) * ITEMS_PER_PAGE);
 
   if (phonetics.length > 0) {
     return await baseQuery
-      .where(samePhonetics(character.phonetics, phonetics))
+      .where(samePhonetics(characterTable.phonetics, phonetics))
       .execute();
   }
 
@@ -33,8 +34,8 @@ async function getCharactersCount(phonetics: string) {
 
   const res = await db
     .select({ count: count() })
-    .from(character)
-    .where(samePhonetics(character.phonetics, phonetics))
+    .from(characterTable)
+    .where(samePhonetics(characterTable.phonetics, phonetics))
     .execute()
     .then((res) => res.at(0)?.count ?? 0);
 
@@ -50,7 +51,7 @@ interface ExplorePageProps {
   }>;
 }
 
-export default async function Page(props: ExplorePageProps) {
+export default async function ExplorePage(props: ExplorePageProps) {
   const { page, q } = await props.searchParams;
 
   const pageInt = Math.max(Number(page) || 1, 1);

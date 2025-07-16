@@ -1,12 +1,12 @@
 import { Search } from "lucide-react";
 import Form from "next/form";
 
-export default function Layout(props: WithChildren) {
+export default function ExploreLayout(props: WithChildren) {
   return (
     <div>
       <Form
         action="/explore"
-        className="fixed left-1/2 -translate-x-1/2 top-0 m-base flex items-center bg-bg-alt rounded-lg"
+        className="fixed left-1/2 -translate-x-1/2 top-0 m-base flex items-center bg-active rounded-lg"
       >
         <input
           name="q"

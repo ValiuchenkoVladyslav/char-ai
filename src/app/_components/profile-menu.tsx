@@ -1,7 +1,7 @@
 import { LogOut } from "lucide-react";
 import Image from "next/image";
 
-import { Menu, MenuItem, MenuSeparator } from "~/components/menu";
+import { Menu, MenuItem, MenuSeparator } from "~/shared/components/menu";
 import { ThemeSwitch } from "./theme-switch";
 
 function ProfileMenuTrigger() {
