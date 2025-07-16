@@ -23,11 +23,13 @@
     "metaphone": "^2.0.1",
     "next": "15.3.5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.1",
     "@tailwindcss/postcss": "^4",
+    "@types/google.accounts": "^0.0.17",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
