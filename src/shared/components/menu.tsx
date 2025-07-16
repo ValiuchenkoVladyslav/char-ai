@@ -1,11 +1,13 @@
 import { Menu as _Menu, MenuItem as _MenuItem } from "@szhsin/react-menu";
 
-export interface MenuProps
-  extends Omit<PropsOf<typeof _Menu>, "menuClassName" | "menuButton"> {
-  trigger: React.ComponentProps<typeof _Menu>["menuButton"];
+namespace Menu {
+  export interface Props
+    extends Omit<PropsOf<typeof _Menu>, "menuClassName" | "menuButton"> {
+    trigger: React.ComponentProps<typeof _Menu>["menuButton"];
+  }
 }
 
-export function Menu({ className, trigger, ...props }: MenuProps) {
+export function Menu({ className, trigger, ...props }: Menu.Props) {
   return (
     <_Menu
       menuClassName={`menu ${className}`}

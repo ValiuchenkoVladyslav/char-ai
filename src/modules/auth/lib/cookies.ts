@@ -1,37 +1,22 @@
 import "server-only";
 
 import { SignJWT } from "jose/jwt/sign";
-import { jwtVerify } from "jose/jwt/verify";
-import { importPKCS8, importSPKI } from "jose/key/import";
-
-import type { cookies } from "next/headers";
-
-type Cookies = Awaited<ReturnType<typeof cookies>>;
-
-/** jwt secret encryption algorithm */
-const JWT_ALG = "RS256";
+import { encodeKey, JWT_ALG, verifyJWT } from "~/shared/lib/jwt";
+import type { Cookies } from "~/shared/lib/utils";
 
 /** 3 days (60 * 60 * 24 * 3) */
 const JWT_EXPIRY_SECONDS = 259200 as const;
 
 const AUTH_COOKIE = "Authorization";
 
-/** fix key after env file */
-function fixKey(key: string) {
-  return key.replaceAll("\\n", "\n");
-}
-
 export async function setAuthCookie(cookies: Cookies, userId: number) {
-  const encodeKey = await importPKCS8(
-    fixKey(process.env.JWT_SECRET_ENCODE),
-    JWT_ALG,
-  );
+  const key = await encodeKey();
 
   const jwt = await new SignJWT()
     .setExpirationTime(`${JWT_EXPIRY_SECONDS}s`)
     .setProtectedHeader({ alg: JWT_ALG })
     .setSubject(String(userId))
-    .sign(encodeKey);
+    .sign(key);
 
   cookies.set({
     name: AUTH_COOKIE,
@@ -55,22 +40,11 @@ export function getToken(cookies: Cookies) {
 
 /** verify jwt token */
 export async function verifyToken(token: string) {
-  const decodeKey = await importSPKI(
-    fixKey(process.env.JWT_SECRET_DECODE),
-    JWT_ALG,
-  );
+  const res = await verifyJWT(token);
 
-  try {
-    const { payload } = await jwtVerify(token, decodeKey, {
-      algorithms: [JWT_ALG],
-    });
+  if (!res || !res.payload.sub) return undefined;
 
-    if (!payload.sub) return undefined;
+  const { sub, ...rest } = res.payload;
 
-    const { sub, ...rest } = payload;
-
-    return { sub: Number(sub), ...rest };
-  } catch {
-    return undefined;
-  }
+  return { sub: Number(sub), ...rest };
 }
