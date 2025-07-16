@@ -1,16 +1,4 @@
 declare global {
-  // === envs (checked in src/instrumentation.ts) ===
-
-  namespace NodeJS {
-    interface ProcessEnv {
-      DB_URL: string;
-      REDIS_URL: string;
-      REDIS_TOKEN: string;
-      JWT_SECRET_ENCODE: string;
-      JWT_SECRET_DECODE: string;
-    }
-  }
-
   // === autocomplete for localStorage ===
 
   interface StorageKVs {
@@ -40,4 +28,4 @@ declare global {
   > = React.ComponentProps<T>;
 }
 
-export {};
+export * from "@types/google.accounts";
