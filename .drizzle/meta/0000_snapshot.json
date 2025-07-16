@@ -1,5 +1,5 @@
 {
-  "id": "a0e52b11-cbb3-463a-b4c0-7146ef7fdaff",
+  "id": "2b3fac61-6564-4ff0-914e-2e75d67c5759",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
@@ -30,7 +30,7 @@
           "name": "description",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "masterPrompt": {
           "name": "masterPrompt",
@@ -40,13 +40,13 @@
         },
         "image": {
           "name": "image",
-          "type": "varchar(255)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "pfp": {
           "name": "pfp",
-          "type": "varchar(255)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -150,7 +150,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
@@ -168,7 +168,7 @@
         },
         "pfp": {
           "name": "pfp",
-          "type": "varchar(255)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -176,32 +176,25 @@
           "name": "email",
           "type": "varchar(32)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "passwordHash": {
           "name": "passwordHash",
-          "type": "varchar(255)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
         "googleId": {
           "name": "googleId",
-          "type": "varchar(255)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "registerMethod": {
-          "name": "registerMethod",
+        "authMethod": {
+          "name": "authMethod",
           "type": "smallint",
           "primaryKey": false,
           "notNull": true
-        },
-        "banned": {
-          "name": "banned",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         },
         "createdAt": {
           "name": "createdAt",
