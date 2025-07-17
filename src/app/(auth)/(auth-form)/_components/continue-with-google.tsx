@@ -17,7 +17,7 @@ export function ContinueWithGoogle() {
       client_id: process.env.NEXT_PUBLIC_OAUTH2_CLIENT_ID,
       scope: "openid email profile",
       async callback(tokenRes) {
-        const res = await handleOauth2(tokenRes.access_token);
+        const res = await handleOauth2(tokenRes.access_token, "/google");
 
         if (res.success) {
           setAuth(res.data);

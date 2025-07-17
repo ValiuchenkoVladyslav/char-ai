@@ -13,7 +13,8 @@ import { err, succ } from "~/shared/lib/utils";
 
 import { type GoogleUserInfo, setGoogleDataCookie } from "../lib/google";
 
-export async function handleOauth2(token: string) {
+/** handle google oauth2 token. if user does not exist, redirect to `usernameRequestPath` */
+export async function handleOauth2(token: string, usernameRequestPath: string) {
   let userInfoRes: Response;
   try {
     userInfoRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
@@ -48,7 +49,7 @@ export async function handleOauth2(token: string) {
 
   if (!existingUser) {
     await setGoogleDataCookie(cookieStore, userInfo);
-    redirect("/google");
+    redirect(usernameRequestPath);
   }
 
   if (existingUser.authMethod === AuthMethod.EmailAndPassword) {
