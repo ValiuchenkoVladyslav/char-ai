@@ -19,7 +19,7 @@ jobs:
       # install bun
       - uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.2.17
+          bun-version-file: package.json
 
       - name: Install bun dependencies
         run: bun install
