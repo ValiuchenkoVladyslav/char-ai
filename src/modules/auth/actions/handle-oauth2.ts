@@ -11,7 +11,7 @@ import { AuthMethod, getUserByEmail, userTable } from "~/modules/user/server";
 import { db } from "~/shared/lib/db";
 import { type ApiResponse, err, succ } from "~/shared/lib/utils";
 
-import { type GoogleUserInfo, setGoogleDataCookie } from "./google-data";
+import { type GoogleUserInfo, setGoogleDataCookie } from "../lib/google";
 
 export async function handleOauth2(
   token: string,

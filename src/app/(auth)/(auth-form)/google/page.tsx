@@ -2,12 +2,12 @@
 
 import { LoaderCircle, LogIn } from "lucide-react";
 import { useActionState } from "react";
-import { createUser, useAuthSuccess } from "~/modules/auth/client";
+import { createUserOAuth2, useAuthSuccess } from "~/modules/auth/client";
 import { Form } from "~/shared/components/form";
 import { UsernameInput } from "../_components/username-input";
 
 export default function CreateGoogleUserPage() {
-  const [res, action, pending] = useActionState(createUser, null);
+  const [res, action, pending] = useActionState(createUserOAuth2, null);
   useAuthSuccess(res?.data);
 
   return (

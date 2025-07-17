@@ -14,9 +14,9 @@ import {
   deleteGoogleDataCookie,
   getGoogleDataToken,
   verifyGoogleDataToken,
-} from "./google-data";
+} from "../lib/google";
 
-export async function createUser(
+export async function createUserOAuth2(
   _: unknown,
   formData: FormData,
 ): Promise<ApiResponse<AuthData, null> | ApiResponse<null, string>> {
