@@ -3,13 +3,8 @@
 import { LogIn, LogOut, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { use, useLayoutEffect } from "react";
-import {
-  type AuthData,
-  setAuth,
-  signOut,
-  useAuth,
-} from "~/modules/auth/client";
+import { useLayoutEffect } from "react";
+import { getMe, signOut, useAuth } from "~/modules/auth/client";
 import { Menu, MenuItem, MenuSeparator } from "~/shared/components/menu";
 import { ThemeSwitch } from "./theme-switch";
 
@@ -33,8 +28,27 @@ function UserProfileMenuTrigger() {
   );
 }
 
-function UserProfileMenu() {
-  const [, setAuth] = useAuth();
+function LoginButton() {
+  return (
+    <Link
+      href="/sign-in"
+      className="flex items-center justify-center rounded-full h-[32px] w-[32px] hover:bg-active"
+    >
+      <LogIn className="w-6" />
+    </Link>
+  );
+}
+
+export function ProfileMenu() {
+  const [me, setAuth] = useAuth();
+
+  useLayoutEffect(() => {
+    getMe().then(setAuth);
+  }, [setAuth]);
+
+  if (!me) {
+    return <LoginButton />;
+  }
 
   return (
     <Menu trigger={UserProfileMenuTrigger} align="end" gap={4} className="w-48">
@@ -60,33 +74,4 @@ function UserProfileMenu() {
       </button>
     </Menu>
   );
-}
-
-function LoginButton() {
-  return (
-    <Link
-      href="/sign-in"
-      className="flex items-center justify-center rounded-full h-[32px] w-[32px] hover:bg-active"
-    >
-      <LogIn className="w-6" />
-    </Link>
-  );
-}
-
-namespace ProfileMenu {
-  export interface Props {
-    user: Promise<AuthData | null>;
-  }
-}
-
-export function ProfileMenu({ user }: ProfileMenu.Props) {
-  const me = use(user);
-
-  useLayoutEffect(() => setAuth(me), [me]);
-
-  if (!me) {
-    return <LoginButton />;
-  }
-
-  return <UserProfileMenu />;
 }
