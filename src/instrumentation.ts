@@ -5,6 +5,7 @@ const requiredEnvs = [
   "JWT_SECRET_ENCODE",
   "JWT_SECRET_DECODE",
   "NEXT_PUBLIC_OAUTH2_CLIENT_ID",
+  "RESEND_KEY",
 ] as const;
 
 declare global {
