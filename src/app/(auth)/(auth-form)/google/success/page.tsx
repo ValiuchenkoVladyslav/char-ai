@@ -12,5 +12,5 @@ export default function SuccessPage() {
     if (user === null) router.push("/sign-in");
   }, [user, router]);
 
-  return <div className="p-base rounded-lg bg-bg-alt">success page!</div>;
+  return <h3>Welcome to Char Ai!</h3>;
 }
