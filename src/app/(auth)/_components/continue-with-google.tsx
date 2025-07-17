@@ -30,7 +30,7 @@ export function ContinueWithGoogle() {
   return (
     <NavLink
       href="/google"
-      className="font-bold hover:bg-active w-8 rounded-md flex items-center justify-center"
+      className="font-bold hover:bg-active aria-[current=page]:bg-active h-full aspect-square rounded-md flex items-center justify-center"
       onClick={(evt) => {
         evt.preventDefault();
         tokenClient?.requestAccessToken();
