@@ -1,3 +1,5 @@
+import "server-only";
+
 import { after } from "next/server";
 
 export function sendEmail(
