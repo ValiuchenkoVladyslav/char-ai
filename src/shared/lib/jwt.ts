@@ -1,5 +1,6 @@
 import "server-only";
 
+import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
 import { importPKCS8, importSPKI } from "jose/key/import";
 
@@ -16,6 +17,16 @@ export function encodeKey() {
 
 export function decodeKey() {
   return importSPKI(fixKey(process.env.JWT_SECRET_DECODE), JWT_ALG);
+}
+
+export async function signJWT(expiry: string, subject: string) {
+  const key = await encodeKey();
+
+  return new SignJWT()
+    .setProtectedHeader({ alg: JWT_ALG })
+    .setExpirationTime(expiry)
+    .setSubject(subject)
+    .sign(key);
 }
 
 export async function verifyJWT(token: string) {
