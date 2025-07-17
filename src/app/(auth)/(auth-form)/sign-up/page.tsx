@@ -13,7 +13,7 @@ import { PasswordInput } from "../_components/password-input";
 import { UsernameInput } from "../_components/username-input";
 
 const SUCCESS_PATH = "/sign-up/email-sent";
-const MAGIC_LINK_PATH = "/sign-up/confirm";
+const MAGIC_LINK_PATH = "/sign-up/success";
 
 export default function SignUpPage() {
   const [res, action, pending] = useActionState(
