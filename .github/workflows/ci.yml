@@ -29,3 +29,6 @@ jobs:
 
       - name: Check compile
         run: bun run build
+        env:
+          # required by drizzle
+          DB_URL: ${{ secrets.DB_URL }}
