@@ -5,17 +5,15 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
 
-import { type AuthData, setAuthCookie } from "~/modules/auth/server";
+import { setAuthCookie } from "~/modules/auth/server";
 import { AuthMethod, getUserByEmail, userTable } from "~/modules/user/server";
 
 import { db } from "~/shared/lib/db";
-import { type ApiResponse, err, succ } from "~/shared/lib/utils";
+import { err, succ } from "~/shared/lib/utils";
 
 import { type GoogleUserInfo, setGoogleDataCookie } from "../lib/google";
 
-export async function handleOauth2(
-  token: string,
-): Promise<ApiResponse<AuthData, null> | ApiResponse<null, string>> {
+export async function handleOauth2(token: string) {
   let userInfoRes: Response;
   try {
     userInfoRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {

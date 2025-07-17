@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { type AuthData, setAuthCookie } from "~/modules/auth/server";
+import { setAuthCookie } from "~/modules/auth/server";
 import {
   AuthMethod,
   getUserByUsername,
@@ -9,17 +9,14 @@ import {
   userTable,
 } from "~/modules/user/server";
 import { db } from "~/shared/lib/db";
-import { type ApiResponse, err, succ } from "~/shared/lib/utils";
+import { err, succ } from "~/shared/lib/utils";
 import {
   deleteGoogleDataCookie,
   getGoogleDataToken,
   verifyGoogleDataToken,
 } from "../lib/google";
 
-export async function createUserOAuth2(
-  _: unknown,
-  formData: FormData,
-): Promise<ApiResponse<AuthData, null> | ApiResponse<null, string>> {
+export async function createUserOAuth2(_: unknown, formData: FormData) {
   const res = usernameSchema.safeParse(formData.get("username"));
   if (res.error) {
     return err(res.error.message);
