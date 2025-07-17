@@ -1,8 +1,8 @@
 import "server-only";
 
 import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import { characterTable } from "~/modules/character/server";
-import { userTable } from "~/modules/user/server";
+import { characterTable } from "~/modules/character/lib/table";
+import { userTable } from "~/modules/user/lib/table";
 
 export { userTable };
 export { characterTable };

@@ -1,0 +1,1 @@
+ALTER TABLE "Character" ALTER COLUMN "phonetics" SET NOT NULL;
