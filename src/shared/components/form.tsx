@@ -19,6 +19,7 @@ const FormContext = createContext<Form.Context>({
 
 function _Form({ onSubmit, ...props }: Form.Props) {
   const blockers = useRef(new Set<() => boolean>());
+  const form = useRef<HTMLFormElement>(null);
 
   function addBlocker(fn: () => boolean) {
     blockers.current.add(fn);
@@ -38,14 +39,30 @@ function _Form({ onSubmit, ...props }: Form.Props) {
     onSubmit?.(evt);
   }
 
+  useEffect(() => {
+    function watchReset(e: Event) {
+      e.preventDefault();
+    }
+
+    const formElem = form.current;
+    formElem?.addEventListener("reset", watchReset);
+
+    return () => {
+      formElem?.removeEventListener("reset", watchReset);
+    };
+  }, []);
+
   return (
     <FormContext value={{ addBlocker, removeBlocker }}>
-      <NextForm {...props} onSubmit={handleSubmit} />
+      <NextForm {...props} ref={form} onSubmit={handleSubmit} />
     </FormContext>
   );
 }
 
-/** form that can be blocked via `usePreventSubmit` */
+/**
+ * form that can be blocked via `usePreventSubmit`
+ * also prevents reset on submit
+ */
 export function Form(props: Form.Props) {
   return <_Form {...props} />;
 }
