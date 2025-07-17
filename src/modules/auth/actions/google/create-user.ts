@@ -1,14 +1,13 @@
 "use server";
 
 import { cookies } from "next/headers";
-import type { Auth } from "~/modules/auth/hooks/use-auth";
-import { setAuthCookie } from "~/modules/auth/lib/cookies";
+import { type AuthData, setAuthCookie } from "~/modules/auth/server";
 import {
   AuthMethod,
   getUserByUsername,
   usernameSchema,
   userTable,
-} from "~/modules/user";
+} from "~/modules/user/server";
 import { db } from "~/shared/lib/db";
 import { type ApiResponse, err, succ } from "~/shared/lib/utils";
 import {
@@ -20,7 +19,7 @@ import {
 export async function createUser(
   _: unknown,
   formData: FormData,
-): Promise<ApiResponse<Auth, null> | ApiResponse<null, string>> {
+): Promise<ApiResponse<AuthData, null> | ApiResponse<null, string>> {
   const res = usernameSchema.safeParse(formData.get("username"));
   if (res.error) {
     return err(res.error.message);

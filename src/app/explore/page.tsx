@@ -1,6 +1,9 @@
 import { count } from "drizzle-orm/sql";
-import { characterTable } from "~/modules/character/lib/table";
-import { getPhonetics, samePhonetics } from "~/modules/character/lib/utils";
+import {
+  characterTable,
+  getPhonetics,
+  samePhonetics,
+} from "~/modules/character/server";
 import { db } from "~/shared/lib/db";
 import { Pagination } from "./_components/pagination";
 

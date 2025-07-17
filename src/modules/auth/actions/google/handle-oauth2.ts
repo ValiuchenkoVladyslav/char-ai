@@ -4,9 +4,10 @@ import { eq } from "drizzle-orm/sql";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
-import type { Auth } from "~/modules/auth/hooks/use-auth";
-import { setAuthCookie } from "~/modules/auth/lib/cookies";
-import { AuthMethod, getUserByEmail, userTable } from "~/modules/user";
+
+import { type AuthData, setAuthCookie } from "~/modules/auth/server";
+import { AuthMethod, getUserByEmail, userTable } from "~/modules/user/server";
+
 import { db } from "~/shared/lib/db";
 import { type ApiResponse, err, succ } from "~/shared/lib/utils";
 
@@ -14,7 +15,7 @@ import { type GoogleUserInfo, setGoogleDataCookie } from "./google-data";
 
 export async function handleOauth2(
   token: string,
-): Promise<ApiResponse<Auth, null> | ApiResponse<null, string>> {
+): Promise<ApiResponse<AuthData, null> | ApiResponse<null, string>> {
   let userInfoRes: Response;
   try {
     userInfoRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {

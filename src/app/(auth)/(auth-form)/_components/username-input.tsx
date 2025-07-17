@@ -2,8 +2,7 @@
 
 import { LoaderCircle } from "lucide-react";
 import { useRef, useState } from "react";
-import { isUsernameTaken } from "~/modules/user/actions/is-username-taken";
-import { usernameBounds } from "~/modules/user/lib/base";
+import { isUsernameTaken, usernameBounds } from "~/modules/user/client";
 import { usePreventSubmit } from "~/shared/components/form";
 import { Input } from "~/shared/components/input";
 

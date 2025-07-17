@@ -2,8 +2,7 @@
 
 import { LoaderCircle, LogIn } from "lucide-react";
 import { useActionState } from "react";
-import { createUser } from "~/modules/auth/actions/google/create-user";
-import { useAuthSuccess } from "~/modules/auth/hooks/use-auth-success";
+import { createUser, useAuthSuccess } from "~/modules/auth/client";
 import { Form } from "~/shared/components/form";
 import { UsernameInput } from "../_components/username-input";
 
