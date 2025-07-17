@@ -68,7 +68,7 @@
   }
 
   .menu {
-    @apply bg-bg-alt rounded-lg py-2 px-3;
+    @apply bg-bg-alt rounded-lg py-2 px-3 border-1;
   }
 
   .menu-item {

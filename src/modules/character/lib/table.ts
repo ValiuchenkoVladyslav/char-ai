@@ -1,3 +1,5 @@
+import "server-only";
+
 import {
   integer,
   pgTable,
@@ -5,7 +7,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { userTable } from "~/modules/user/lib/table";
+import { userTable } from "~/modules/user/server";
 import { descriptionBounds, masterPromptBounds, nameBounds } from "./base";
 
 export const characterTable = pgTable("Character", {
