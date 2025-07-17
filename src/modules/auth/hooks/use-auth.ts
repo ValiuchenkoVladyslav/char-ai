@@ -1,23 +1,17 @@
 import { useSyncExternalStore } from "react";
+import type { AuthData } from "../lib/base";
 
-// todo
-export interface Auth {
-  userId: number;
-  username: string;
-  email: string;
-}
-
-type AuthState = Auth | null;
+type AuthState = AuthData | null | undefined;
 type Listener = () => void;
 
-let state: AuthState = null;
+let state: AuthState;
 const listeners = new Set<Listener>();
 
 function getAuth(): AuthState {
   return state;
 }
 
-function setAuth(updater: AuthState | ((prev: AuthState) => AuthState)) {
+export function setAuth(updater: AuthState | ((prev: AuthState) => AuthState)) {
   state = typeof updater === "function" ? updater(state) : updater;
 
   for (const listener of listeners) {

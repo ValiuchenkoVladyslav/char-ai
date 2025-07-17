@@ -2,7 +2,9 @@ import { Brush, Compass } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
+import { getMe } from "~/modules/auth/server";
 import { ProfileMenu } from "./_components/profile-menu";
 import Logo from "./favicon.ico";
 
@@ -14,6 +16,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout(props: WithChildren) {
+  const user = getMe();
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
@@ -39,7 +43,9 @@ export default function RootLayout(props: WithChildren) {
             </nav>
           </section>
 
-          <ProfileMenu />
+          <Suspense>
+            <ProfileMenu user={user} />
+          </Suspense>
         </header>
 
         <main className="p-base">{props.children}</main>
