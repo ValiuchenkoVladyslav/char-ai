@@ -1,6 +1,6 @@
 pre-commit:
   commands:
     lint:
-      glob: "*.{js,cjs,mjs,ts,tsx,json,jsonc}"
+      glob: "*.{js,cjs,mjs,ts,tsx,json,jsonc,css}"
       run: bun biome check --write {staged_files}
       stage_fixed: true
