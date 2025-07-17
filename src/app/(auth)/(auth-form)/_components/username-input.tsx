@@ -32,16 +32,17 @@ export function UsernameInput() {
 
   return (
     <Input
-      label="Username"
-      status={
-        <div className="text-sm font-semibold h-[1lh] flex gap-1 items-center opacity-70">
-          <LoaderCircle
-            className={`animate-spin h-[0.8lh] ${isTaken === null ? "" : "hidden"}`}
-          />
-          {isTaken === null ? "Checking..." : null}
-          {isTaken === true ? (
-            <span className="text-red-600">Username is taken!</span>
-          ) : null}
+      label={
+        <div className="flex items-center gap-2">
+          <span>Username</span>
+
+          <span className="flex gap-0.5 items-center opacity-70">
+            {isTaken === null ? (
+              <LoaderCircle className={`animate-spin h-[0.7lh]`} />
+            ) : isTaken === true ? (
+              <span className="text-red-600">is taken!</span>
+            ) : null}
+          </span>
         </div>
       }
       type="text"

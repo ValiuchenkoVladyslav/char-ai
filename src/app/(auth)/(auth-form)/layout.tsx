@@ -22,7 +22,7 @@ export default function AuthFormLayout(props: WithChildren) {
         <ContinueWithGoogle />
       </nav>
 
-      <div className="bg-bg-alt rounded-lg p-base">{props.children}</div>
+      <div className="bg-bg-alt rounded-lg px-4 py-3">{props.children}</div>
     </>
   );
 }
