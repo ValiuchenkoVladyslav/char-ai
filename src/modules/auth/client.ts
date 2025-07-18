@@ -1,11 +1,11 @@
-export { createUserEmailPass } from "./actions/create-user-email-pass";
-export { createUserOAuth2 } from "./actions/create-user-oauth2";
 export { getMe } from "./actions/get-me";
-export { handleEmailPass } from "./actions/handle-email-pass";
-export { handleOauth2 } from "./actions/handle-oauth2";
+export { createUserOAuth2, handleOauth2 } from "./actions/google-oauth2";
+export { handleSignInForm } from "./actions/sign-in";
 export { signOut } from "./actions/sign-out";
+export { handleSignUpForm, signUpEmailPass } from "./actions/sign-up";
 
 export { setAuth, useAuth } from "./hooks/use-auth";
 
-export * from "./lib/base";
-export * from "./lib/sign-up-schema";
+export type { AuthData } from "./lib/base";
+export { type SignInData, signInSchema } from "./lib/sign-in-schema";
+export { type SignUpData, signUpSchema } from "./lib/sign-up-schema";
