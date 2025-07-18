@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useActionState, useLayoutEffect } from "react";
 
 import { createUserOAuth2, setAuth } from "~/modules/auth/client";
