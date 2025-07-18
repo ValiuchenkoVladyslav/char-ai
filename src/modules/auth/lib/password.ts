@@ -1,5 +1,6 @@
 import "server-only";
 
+import { randomBytes } from "node:crypto";
 import {
   type Algorithm as ArgonAlgorithm,
   type Options as ArgonOptions,
@@ -14,12 +15,9 @@ const hashParams: Omit<ArgonOptions, "salt"> = {
 };
 
 export function hashPassword(password: string) {
-  const salt = new Uint8Array(16);
-  crypto.getRandomValues(salt);
-
   return hashSync(new TextEncoder().encode(password), {
     ...hashParams,
-    salt,
+    salt: randomBytes(16),
   });
 }
 
