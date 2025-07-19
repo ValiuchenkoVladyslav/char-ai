@@ -77,7 +77,7 @@ export async function handleSignInForm(
     data.email,
     "Confirm Sign-In",
     `
-      <a href="https://${host}/${confirmPath}?t=${str}" target="_blank">
+      <a href="https://${host}/${confirmPath}?t=${token}" target="_blank">
         Click here to Sign In
       </a>
       <br/>
