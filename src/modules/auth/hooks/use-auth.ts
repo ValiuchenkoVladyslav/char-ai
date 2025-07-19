@@ -38,23 +38,22 @@ function subscribe(listener: Listener): () => void {
   return () => listeners.delete(listener);
 }
 
-// start fetching during render & on first import
-const reqPromise = typeof window === "undefined" ? null : getMe();
-let stateSettersAttached = false;
+let initial = true;
 
 /** fetch auth or reuse from cache */
 export function useAuth(): AuthState {
   const auth = useSyncExternalStore(subscribe, getAuth, getAuth);
 
-  // attach state setters only after render is complete
   useLayoutEffect(() => {
-    if (!reqPromise || stateSettersAttached) return;
+    if (!initial) return;
 
-    reqPromise.then(setUser).catch((error) => {
-      setAuth({ user: null, error, loading: false });
-    });
+    getMe()
+      .then(setUser)
+      .catch((error) => {
+        setAuth({ user: null, error, loading: false });
+      });
 
-    stateSettersAttached = true;
+    initial = false;
   }, []);
 
   return auth;
