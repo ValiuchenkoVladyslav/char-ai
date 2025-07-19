@@ -13,12 +13,12 @@
 }
 
 @theme inline {
-  --color-bg: light-dark(oklch(1 0 0), oklch(.2 0 0));
-  --color-bg-alt: light-dark(oklch(.94 0 0), oklch(.16 0 0));
-  --color-fg: light-dark(oklch(0 0 0), oklch(.96 0 0));
+  --color-bg: light-dark(oklch(1 0 0), oklch(0.2 0 0));
+  --color-bg-alt: light-dark(oklch(0.94 0 0), oklch(0.16 0 0));
+  --color-fg: light-dark(oklch(0 0 0), oklch(0.96 0 0));
   --color-active: color-mix(in oklch, var(--color-fg), var(--color-bg) 86%);
 
-  --spacing-base: .64rem max(.64rem, 1.2vw);
+  --spacing-base: 0.64rem max(0.64rem, 1.2vw);
 }
 
 @layer base {
