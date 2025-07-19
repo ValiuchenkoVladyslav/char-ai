@@ -15,7 +15,7 @@ export function Input({ label, status, className, ...props }: Input.Props) {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={inputId} className="font-semibold">
-        Username
+        {label}
       </label>
       <input
         id={inputId}

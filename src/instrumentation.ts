@@ -2,9 +2,11 @@ const requiredEnvs = [
   "DB_URL",
   "REDIS_URL",
   "REDIS_TOKEN",
-  "JWT_SECRET_ENCODE",
-  "JWT_SECRET_DECODE",
   "NEXT_PUBLIC_OAUTH2_CLIENT_ID",
+  "RESEND_KEY",
+  "ARGON2_SECRET",
+  "JWK_SIGN",
+  "JWK_ENCRYPT",
 ] as const;
 
 declare global {

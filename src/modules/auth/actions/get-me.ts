@@ -1,11 +1,15 @@
 "use server";
 
 import { eq } from "drizzle-orm/sql";
+
 import { cookies } from "next/headers";
+
+import type { AuthData } from "~/modules/auth/lib/base";
+import { getToken, verifyToken } from "~/modules/auth/lib/cookies";
+
 import { userTable } from "~/modules/user/server";
+
 import { db } from "~/shared/lib/db";
-import type { AuthData } from "../lib/base";
-import { getToken, verifyToken } from "../lib/cookies";
 
 export async function getMe(): Promise<AuthData | null> {
   const cookieStore = await cookies();
@@ -23,15 +27,15 @@ export async function getMe(): Promise<AuthData | null> {
       pfp: userTable.pfp,
     })
     .from(userTable)
-    .where(eq(userTable.id, decoded.sub))
+    .where(eq(userTable.id, decoded))
     .then((res) => res.at(0));
 
   if (!auth) return null;
 
   return {
-    userId: decoded.sub,
+    userId: decoded,
     username: auth.username,
     email: auth.email,
-    pfp: auth.pfp ?? undefined,
+    pfp: auth.pfp,
   };
 }

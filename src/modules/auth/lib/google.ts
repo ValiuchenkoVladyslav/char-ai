@@ -1,7 +1,6 @@
 import "server-only";
 
-import { SignJWT } from "jose/jwt/sign";
-import { encodeKey, JWT_ALG, verifyJWT } from "~/shared/lib/jwt";
+import { signJWT, verifyJWT } from "~/shared/lib/jwt";
 import type { Cookies } from "~/shared/lib/utils";
 
 // google response example
@@ -22,21 +21,16 @@ export type GoogleUserInfo = {
 };
 
 /** 30 mins (60 * 30) */
-const JWT_EXPIRY_SECONDS = 1800 as const;
+const JWT_EXP_SECS = 1800 as const;
+const JWT_EXP_SECS_STR: `${typeof JWT_EXP_SECS}s` = `1800s`;
 
-export const GOOGLE_DATA_COOKIE = "char-ai-google-data";
+const GOOGLE_DATA_COOKIE = "char-ai-google-data";
 
 export async function setGoogleDataCookie(
   cookies: Cookies,
   googleData: GoogleUserInfo,
 ) {
-  const key = await encodeKey();
-
-  const jwt = await new SignJWT()
-    .setExpirationTime(`${JWT_EXPIRY_SECONDS}s`)
-    .setProtectedHeader({ alg: JWT_ALG })
-    .setSubject(JSON.stringify(googleData))
-    .sign(key);
+  const jwt = await signJWT(JWT_EXP_SECS_STR, JSON.stringify(googleData));
 
   cookies.set({
     name: GOOGLE_DATA_COOKIE,
@@ -45,7 +39,7 @@ export async function setGoogleDataCookie(
     httpOnly: true,
     secure: true,
     sameSite: "lax",
-    maxAge: JWT_EXPIRY_SECONDS,
+    maxAge: JWT_EXP_SECS,
   });
 }
 
@@ -60,7 +54,7 @@ export function getGoogleDataToken(cookies: Cookies) {
 export async function verifyGoogleDataToken(token: string) {
   const res = await verifyJWT(token);
 
-  if (!res || !res.payload.sub) return undefined;
+  if (!res) return undefined;
 
-  return JSON.parse(res.payload.sub) as GoogleUserInfo;
+  return JSON.parse(res) as GoogleUserInfo;
 }

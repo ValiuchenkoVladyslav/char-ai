@@ -1,7 +1,6 @@
 import "server-only";
 
-import { SignJWT } from "jose/jwt/sign";
-import { encodeKey, JWT_ALG, verifyJWT } from "~/shared/lib/jwt";
+import { signJWT, verifyJWT } from "~/shared/lib/jwt";
 import type { Cookies } from "~/shared/lib/utils";
 
 /** 3 days (60 * 60 * 24 * 3) */
@@ -10,13 +9,7 @@ const JWT_EXPIRY_SECONDS = 259200 as const;
 const AUTH_COOKIE = "Authorization";
 
 export async function setAuthCookie(cookies: Cookies, userId: number) {
-  const key = await encodeKey();
-
-  const jwt = await new SignJWT()
-    .setExpirationTime(`${JWT_EXPIRY_SECONDS}s`)
-    .setProtectedHeader({ alg: JWT_ALG })
-    .setSubject(String(userId))
-    .sign(key);
+  const jwt = await signJWT(`${JWT_EXPIRY_SECONDS}s`, String(userId));
 
   cookies.set({
     name: AUTH_COOKIE,
@@ -38,13 +31,14 @@ export function getToken(cookies: Cookies) {
   return cookies.get(AUTH_COOKIE)?.value?.split(" ")[1];
 }
 
-/** verify jwt token */
+/**
+ * verify jwt token
+ * @returns user id if valid
+ */
 export async function verifyToken(token: string) {
   const res = await verifyJWT(token);
 
-  if (!res || !res.payload.sub) return undefined;
+  if (!res) return undefined;
 
-  const { sub, ...rest } = res.payload;
-
-  return { sub: Number(sub), ...rest };
+  return Number(res);
 }

@@ -1,13 +1,14 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Script from "next/script";
-import { handleOauth2, useAuthSuccess } from "~/modules/auth/client";
+import { handleOauth2, setUser } from "~/modules/auth/client";
 import { NavLink } from "~/shared/components/nav-link";
 
 let tokenClient: google.accounts.oauth2.TokenClient | undefined;
 
 export function ContinueWithGoogle() {
-  const authSuccess = useAuthSuccess();
+  const router = useRouter();
 
   // i spent 1.5 hours digging inside some react lib, @types/some-google-shit, reading google docs,
   // debating with gpt hallucination and reading stack overflow to find this solution
@@ -16,9 +17,12 @@ export function ContinueWithGoogle() {
       client_id: process.env.NEXT_PUBLIC_OAUTH2_CLIENT_ID,
       scope: "openid email profile",
       async callback(tokenRes) {
-        const res = await handleOauth2(tokenRes.access_token);
+        const res = await handleOauth2(tokenRes.access_token, "/google");
 
-        authSuccess(res.data);
+        if (res.success) {
+          setUser(res.data);
+          router.push("/google/success");
+        }
       },
     });
   }
@@ -26,7 +30,7 @@ export function ContinueWithGoogle() {
   return (
     <NavLink
       href="/google"
-      className="font-bold hover:bg-active w-8 rounded-md flex items-center justify-center"
+      className="font-bold hover:bg-active aria-[current=page]:bg-active h-full aspect-square rounded-md flex items-center justify-center"
       onClick={(evt) => {
         evt.preventDefault();
         tokenClient?.requestAccessToken();

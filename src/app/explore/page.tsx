@@ -60,7 +60,7 @@ export default async function ExplorePage(props: ExplorePageProps) {
   const pageInt = Math.max(Number(page) || 1, 1);
   const phonetics = typeof q === "string" ? getPhonetics(q) : "";
 
-  const [characters, count] = await Promise.all([
+  const [_characters, count] = await Promise.all([
     getCharacters(pageInt, phonetics),
     getCharactersCount(phonetics),
   ]);
