@@ -127,6 +127,6 @@ export async function signUpEmailPass(token: string) {
     userId: res.id,
     username: data.username,
     email: data.email,
-    pfp: undefined,
+    pfp: null,
   } satisfies AuthData);
 }

@@ -2,5 +2,5 @@ export interface AuthData {
   userId: number;
   username: string;
   email: string;
-  pfp?: string;
+  pfp?: string | null;
 }

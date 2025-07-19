@@ -36,6 +36,6 @@ export async function getMe(): Promise<AuthData | null> {
     userId: decoded,
     username: auth.username,
     email: auth.email,
-    pfp: auth.pfp ?? undefined,
+    pfp: auth.pfp,
   };
 }

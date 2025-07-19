@@ -71,7 +71,7 @@ export async function handleSignInForm(
     JSON.stringify({
       email: data.email,
       userId: selectedUser.userId,
-      pfp: selectedUser.pfp ?? undefined,
+      pfp: selectedUser.pfp,
       username: selectedUser.username,
     } satisfies AuthData),
   );
@@ -113,6 +113,6 @@ export async function signInEmailPass(token: string) {
     userId: data.userId,
     username: data.username,
     email: data.email,
-    pfp: undefined,
+    pfp: data.pfp,
   } satisfies AuthData);
 }
