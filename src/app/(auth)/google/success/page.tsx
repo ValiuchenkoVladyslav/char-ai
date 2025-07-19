@@ -6,7 +6,7 @@ import { useAuth } from "~/modules/auth/client";
 
 export default function SuccessPage() {
   const router = useRouter();
-  const [user] = useAuth();
+  const { user } = useAuth();
 
   useLayoutEffect(() => {
     if (user === null) router.push("/sign-in");
