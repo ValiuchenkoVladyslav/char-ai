@@ -7,7 +7,7 @@ import { setUser, signInEmailPass } from "~/modules/auth/client";
 type Response = Awaited<ReturnType<typeof signInEmailPass>>;
 
 export default function ConfirmSignInPage() {
-  const [res, setRes] = useState<Response | null>(null);
+  const [res, setRes] = useState<Response>();
 
   useLayoutEffect(() => {
     const token = new URL(location.href).searchParams.get("t");
@@ -25,7 +25,12 @@ export default function ConfirmSignInPage() {
   }
 
   if (!res.success) {
-    throw new Error(res.error);
+    return (
+      <div>
+        <h3 className="text-red-500">Error occurred!</h3>
+        <p>{res.error}</p>
+      </div>
+    );
   }
 
   return <h3>Signed-In successfully!</h3>;
