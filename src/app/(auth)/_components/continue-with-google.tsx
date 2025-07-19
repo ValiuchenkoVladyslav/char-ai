@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Script from "next/script";
-import { handleOauth2, setAuth } from "~/modules/auth/client";
+import { handleOauth2, setUser } from "~/modules/auth/client";
 import { NavLink } from "~/shared/components/nav-link";
 
 let tokenClient: google.accounts.oauth2.TokenClient | undefined;
@@ -20,7 +20,7 @@ export function ContinueWithGoogle() {
         const res = await handleOauth2(tokenRes.access_token, "/google");
 
         if (res.success) {
-          setAuth(res.data);
+          setUser(res.data);
           router.push("/google/success");
         }
       },

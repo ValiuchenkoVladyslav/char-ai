@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useState } from "react";
 
-import { setAuth, signInEmailPass } from "~/modules/auth/client";
+import { setUser, signInEmailPass } from "~/modules/auth/client";
 
 type Response = Awaited<ReturnType<typeof signInEmailPass>>;
 
@@ -16,7 +16,7 @@ export default function ConfirmSignInPage() {
 
     signInEmailPass(token).then((res) => {
       setRes(res);
-      if (res.success) setAuth(res.data);
+      if (res.success) setUser(res.data);
     });
   }, []);
 

@@ -3,19 +3,18 @@
 import { LogIn, LogOut, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useLayoutEffect } from "react";
-import { getMe, signOut, useAuth } from "~/modules/auth/client";
+import { setUser, signOut, useAuth } from "~/modules/auth/client";
 import { Menu, MenuItem, MenuSeparator } from "~/shared/components/menu";
 import { ThemeSwitch } from "./theme-switch";
 
 function UserProfileMenuTrigger() {
-  const [auth] = useAuth();
+  const { user } = useAuth();
 
   return (
     <button type="button" className="rounded-full h-[32px] w-[32px]">
-      {auth?.pfp ? (
+      {user?.pfp ? (
         <Image
-          src={auth.pfp}
+          src={user.pfp}
           alt="Profile"
           width={32}
           height={32}
@@ -40,13 +39,9 @@ function LoginButton() {
 }
 
 export function ProfileMenu() {
-  const [me, setAuth] = useAuth();
+  const { user } = useAuth();
 
-  useLayoutEffect(() => {
-    getMe().then(setAuth);
-  }, [setAuth]);
-
-  if (!me) {
+  if (!user) {
     return <LoginButton />;
   }
 
@@ -65,7 +60,7 @@ export function ProfileMenu() {
       <button
         type="button"
         className="w-full"
-        onClick={() => signOut().then(() => setAuth(null))}
+        onClick={() => signOut().then(() => setUser(null))}
       >
         <MenuItem className="text-red-600">
           <LogOut className="w-5" />
