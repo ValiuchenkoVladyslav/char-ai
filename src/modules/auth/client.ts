@@ -5,7 +5,6 @@ export { handleSignInForm, signInEmailPass } from "./actions/sign-in";
 export { signOut } from "./actions/sign-out";
 export { handleSignUpForm, signUpEmailPass } from "./actions/sign-up";
 
-// export { setAuth, useAuth } from "./hooks/use-auth";
 export { setAuth, setUser, useAuth } from "./hooks/use-auth";
 
 export type { AuthData } from "./lib/base";
