@@ -1,81 +1,69 @@
 "use client";
 
 import NextForm from "next/form";
-import { createContext, use, useEffect, useRef } from "react";
+import { createContext, use, useEffect, useState } from "react";
 
 namespace Form {
-  export interface Props extends PropsOf<typeof NextForm> {}
+  export interface Props extends Omit<PropsOf<typeof NextForm>, "ref"> {}
 
   export interface Context {
-    addBlocker: (fn: () => boolean) => void;
-    removeBlocker: (fn: () => boolean) => void;
+    form: HTMLFormElement | null;
   }
 }
 
 const FormContext = createContext<Form.Context>({
-  addBlocker: () => {},
-  removeBlocker: () => {},
+  form: null,
 });
 
-function _Form({ onSubmit, ...props }: Form.Props) {
-  const blockers = useRef(new Set<() => boolean>());
-  const form = useRef<HTMLFormElement>(null);
+/** get form ref */
+export function useForm() {
+  return use(FormContext).form;
+}
 
-  function addBlocker(fn: () => boolean) {
-    blockers.current.add(fn);
-  }
-
-  function removeBlocker(fn: () => boolean) {
-    blockers.current.delete(fn);
-  }
-
-  function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
-    for (const blocker of blockers.current) {
-      if (blocker()) {
-        return evt.preventDefault();
-      }
-    }
-
-    onSubmit?.(evt);
-  }
+/** prevent form submit */
+export function usePreventSubmit(prevent: boolean) {
+  const form = useForm();
 
   useEffect(() => {
-    function watchReset(e: Event) {
-      e.preventDefault();
+    function preventSubmit(evt: Event) {
+      if (!prevent) return;
+
+      evt.preventDefault();
+      evt.stopPropagation();
     }
 
-    const formElem = form.current;
-    formElem?.addEventListener("reset", watchReset);
+    form?.addEventListener("submit", preventSubmit);
 
     return () => {
-      formElem?.removeEventListener("reset", watchReset);
+      form?.removeEventListener("submit", preventSubmit);
     };
-  }, []);
+  }, [prevent, form]);
+}
 
-  return (
-    <FormContext value={{ addBlocker, removeBlocker }}>
-      <NextForm {...props} ref={form} onSubmit={handleSubmit} />
-    </FormContext>
-  );
+function watchReset(evt: Event) {
+  evt.preventDefault();
 }
 
 /**
- * form that can be blocked via `usePreventSubmit`
- * also prevents reset on submit
+ * - prevents reset on submit
+ * - ref is exposed via `useForm`
  */
 export function Form(props: Form.Props) {
-  return <_Form {...props} />;
-}
+  const [form, setForm] = useState<HTMLFormElement | null>(null);
 
-export function usePreventSubmit(preventSubmit: boolean) {
-  const { addBlocker, removeBlocker } = use(FormContext);
-  const fnRef = useRef(() => preventSubmit);
-  fnRef.current = () => preventSubmit;
+  return (
+    <FormContext value={{ form }}>
+      <NextForm
+        {...props}
+        ref={(form) => {
+          setForm(form);
+          form?.addEventListener("reset", watchReset);
 
-  useEffect(() => {
-    const blocker = () => fnRef.current();
-    addBlocker(blocker);
-
-    return () => removeBlocker(blocker);
-  }, [addBlocker, removeBlocker]);
+          return () => {
+            form?.removeEventListener("reset", watchReset);
+          };
+        }}
+      />
+    </FormContext>
+  );
 }
