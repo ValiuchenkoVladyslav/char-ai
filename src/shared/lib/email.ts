@@ -30,7 +30,11 @@ export function sendEmail(
       const res = await req;
 
       if (!res.ok) {
-        console.error("FAILED TO SEND EMAIL:", res.statusText, res.text());
+        console.error(
+          "FAILED TO SEND EMAIL:",
+          res.statusText,
+          await res.text(),
+        );
       }
     } catch (e) {
       console.error("FAILED TO SEND EMAIL:", e);
