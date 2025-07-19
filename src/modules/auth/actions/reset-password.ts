@@ -26,17 +26,15 @@ export async function passwordResetRequest(
   const email = res.data;
 
   const existingUser = await db
-    .update(userTable)
-    .set({ passwordHash: hashPassword(res.data) })
-    .where(eq(userTable.email, email))
-    .returning({
+    .select({
       userId: userTable.id,
       email: userTable.email,
       username: userTable.username,
       pfp: userTable.pfp,
     })
+    .from(userTable)
+    .where(eq(userTable.email, email))
     .then((res) => res.at(0));
-
   if (!existingUser) {
     return err("User not found");
   }
