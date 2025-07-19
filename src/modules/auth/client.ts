@@ -1,6 +1,6 @@
 export { getMe } from "./actions/get-me";
 export { createUserOAuth2, handleOauth2 } from "./actions/google-oauth2";
-export { handleSignInForm } from "./actions/sign-in";
+export { handleSignInForm, signInEmailPass } from "./actions/sign-in";
 export { signOut } from "./actions/sign-out";
 export { handleSignUpForm, signUpEmailPass } from "./actions/sign-up";
 

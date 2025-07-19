@@ -2,33 +2,40 @@
 
 import { eq } from "drizzle-orm/sql";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
+
 import type { AuthData } from "~/modules/auth/lib/base";
+import { setAuthCookie } from "~/modules/auth/lib/cookies";
 import { verifyPassword } from "~/modules/auth/lib/password";
 import { signInSchema } from "~/modules/auth/lib/sign-in-schema";
 
 import { AuthMethod, userTable } from "~/modules/user/server";
 
-import { db } from "~/shared/lib/db";
+import { db, redis } from "~/shared/lib/db";
 import { sendEmail } from "~/shared/lib/email";
-import { signJWT } from "~/shared/lib/jwt";
-import { err, parseFormData } from "~/shared/lib/utils";
+import { decryptJWT, encryptJWT } from "~/shared/lib/jwt";
+import { err, parseFormData, succ } from "~/shared/lib/utils";
 
-/** 1 hour (60 * 60) */
-const JWT_EXPIRY_SECS = `3600s` as const;
+/** 15 mins (60 * 15) */
+const JWT_EXP_SECS = 900 as const;
+const JWT_EXP_SECS_STR: `${typeof JWT_EXP_SECS}s` = `900s`;
 
 /**
  * Handle email and password sign-in form.
+ *
+ * - Sends a confirmation email with a magic link.
+ *
  * @param formData email, password
  * @param successPath path to redirect on success
- * @param magicLinkPath email link path. ?t= param provides JWT encoded user data
+ * @param confirmPath email link path. ?t= param provides JWT encoded user data
  * @returns error or redirects to `successPath`
  */
 export async function handleSignInForm(
   formData: FormData,
   successPath: string,
-  magicLinkPath: string,
+  confirmPath: string,
 ) {
   const { data, error } = parseFormData(formData, signInSchema);
 
@@ -59,9 +66,8 @@ export async function handleSignInForm(
     return err("Invalid email or password.");
   }
 
-  // todo make this an auth token straight up?
-  const jwtEncoded = await signJWT(
-    JWT_EXPIRY_SECS,
+  const jwtEncoded = await encryptJWT(
+    JWT_EXP_SECS_STR,
     JSON.stringify({
       email: data.email,
       userId: selectedUser.userId,
@@ -69,14 +75,13 @@ export async function handleSignInForm(
       username: selectedUser.username,
     } satisfies AuthData),
   );
-  // TODO ban this token in redis until expired so it can't be reused
 
   const host = (await headers()).get("host");
   sendEmail(
     data.email,
     "Confirm Sign-In",
     `
-      <a href="https://${host}/${magicLinkPath}?t=${jwtEncoded}" target="_blank">
+      <a href="https://${host}/${confirmPath}?t=${jwtEncoded}" target="_blank">
         Click here to Sign In
       </a>
       <br/>
@@ -87,6 +92,27 @@ export async function handleSignInForm(
   redirect(successPath);
 }
 
-export async function signInMagicLink(token: string) {
-  // TODO
+export async function signInEmailPass(token: string) {
+  const isUsed = await redis.get<string>(token);
+  if (isUsed) {
+    return err("Sign-in token already used.");
+  }
+
+  const verified = await decryptJWT(token);
+  if (!verified) {
+    return err("Invalid sign-in token.");
+  }
+
+  // ban this token until expired so it can't be reused
+  after(async () => await redis.set(token, "USED", { ex: JWT_EXP_SECS }));
+
+  const data: AuthData = JSON.parse(verified);
+
+  await setAuthCookie(await cookies(), data.userId);
+  return succ({
+    userId: data.userId,
+    username: data.username,
+    email: data.email,
+    pfp: undefined,
+  } satisfies AuthData);
 }
