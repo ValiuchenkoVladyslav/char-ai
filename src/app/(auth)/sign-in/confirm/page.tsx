@@ -3,6 +3,7 @@
 import { useLayoutEffect, useState } from "react";
 
 import { setUser, signInEmailPass } from "~/modules/auth/client";
+import { err } from "~/shared/lib/utils";
 
 type Response = Awaited<ReturnType<typeof signInEmailPass>>;
 
@@ -13,7 +14,7 @@ export default function ConfirmSignInPage() {
     const token = new URL(location.href).searchParams.get("t");
 
     if (!token) {
-      setRes({ success: false, error: "No sign-in token found" });
+      setRes(err("No sign-in token found"));
       return;
     }
 
@@ -23,7 +24,7 @@ export default function ConfirmSignInPage() {
         if (res.success) setUser(res.data);
       })
       .catch((error) => {
-        setRes({ success: false, error: error.message || "Sign-in failed" });
+        setRes(err(error?.message || "Sign-in failed"));
       });
   }, []);
 
