@@ -48,7 +48,7 @@ export function deleteGoogleDataCookie(cookies: Cookies) {
 }
 
 export function getGoogleDataToken(cookies: Cookies) {
-  return cookies.get(GOOGLE_DATA_COOKIE)?.value.split(" ")[1];
+  return cookies.get(GOOGLE_DATA_COOKIE)?.value?.split(" ")[1];
 }
 
 export async function verifyGoogleDataToken(token: string) {
