@@ -111,14 +111,33 @@ export async function createUserOAuth2(_: unknown, formData: FormData) {
     return err("Unknown error occurred, please try to login with Google again");
   }
 
+const token = getGoogleDataToken(cookieStore);
+
+if (!token) {
+  return err("Unknown error occurred, please try to login with Google again");
+}
+
+const userInfo = await verifyGoogleDataToken(token);
+
+if (!userInfo) {
   deleteGoogleDataCookie(cookieStore);
+  return err("Unknown error occurred, please try to login with Google again");
+}
 
-  const userInfo = await verifyGoogleDataToken(token);
+const newUser = await db
+  .insert(userTable)
+  .values({
+    displayName: userInfo.name,
+    authMethod: AuthMethod.GoogleId,
+    username,
+    email: userInfo.email,
+    googleId: userInfo.sub,
+  })
+  .returning({ id: userTable.id })
+  .then((res) => res[0]);
 
-  if (!userInfo) {
-    return err("Unknown error occurred, please try to login with Google again");
-  }
-
+deleteGoogleDataCookie(cookieStore);
+await setAuthCookie(cookieStore, newUser.id);
   const newUser = await db
     .insert(userTable)
     .values({
