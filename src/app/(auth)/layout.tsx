@@ -11,7 +11,7 @@ export default function AuthLayout(props: WithChildren) {
       </aside>
 
       <section className="w-[min(400px,100%)] flex flex-col gap-1">
-        <nav 
+        <nav
           className="rounded-lg bg-bg-alt flex gap-1.5 rounded-lg px-1.5 py-1"
           aria-label="Authentication options"
         >
