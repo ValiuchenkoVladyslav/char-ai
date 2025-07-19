@@ -36,7 +36,7 @@ export default function SignUpPage() {
       <EmailInput />
       <PasswordInput />
 
-      {res?.error ? <p className="text-red-500 py-3">{res.error}</p> : null}
+      {res?.error && <p className="text-red-500 py-3">{res.error}</p>}
 
       <ContinueBtn pending={pending} />
     </Form>

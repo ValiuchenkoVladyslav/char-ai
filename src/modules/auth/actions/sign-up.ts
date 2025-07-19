@@ -1,5 +1,6 @@
 "use server";
 
+import { randomBytes } from "node:crypto";
 import { eq, or } from "drizzle-orm/sql";
 
 import { cookies, headers } from "next/headers";
@@ -18,12 +19,7 @@ import { AuthMethod, userTable } from "~/modules/user/server";
 
 import { db, redis } from "~/shared/lib/db";
 import { sendEmail } from "~/shared/lib/email";
-import { decryptJWT, encryptJWT } from "~/shared/lib/jwt";
 import { err, parseFormData, succ } from "~/shared/lib/utils";
-
-/** 15 mins (60 * 15) */
-const JWT_EXP_SECS = 900 as const;
-const JWT_EXP_SECS_STR: `${typeof JWT_EXP_SECS}s` = `900s`;
 
 /**
  * Handle email and password sign-up form.
@@ -65,14 +61,17 @@ export async function handleSignUpForm(
     );
   }
 
-  const jwtEncoded = await encryptJWT(JWT_EXP_SECS_STR, JSON.stringify(data));
+  const token = randomBytes(24).toString("base64url");
+  after(
+    async () => await redis.set(token, JSON.stringify(data), { ex: 60 * 15 }),
+  );
 
   const host = (await headers()).get("host");
   sendEmail(
     data.email,
     "Confirm Sign-Up",
     `
-      <a href="https://${host}/${confirmPath}?t=${jwtEncoded}" target="_blank">
+      <a href="https://${host}/${confirmPath}?t=${token}" target="_blank">
         Click here to Sign Up
       </a>
       <br/>
@@ -84,20 +83,12 @@ export async function handleSignUpForm(
 }
 
 export async function signUpEmailPass(token: string) {
-  const isUsed = await redis.get<string>(token);
-  if (isUsed) {
-    return err("Sign-up token already used.");
+  const userData = await redis.getdel<string>(token);
+  if (!userData) {
+    return err("Invalid or expired token");
   }
 
-  const verified = await decryptJWT(token);
-  if (!verified) {
-    return err("Invalid sign-up token.");
-  }
-
-  // ban this token until expired so it can't be reused
-  after(async () => await redis.set(token, "USED", { ex: JWT_EXP_SECS }));
-
-  const data: SignUpData = JSON.parse(verified);
+  const data: SignUpData = JSON.parse(userData);
 
   const res = await db
     .insert(userTable)

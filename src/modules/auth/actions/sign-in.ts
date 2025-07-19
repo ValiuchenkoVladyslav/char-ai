@@ -1,5 +1,6 @@
 "use server";
 
+import { randomBytes } from "node:crypto";
 import { eq } from "drizzle-orm/sql";
 
 import { cookies, headers } from "next/headers";
@@ -15,12 +16,7 @@ import { AuthMethod, userTable } from "~/modules/user/server";
 
 import { db, redis } from "~/shared/lib/db";
 import { sendEmail } from "~/shared/lib/email";
-import { decryptJWT, encryptJWT } from "~/shared/lib/jwt";
 import { err, parseFormData, succ } from "~/shared/lib/utils";
-
-/** 15 mins (60 * 15) */
-const JWT_EXP_SECS = 900 as const;
-const JWT_EXP_SECS_STR: `${typeof JWT_EXP_SECS}s` = `900s`;
 
 /**
  * Handle email and password sign-in form.
@@ -66,22 +62,22 @@ export async function handleSignInForm(
     return err("Invalid email or password.");
   }
 
-  const jwtEncoded = await encryptJWT(
-    JWT_EXP_SECS_STR,
-    JSON.stringify({
-      email: data.email,
-      userId: selectedUser.userId,
-      pfp: selectedUser.pfp,
-      username: selectedUser.username,
-    } satisfies AuthData),
-  );
+  const token = randomBytes(24).toString("base64url");
+  const str = JSON.stringify({
+    userId: selectedUser.userId,
+    email: data.email,
+    pfp: selectedUser.pfp,
+    username: selectedUser.username,
+  } satisfies AuthData);
+
+  after(async () => await redis.set(token, str, { ex: 60 * 15 }));
 
   const host = (await headers()).get("host");
   sendEmail(
     data.email,
     "Confirm Sign-In",
     `
-      <a href="https://${host}/${confirmPath}?t=${jwtEncoded}" target="_blank">
+      <a href="https://${host}/${confirmPath}?t=${str}" target="_blank">
         Click here to Sign In
       </a>
       <br/>
@@ -93,26 +89,13 @@ export async function handleSignInForm(
 }
 
 export async function signInEmailPass(token: string) {
-  const isUsed = await redis.get<string>(token);
-  if (isUsed) {
-    return err("Sign-in token already used.");
+  const userData = await redis.getdel<string>(token);
+  if (!userData) {
+    return err("Invalid or expired token");
   }
 
-  const verified = await decryptJWT(token);
-  if (!verified) {
-    return err("Invalid sign-in token.");
-  }
+  const parsed: AuthData = JSON.parse(userData);
 
-  // ban this token until expired so it can't be reused
-  after(async () => await redis.set(token, "USED", { ex: JWT_EXP_SECS }));
-
-  const data: AuthData = JSON.parse(verified);
-
-  await setAuthCookie(await cookies(), data.userId);
-  return succ({
-    userId: data.userId,
-    username: data.username,
-    email: data.email,
-    pfp: data.pfp,
-  } satisfies AuthData);
+  await setAuthCookie(await cookies(), parsed.userId);
+  return succ(parsed);
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 
 import { handleSignInForm } from "~/modules/auth/client";
@@ -24,7 +25,11 @@ export default function SignInPage() {
       <EmailInput />
       <PasswordInput />
 
-      {res?.error ? <p className="text-red-500 py-3">{res.error}</p> : null}
+      {res?.error && <p className="text-red-500 py-3">{res.error}</p>}
+
+      <Link href="/forgot-password" className="opacity-70 hover:underline">
+        Forgot Password?
+      </Link>
 
       <ContinueBtn pending={pending} />
     </Form>
