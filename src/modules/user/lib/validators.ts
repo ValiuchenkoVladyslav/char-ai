@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { email, string, url } from "zod/v4";
 import {
   displayNameBounds,
   emailBounds,
@@ -6,8 +6,7 @@ import {
   usernameBounds,
 } from "./base";
 
-export const displayNameSchema = z
-  .string({ error: "Name must be a string!" })
+export const displayNameSchema = string({ error: "Name must be a string!" })
   .min(displayNameBounds.minLen, {
     error: `Must be at least ${displayNameBounds.minLen} characters!`,
   })
@@ -15,8 +14,7 @@ export const displayNameSchema = z
     error: `Must be at most ${displayNameBounds.maxLen} characters!`,
   });
 
-export const usernameSchema = z
-  .string({ error: "Invalid username!" })
+export const usernameSchema = string({ error: "Invalid username!" })
   .min(usernameBounds.minLen, {
     error: `Must be at least ${usernameBounds.minLen} characters!`,
   })
@@ -25,16 +23,16 @@ export const usernameSchema = z
   })
   .transform((val) => (val[0] === "@" ? val.slice(1) : val));
 
-export const pfpSchema = z.url({ error: "Invalid url!" }).optional().nullable();
+export const pfpSchema = url({ error: "Invalid url!" }).optional().nullable();
 
-export const emailSchema = z
-  .email({ error: "Invalid email!" })
-  .max(emailBounds.maxLen, {
+export const emailSchema = email({ error: "Invalid email!" }).max(
+  emailBounds.maxLen,
+  {
     error: `Email must be at most ${emailBounds.maxLen} characters!`,
-  });
+  },
+);
 
-export const passwordSchema = z
-  .string({ error: "Must be a string!" })
+export const passwordSchema = string({ error: "Must be a string!" })
   .min(passwordBounds.minLen, {
     error: `Must be at least ${passwordBounds.minLen} characters!`,
   })

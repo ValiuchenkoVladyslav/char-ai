@@ -21,8 +21,8 @@ export type GoogleUserInfo = {
 };
 
 /** 30 mins (60 * 30) */
-const JWT_EXPIRY_SECS = 1800 as const;
-const JWT_EXPIRY_SECS_STR = `1800s` satisfies `${typeof JWT_EXPIRY_SECS}s`;
+const JWT_EXP_SECS = 1800 as const;
+const JWT_EXP_SECS_STR: `${typeof JWT_EXP_SECS}s` = `1800s`;
 
 const GOOGLE_DATA_COOKIE = "char-ai-google-data";
 
@@ -30,7 +30,7 @@ export async function setGoogleDataCookie(
   cookies: Cookies,
   googleData: GoogleUserInfo,
 ) {
-  const jwt = await signJWT(JWT_EXPIRY_SECS_STR, JSON.stringify(googleData));
+  const jwt = await signJWT(JWT_EXP_SECS_STR, JSON.stringify(googleData));
 
   cookies.set({
     name: GOOGLE_DATA_COOKIE,
@@ -39,7 +39,7 @@ export async function setGoogleDataCookie(
     httpOnly: true,
     secure: true,
     sameSite: "lax",
-    maxAge: JWT_EXPIRY_SECS,
+    maxAge: JWT_EXP_SECS,
   });
 }
 
@@ -48,13 +48,13 @@ export function deleteGoogleDataCookie(cookies: Cookies) {
 }
 
 export function getGoogleDataToken(cookies: Cookies) {
-  return cookies.get(GOOGLE_DATA_COOKIE)?.value?.split(" ")[1];
+  return cookies.get(GOOGLE_DATA_COOKIE)?.value.split(" ")[1];
 }
 
 export async function verifyGoogleDataToken(token: string) {
   const res = await verifyJWT(token);
 
-  if (!res || !res.payload.sub) return undefined;
+  if (!res) return undefined;
 
-  return JSON.parse(res.payload.sub) as GoogleUserInfo;
+  return JSON.parse(res) as GoogleUserInfo;
 }

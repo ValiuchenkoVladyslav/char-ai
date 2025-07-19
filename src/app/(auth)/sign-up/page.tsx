@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import { handleEmailPass } from "~/modules/auth/client";
+import { handleSignUpForm } from "~/modules/auth/client";
 import { displayNameBounds } from "~/modules/user/client";
 
 import { Form } from "~/shared/components/form";
@@ -13,12 +13,12 @@ import { PasswordInput } from "../_components/password-input";
 import { UsernameInput } from "../_components/username-input";
 
 const SUCCESS_PATH = "/sign-up/email-sent";
-const MAGIC_LINK_PATH = "/sign-up/success";
+const CONFIRM_PATH = "/sign-up/confirm";
 
 export default function SignUpPage() {
   const [res, action, pending] = useActionState(
     (_: unknown, data: FormData) =>
-      handleEmailPass(data, SUCCESS_PATH, MAGIC_LINK_PATH),
+      handleSignUpForm(data, SUCCESS_PATH, CONFIRM_PATH),
     null,
   );
 

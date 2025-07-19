@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import type { AuthData } from "../lib/base";
+import type { AuthData } from "~/modules/auth/lib/base";
 
 type AuthState = AuthData | null | undefined;
 type Listener = () => void;

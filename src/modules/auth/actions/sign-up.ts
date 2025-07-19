@@ -4,6 +4,7 @@ import { eq, or } from "drizzle-orm/sql";
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 
 import type { AuthData } from "~/modules/auth/lib/base";
 import { setAuthCookie } from "~/modules/auth/lib/cookies";
@@ -12,26 +13,32 @@ import {
   type SignUpData,
   signUpSchema,
 } from "~/modules/auth/lib/sign-up-schema";
+
 import { AuthMethod, userTable } from "~/modules/user/server";
-import { db } from "~/shared/lib/db";
+
+import { db, redis } from "~/shared/lib/db";
 import { sendEmail } from "~/shared/lib/email";
-import { signJWT, verifyJWT } from "~/shared/lib/jwt";
+import { decryptJWT, encryptJWT } from "~/shared/lib/jwt";
 import { err, parseFormData, succ } from "~/shared/lib/utils";
 
-/** 1 hour (60 * 60) */
-const JWT_EXPIRY_SECS = `3600s` as const;
+/** 15 mins (60 * 15) */
+const JWT_EXP_SECS = 900 as const;
+const JWT_EXP_SECS_STR: `${typeof JWT_EXP_SECS}s` = `900s`;
 
 /**
  * Handle email and password sign-up form.
+ *
+ * - Sends a confirmation email with a magic link.
+ *
  * @param formData username, displayName, email, password
  * @param successPath path to redirect on success
- * @param magicLinkPath email link path. ?t= param provides JWT encoded user data
+ * @param confirmPath email link path. ?t= param provides JWT encoded user data
  * @returns error or redirects to `successPath`
  */
 export async function handleSignUpForm(
   formData: FormData,
   successPath: string,
-  magicLinkPath: string,
+  confirmPath: string,
 ) {
   const { data, error } = parseFormData(formData, signUpSchema);
 
@@ -58,14 +65,14 @@ export async function handleSignUpForm(
     );
   }
 
-  const jwtEncoded = await signJWT(JWT_EXPIRY_SECS, JSON.stringify(data));
+  const jwtEncoded = await encryptJWT(JWT_EXP_SECS_STR, JSON.stringify(data));
 
   const host = (await headers()).get("host");
   sendEmail(
     data.email,
     "Confirm Sign-Up",
     `
-      <a href="https://${host}/${magicLinkPath}?t=${jwtEncoded}" target="_blank">
+      <a href="https://${host}/${confirmPath}?t=${jwtEncoded}" target="_blank">
         Click here to Sign Up
       </a>
       <br/>
@@ -77,10 +84,18 @@ export async function handleSignUpForm(
 }
 
 export async function signUpEmailPass(token: string) {
-  const verified = await verifyJWT(token);
-  if (!verified) {
-    return err("Invalid signup token.");
+  const isUsed = await redis.get<string>(token);
+  if (isUsed) {
+    return err("Sign-up token already used.");
   }
+
+  const verified = await decryptJWT(token);
+  if (!verified) {
+    return err("Invalid sign-up token.");
+  }
+
+  // ban this token until expired so it can't be reused
+  after(async () => await redis.set(token, "USED", { ex: JWT_EXP_SECS }));
 
   const data: SignUpData = JSON.parse(verified);
 
