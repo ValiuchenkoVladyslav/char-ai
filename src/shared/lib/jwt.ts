@@ -2,6 +2,7 @@ import "server-only";
 
 import { jwtDecrypt } from "jose/jwt/decrypt";
 import { EncryptJWT } from "jose/jwt/encrypt";
+
 import { SignJWT } from "jose/jwt/sign";
 import { jwtVerify } from "jose/jwt/verify";
 
@@ -46,7 +47,7 @@ export async function encryptJWT(exp: string, sub: string) {
   return new EncryptJWT()
     .setProtectedHeader({ alg: EJWT_ALG, enc: EJWT_ENC })
     .setExpirationTime(exp)
-    .setSubject(JSON.stringify(sub))
+    .setSubject(sub)
     .encrypt(key);
 }
 
