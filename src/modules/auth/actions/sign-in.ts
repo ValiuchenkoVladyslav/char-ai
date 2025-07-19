@@ -94,7 +94,13 @@ export async function signInEmailPass(token: string) {
     return err("Invalid or expired token");
   }
 
-  const parsed: AuthData = JSON.parse(userData);
+  let parsed: AuthData;
+  try {
+    parsed = JSON.parse(userData);
+  } catch (error) {
+    console.error("Failed to parse auth data from Redis:", error);
+    return err("Invalid token data");
+  }
 
   await setAuthCookie(await cookies(), parsed.userId);
   return succ(parsed);
