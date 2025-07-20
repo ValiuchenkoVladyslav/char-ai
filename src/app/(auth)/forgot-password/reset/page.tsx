@@ -9,7 +9,7 @@ import { ContinueBtn } from "../../_components/continue-btn";
 import { PasswordInput } from "../../_components/password-input";
 
 export default function ResetPasswordPage() {
-  const [token, setToken] = useState<string | null>("");
+  const [token, setToken] = useState<string | null>(null);
   const [res, action, pending] = useActionState(
     // biome-ignore lint/style/noNonNullAssertion: we check token below
     (_: unknown, data: FormData) => resetPassword(data, token!),
