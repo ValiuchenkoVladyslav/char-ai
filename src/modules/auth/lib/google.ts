@@ -1,4 +1,4 @@
-import "server-only";
+import "~/shared/lib/server-only";
 
 import { signJWT, verifyJWT } from "~/shared/lib/jwt";
 import type { Cookies } from "~/shared/lib/utils";

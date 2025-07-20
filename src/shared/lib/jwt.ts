@@ -1,4 +1,4 @@
-import "server-only";
+import "~/shared/lib/server-only";
 
 import { jwtDecrypt } from "jose/jwt/decrypt";
 import { EncryptJWT } from "jose/jwt/encrypt";

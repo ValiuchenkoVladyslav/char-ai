@@ -1,4 +1,4 @@
-import "server-only";
+import "~/shared/lib/server-only";
 
 import { eq } from "drizzle-orm/sql";
 import { db } from "~/shared/lib/db";

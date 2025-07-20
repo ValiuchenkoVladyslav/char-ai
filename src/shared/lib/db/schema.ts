@@ -1,4 +1,4 @@
-import "server-only";
+import "~/shared/lib/server-only";
 
 import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
 import { characterTable } from "~/modules/character/lib/table";

@@ -1,4 +1,4 @@
-import "server-only";
+import "~/shared/lib/server-only";
 
 import { Redis } from "@upstash/redis";
 import { createPool } from "@vercel/postgres";
