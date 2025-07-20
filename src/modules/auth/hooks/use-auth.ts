@@ -40,6 +40,27 @@ function subscribe(listener: Listener): () => void {
 
 let initial = true;
 
+function getMeAndSetUser() {
+  getMe()
+    .then(setUser)
+    .catch((error) => {
+      setAuth({ user: null, error, loading: false });
+    });
+}
+
+let wasVisible = false; // for some reason visibilitychange triggers twice with same state
+
+function onVisible() {
+  if (document.hidden) {
+    wasVisible = true;
+  }
+
+  if (wasVisible && !document.hidden) {
+    getMeAndSetUser();
+    wasVisible = false;
+  }
+}
+
 /** fetch auth or reuse from cache */
 export function useAuth(): AuthState {
   const auth = useSyncExternalStore(subscribe, getAuth, getAuth);
@@ -47,13 +68,15 @@ export function useAuth(): AuthState {
   useLayoutEffect(() => {
     if (!initial) return;
 
-    getMe()
-      .then(setUser)
-      .catch((error) => {
-        setAuth({ user: null, error, loading: false });
-      });
+    getMeAndSetUser();
 
     initial = false;
+  }, []);
+
+  useLayoutEffect(() => {
+    window.addEventListener("visibilitychange", onVisible);
+
+    return () => window.removeEventListener("visibilitychange", onVisible);
   }, []);
 
   return auth;
