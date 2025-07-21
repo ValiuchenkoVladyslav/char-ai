@@ -1,18 +1,31 @@
+"use client";
+
 import { ChevronRight, ChevronsRight } from "lucide-react";
 import Link from "next/link";
-
-interface Props {
-  page: number;
-  maxPage: number;
-  query?: string | string[];
-}
+import { use } from "react";
 
 const PAGINATION_ITEMS = 4;
 
 const linkClasses =
-  "bg-bg-alt rounded-lg flex items-center justify-center w-12 h-12 aria-[disabled=true]:opacity-40 aria-[disabled=true]:pointer-events-none aria-[current=page]:bg-active";
+  "bg-bg-alt rounded-lg flex items-center justify-center w-12 h-12 aria-[disabled=true]:opacity-40 aria-[disabled=true]:pointer-events-none aria-[current=page]:bg-active border-1 aria-[current=page]:border-0";
 
-export function Pagination({ page, maxPage, query }: Props) {
+namespace Pagination {
+  export interface Props {
+    page: number;
+    query?: string | string[];
+    itemsCount: Promise<number>;
+    itemsPerPage: number;
+  }
+}
+
+export function Pagination({
+  page,
+  query,
+  itemsCount,
+  itemsPerPage,
+}: Pagination.Props) {
+  const maxPage = Math.max(1, Math.ceil(use(itemsCount) / itemsPerPage));
+
   const paginationOffset = Math.max(
     1,
     Math.min(page - 1, maxPage - (PAGINATION_ITEMS - 1)),
