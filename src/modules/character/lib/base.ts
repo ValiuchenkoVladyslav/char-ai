@@ -11,3 +11,14 @@ export const masterPromptBounds = {
   maxLen: 512,
   minLen: 12,
 } as const;
+
+export function characterSlug(id: number, name: string) {
+  return `${id}-${encodeURIComponent(name.toLowerCase())}`;
+}
+
+export function decodeCharacterSlug(slug: string) {
+  const [id, ...nameParts] = slug.split("-");
+  const name = decodeURIComponent(nameParts.join("-"));
+
+  return { id: Number(id), name };
+}
