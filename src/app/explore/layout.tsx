@@ -1,17 +1,22 @@
 import { Search } from "lucide-react";
 import Form from "next/form";
 
+import { nameBounds } from "~/modules/character/server";
+
 export default function ExploreLayout(props: WithChildren) {
   return (
-    <div>
+    <div className="flex flex-col gap-4 flex-1">
       <Form
         action="/explore"
-        className="fixed left-1/2 -translate-x-1/2 top-0 m-base flex items-center bg-active rounded-lg"
+        className="flex items-center bg-active rounded-lg lg:fixed lg:top-0 lg:left-1/2 lg:-translate-x-1/2 lg:m-base"
       >
         <input
           name="q"
           placeholder="Search characters"
-          className="px-4 text-lg py-1 w-80 rounded-l-lg"
+          minLength={nameBounds.minLen}
+          maxLength={nameBounds.maxLen}
+          required
+          className="px-4 text-lg py-1 w-full lg:w-[28vw] rounded-l-lg"
         />
         <Search className="mx-2" />
       </Form>

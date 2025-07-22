@@ -21,7 +21,7 @@ export default function RootLayout(props: WithChildren) {
       </head>
       <body className="bg-bg text-fg min-h-screen flex flex-col">
         <header className="p-base sticky top-0 bg-bg flex justify-between items-center">
-          <section className="flex items-center gap-4 sm:gap-8">
+          <section className="flex items-center gap-4 sm:gap-5">
             <Link href="/" className="flex gap-2 items-center">
               <Image src={Logo} alt="Logo" width={32} height={32} />
               <h3 className="not-sm:hidden">CharAi</h3>
@@ -42,11 +42,7 @@ export default function RootLayout(props: WithChildren) {
           <ProfileMenu />
         </header>
 
-        <main className="p-base">{props.children}</main>
-
-        <footer className="mt-auto p-base">
-          <p>todo footer</p>
-        </footer>
+        <main className="p-base flex-1 flex">{props.children}</main>
       </body>
     </html>
   );

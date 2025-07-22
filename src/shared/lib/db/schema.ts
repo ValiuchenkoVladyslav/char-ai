@@ -7,7 +7,7 @@ import { userTable } from "~/modules/user/lib/table";
 export { userTable };
 export { characterTable };
 
-export const like = pgTable(
+export const likeTable = pgTable(
   "Like",
   {
     characterId: integer("characterId")

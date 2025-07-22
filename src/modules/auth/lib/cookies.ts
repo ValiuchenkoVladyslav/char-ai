@@ -26,16 +26,15 @@ export function deleteAuthCookie(cookies: Cookies) {
   cookies.delete({ name: AUTH_COOKIE, path: "/" });
 }
 
-/** get jwt token from `Authorization` cookie */
-export function getToken(cookies: Cookies) {
-  return cookies.get(AUTH_COOKIE)?.value?.split(" ")[1];
-}
-
 /**
- * verify jwt token
+ * verify jwt token from `Authorization` cookie
  * @returns user id if valid
  */
-export async function verifyToken(token: string) {
+export async function verifyToken(cookies: Cookies) {
+  const token = cookies.get(AUTH_COOKIE)?.value?.split(" ").at(1);
+
+  if (!token) return undefined;
+
   const res = await verifyJWT(token);
 
   if (!res) return undefined;

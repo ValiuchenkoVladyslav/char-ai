@@ -1,48 +1,47 @@
-import { count } from "drizzle-orm/sql";
+import { count, eq } from "drizzle-orm/sql";
+import { Suspense } from "react";
 import {
   characterTable,
   getPhonetics,
   samePhonetics,
 } from "~/modules/character/server";
+import { userTable } from "~/modules/user/server";
 import { db } from "~/shared/lib/db";
+import { CharactersList } from "./_components/characters-list";
 import { Pagination } from "./_components/pagination";
 
 const ITEMS_PER_PAGE = 28;
 
 async function getCharacters(page: number, phonetics: string) {
-  "use cache";
-
   const baseQuery = db
     .select({
       name: characterTable.name,
       description: characterTable.description,
       image: characterTable.image,
       likesCount: characterTable.likesCount,
+      characterId: characterTable.id,
+      authorName: userTable.displayName,
+      authorUsername: userTable.username,
+      authorPfp: userTable.pfp,
     })
     .from(characterTable)
+    .leftJoin(userTable, eq(userTable.id, characterTable.creatorId))
     .limit(ITEMS_PER_PAGE)
     .offset((page - 1) * ITEMS_PER_PAGE);
 
   if (phonetics.length > 0) {
-    return await baseQuery
-      .where(samePhonetics(characterTable.phonetics, phonetics))
-      .execute();
+    return baseQuery.where(samePhonetics(phonetics));
   }
 
-  return await baseQuery.execute();
+  return baseQuery;
 }
 
 async function getCharactersCount(phonetics: string) {
-  "use cache";
-
-  const res = await db
+  return db
     .select({ count: count() })
     .from(characterTable)
-    .where(samePhonetics(characterTable.phonetics, phonetics))
-    .execute()
+    .where(samePhonetics(phonetics))
     .then((res) => res.at(0)?.count ?? 0);
-
-  return res;
 }
 
 interface ExplorePageProps {
@@ -58,22 +57,22 @@ export default async function ExplorePage(props: ExplorePageProps) {
   const { page, q } = await props.searchParams;
 
   const pageInt = Math.max(Number(page) || 1, 1);
-  const phonetics = typeof q === "string" ? getPhonetics(q) : "";
-
-  const [_characters, count] = await Promise.all([
-    getCharacters(pageInt, phonetics),
-    getCharactersCount(phonetics),
-  ]);
+  const search = typeof q === "string" ? q.trim() : "";
+  const phonetics = getPhonetics(search);
 
   return (
-    <div>
-      {JSON.stringify(phonetics)}
+    <Suspense fallback={<div>Loading...</div>}>
+      <CharactersList
+        characters={getCharacters(pageInt, phonetics)}
+        search={search}
+      />
 
       <Pagination
         page={pageInt}
-        maxPage={Math.max(1, Math.ceil(count / ITEMS_PER_PAGE))}
+        itemsCount={getCharactersCount(phonetics)}
+        itemsPerPage={ITEMS_PER_PAGE}
         query={q}
       />
-    </div>
+    </Suspense>
   );
 }
