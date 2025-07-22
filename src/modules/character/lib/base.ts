@@ -18,7 +18,13 @@ export function characterSlug(id: number, name: string) {
 
 export function decodeCharacterSlug(slug: string) {
   const [id, ...nameParts] = slug.split("-");
+  const numericId = Number(id);
+
+  if (isNaN(numericId)) {
+    throw new Error(`Invalid character slug format: ${slug}`);
+  }
+
   const name = decodeURIComponent(nameParts.join("-"));
 
-  return { id: Number(id), name };
+  return { id: numericId, name };
 }
