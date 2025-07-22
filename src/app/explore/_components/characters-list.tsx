@@ -21,19 +21,19 @@ function CharacterCard(props: CharacterCard.Props) {
   return (
     <article className="bg-bg-alt rounded-lg border-1 flex flex-col overflow-hidden h-fit">
       <Link href={`/character/${characterSlug(props.characterId, props.name)}`}>
-        <img src="asdasd" alt="Character" className="h-72 bg-active" />
+        <img
+          src={props.image}
+          alt={`${props.name} character`}
+          className="h-72 bg-active object-cover"
+        />
       </Link>
 
       <section className="px-3 py-2">
         <h3 className="truncate">
           {props.name}
-          lsdalsjdha sldjh asldhj alsdh alshd alshd dasljasld hj
         </h3>
         <p className="h-[4lh] line-clamp-4">
           {props.description}
-          asldaslkjd alsd laks dlakhd lkash d;ajs ;djaj; dja;s jads; jkasdlkj
-          alsdjakshbd askhdb aksh bdkashbd kashb dkasb dkha skdb akshd akshd
-          kashd khas kdhas hbd
         </p>
 
         <div className="flex items-center justify-between pt-2">
@@ -43,9 +43,9 @@ function CharacterCard(props: CharacterCard.Props) {
               className="flex gap-2 items-center"
             >
               <img
-                src="asdasd"
+                src={props.authorPfp || "/default-avatar.png"}
                 alt="Author"
-                className="h-9 w-9 bg-active rounded-full"
+                className="h-9 w-9 bg-active rounded-full object-cover"
               />
 
               <h4>{props.authorName}</h4>
