@@ -20,7 +20,7 @@ export function decodeCharacterSlug(slug: string) {
   const [id, ...nameParts] = slug.split("-");
   const numericId = Number(id);
 
-  if (isNaN(numericId)) {
+  if (Number.isNaN(numericId)) {
     throw new Error(`Invalid character slug format: ${slug}`);
   }
 

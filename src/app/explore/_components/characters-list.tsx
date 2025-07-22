@@ -29,12 +29,8 @@ function CharacterCard(props: CharacterCard.Props) {
       </Link>
 
       <section className="px-3 py-2">
-        <h3 className="truncate">
-          {props.name}
-        </h3>
-        <p className="h-[4lh] line-clamp-4">
-          {props.description}
-        </p>
+        <h3 className="truncate">{props.name}</h3>
+        <p className="h-[4lh] line-clamp-4">{props.description}</p>
 
         <div className="flex items-center justify-between pt-2">
           {props.authorUsername ? (
