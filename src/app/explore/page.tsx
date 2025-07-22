@@ -30,20 +30,18 @@ async function getCharacters(page: number, phonetics: string) {
     .offset((page - 1) * ITEMS_PER_PAGE);
 
   if (phonetics.length > 0) {
-    return await baseQuery.where(samePhonetics(phonetics)).execute();
+    return baseQuery.where(samePhonetics(phonetics));
   }
 
-  return await baseQuery;
+  return baseQuery;
 }
 
 async function getCharactersCount(phonetics: string) {
-  const res = await db
+  return db
     .select({ count: count() })
     .from(characterTable)
     .where(samePhonetics(phonetics))
     .then((res) => res.at(0)?.count ?? 0);
-
-  return res;
 }
 
 interface ExplorePageProps {
