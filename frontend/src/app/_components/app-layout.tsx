@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../_styles/main.css";
 
 /**
  * required in:
