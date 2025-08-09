@@ -1,4 +1,4 @@
-const requiredEnvs = ["BACKEND_ORIGIN"] as const;
+const requiredEnvs = ["NEXT_PUBLIC_BACKEND_ORIGIN"] as const;
 
 export function register() {
   for (const envVar of requiredEnvs) {
