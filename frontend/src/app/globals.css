@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark *));
+
+@layer theme {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-bg: light-dark(oklch(1 0 0), oklch(0.2 0 0));
+  --color-bg-alt: light-dark(oklch(0.94 0 0), oklch(0.16 0 0));
+  --color-fg: light-dark(oklch(0 0 0), oklch(0.96 0 0));
+  --color-active: color-mix(in oklch, var(--color-fg), var(--color-bg) 86%);
+
+  --spacing-base: 0.64rem max(0.64rem, 1.2vw);
+}
+
+@layer base {
+  * {
+    @apply border-fg/20;
+  }
+
+  /* headings */
+  h1 {
+    @apply text-2xl font-bold;
+  }
+
+  h2 {
+    @apply text-xl font-semibold;
+  }
+
+  h3 {
+    @apply text-lg font-semibold;
+  }
+
+  h4 {
+    @apply font-semibold;
+  }
+
+  /* button fix */
+  button {
+    @apply cursor-pointer;
+  }
+
+  /* custom scrollbar on pc */
+  @media (hover: hover) and (pointer: fine) {
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-fg) transparent;
+      scrollbar-gutter: stable;
+    }
+  }
+}
+
+@layer components {
+  .btn {
+    @apply flex gap-2 items-center justify-center rounded-md font-semibold py-1.5 px-2;
+  }
+
+  .input {
+    @apply focus:outline-none py-2 px-3 rounded-md bg-active;
+  }
+
+  .menu {
+    @apply bg-bg-alt rounded-lg py-2 px-3 border-1;
+  }
+
+  .menu-item {
+    @apply cursor-pointer py-1 px-2 rounded-md duration-200 hover:bg-active flex items-center gap-2 w-full;
+  }
+}

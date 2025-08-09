@@ -1,0 +1,11 @@
+pre-push:
+  commands:
+    build:
+      run: bun run build
+
+pre-commit:
+  commands:
+    lint:
+      glob: "*.{js,cjs,mjs,jsx,ts,tsx,json,css}"
+      run: bun biome check --write {staged_files}
+      stage_fixed: true

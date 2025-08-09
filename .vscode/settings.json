@@ -1,0 +1,10 @@
+{
+  "files.exclude": {
+    "backend/.drizzle/": true,
+    "backend/dist/": true,
+    "frontend/.next/": true,
+    "frontend/next-env.d.ts": true,
+    "**/node_modules/": true,
+    "bun.lock": true
+  }
+}
