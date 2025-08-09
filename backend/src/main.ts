@@ -26,10 +26,7 @@ declare global {
 
 // === HONO APP ===
 const corsPolicy = cors({
-  origin:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:5173"
-      : process.env.FRONTEND_ORIGIN,
+  origin: process.env.FRONTEND_ORIGIN,
   credentials: true,
 });
 
