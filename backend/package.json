@@ -6,7 +6,11 @@
     "build": "bun tsc --noEmit && bun build src/main.ts --outfile dist/main.js --target bun",
     "start": "bun run build && bun run dist/main.js",
     "gen:jwks": "bun scripts/gen-jwks.ts",
-    "gen:argon-secret": "bun scripts/gen-argon-secret.ts"
+    "gen:argon-secret": "bun scripts/gen-argon-secret.ts",
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:gen": "drizzle-kit generate"
   },
   "dependencies": {
     "@repo/schema": "workspace:",

@@ -9,17 +9,17 @@
   ],
   "scripts": {
     "prepare": "lefthook install",
-    "dev": "NODE_ENV=development bun run --env-file=.env --filter='*' dev",
-    "build": "bun run --env-file=.env --filter='*' build",
-    "start": "bun run --env-file=.env --filter='*' start",
+    "dev": "bun run --filter='*' dev",
+    "build": "bun run --filter='*' build",
+    "start": "bun run --filter='*' start",
     "lint:check": "bun biome check",
     "lint:fix": "bun biome check --write",
     "gen:jwks": "cd backend && bun gen:jwks",
     "gen:argon-secret": "cd backend && bun gen:argon-secret",
-    "db:push": "cd backend && drizzle-kit push",
-    "db:migrate": "cd backend && drizzle-kit migrate",
-    "db:studio": "cd backend && drizzle-kit studio",
-    "db:gen": "cd backend && drizzle-kit generate"
+    "db:push": "cd backend && bun db:push",
+    "db:migrate": "cd backend && bun db:migrate",
+    "db:studio": "cd backend && bun db:studio",
+    "db:gen": "cd backend && bun db:gen"
   },
   "dependencies": {
     "hono": "^4.8.5",
