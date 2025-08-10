@@ -1,4 +1,5 @@
 import "../_styles/main.css";
+import { ThemeProvider } from "next-themes";
 
 /**
  * required in:
@@ -9,7 +10,15 @@ import "../_styles/main.css";
 export function AppLayout(props: WithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{props.children}</body>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem={true}
+        >
+          {props.children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
