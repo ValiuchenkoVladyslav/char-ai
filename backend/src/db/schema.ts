@@ -40,6 +40,8 @@ export const characterTbl = pgTable("Character", {
     )
     .notNull(),
 
+  slug: varchar("slug").notNull(),
+
   description: varchar("description", {
     length: descriptionBase.maxLen,
   }).notNull(),

@@ -16,7 +16,8 @@
     "@repo/schema": "workspace:",
     "drizzle-orm": "^0.44.4",
     "jose": "^6.0.12",
-    "postgres": "^3.4.7"
+    "postgres": "^3.4.7",
+    "slugify": "^1.6.6"
   },
   "devDependencies": {
     "@types/bun": "1.2.19",
