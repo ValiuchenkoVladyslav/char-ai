@@ -22,8 +22,8 @@ export async function updateCharacter(
   }
 
   // TODO compress & upload images => get urls
-  const pfpUrl = "";
-  const imageUrl = "";
+  const pfpUrl = data.pfp ? "" : undefined;
+  const imageUrl = data.image ? "" : undefined;
 
   const res = await db
     .update(characterTbl)
