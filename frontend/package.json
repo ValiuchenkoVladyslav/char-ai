@@ -2,7 +2,7 @@
   "name": "frontend",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack -p 3001",
     "build": "next build",
     "start": "bun run build && next start"
   },
