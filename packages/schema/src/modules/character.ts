@@ -1,6 +1,6 @@
 import { base } from "../utils";
 
-export const nameBase = base(3, 32);
+export const characterNameBase = base(3, 32);
 
 export const descriptionBase = base(16, 256);
 

@@ -1,10 +1,10 @@
 import {
+  characterNameBase,
   descriptionBase,
-  displayNameBase,
   emailBase,
   masterPromptBase,
-  nameBase,
   tagBase,
+  userNameBase,
 } from "@repo/schema";
 import {
   integer,
@@ -20,9 +20,7 @@ export const userTbl = pgTable("User", {
   id: serial("id").primaryKey(),
 
   tag: varchar("tag", { length: tagBase.maxLen }).notNull().unique(),
-  displayName: varchar("displayName", {
-    length: displayNameBase.maxLen,
-  }).notNull(),
+  name: varchar("name", { length: userNameBase.maxLen }).notNull(),
   pfp: varchar("pfp"),
 
   email: varchar("email", { length: emailBase.maxLen }).unique().notNull(),
@@ -34,10 +32,11 @@ export const userTbl = pgTable("User", {
 export const characterTbl = pgTable("Character", {
   id: serial("id").primaryKey(),
 
-  name: varchar("name", { length: nameBase.maxLen }).notNull(),
-  phonetics: varchar("phonetics", { length: nameBase.maxLen })
+  name: varchar("name", { length: characterNameBase.maxLen }).notNull(),
+  phonetics: varchar("phonetics", { length: characterNameBase.maxLen })
     .generatedAlwaysAs(
-      (): SQL => sql`metaphone(${characterTbl.name}, ${nameBase.maxLen}::int)`,
+      (): SQL =>
+        sql`metaphone(${characterTbl.name}, ${characterNameBase.maxLen}::int)`,
     )
     .notNull(),
 
