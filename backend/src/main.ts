@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
+import { characterController } from "./modules/character/controller";
+
 // === ENVS ===
 const requiredEnvs = [
   "FRONTEND_ORIGIN",
@@ -30,14 +32,7 @@ const corsPolicy = cors({
   credentials: true,
 });
 
-const app = new Hono()
-  .use("*", corsPolicy)
-  .get("/", (ctx) => {
-    return ctx.text("[GET] Hello, World!");
-  })
-  .post("/", (ctx) => {
-    return ctx.text("[POST] Hello, World!");
-  });
+const app = new Hono().use("*", corsPolicy).route("/", characterController);
 
 export type HonoApp = typeof app;
 
