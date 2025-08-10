@@ -2,8 +2,13 @@
 
 export {
   characterNameBase,
+  characterNameSchema,
+  createCharacterDto,
   descriptionBase,
-  masterPromptBase,
+  descriptionSchema,
+  promptBase,
+  promptSchema,
+  updateCharacterDto,
 } from "./modules/character";
 export {
   AuthMethod,

@@ -2,7 +2,7 @@ import {
   characterNameBase,
   descriptionBase,
   emailBase,
-  masterPromptBase,
+  promptBase,
   tagBase,
   userNameBase,
 } from "@repo/schema";
@@ -40,16 +40,13 @@ export const characterTbl = pgTable("Character", {
     )
     .notNull(),
 
-  slug: varchar("slug").notNull(),
-
   description: varchar("description", {
     length: descriptionBase.maxLen,
   }).notNull(),
-  masterPrompt: varchar("masterPrompt", {
-    length: masterPromptBase.maxLen,
-  }).notNull(),
   image: varchar("image").notNull(),
   pfp: varchar("pfp").notNull(),
+
+  prompt: varchar("prompt", { length: promptBase.maxLen }).notNull(),
 
   likesCount: integer("likesCount").notNull().default(0),
 

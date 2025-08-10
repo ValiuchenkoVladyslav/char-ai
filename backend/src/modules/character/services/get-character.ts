@@ -17,11 +17,11 @@ export async function getCharacter(ctx: Context, id: number) {
     });
 
   if (res instanceof Error) {
-    return ctx.text(res.message, 400);
+    return ctx.text(res.message, 500);
   }
 
   if (res === undefined) {
-    return ctx.notFound();
+    return ctx.text("Character not found!", 404);
   }
 
   return ctx.json(res, 200);
