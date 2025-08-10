@@ -21,12 +21,12 @@ export const characterNameSchema = string("Name must be a string!")
 
 export const descriptionSchema = string("Description must be a string!")
   .min(
-    characterNameBase.minLen,
-    `Must be at least ${characterNameBase.minLen} characters!`,
+    descriptionBase.minLen,
+    `Must be at least ${descriptionBase.minLen} characters!`,
   )
   .max(
-    characterNameBase.maxLen,
-    `Must be at most ${characterNameBase.maxLen} characters!`,
+    descriptionBase.maxLen,
+    `Must be at most ${descriptionBase.maxLen} characters!`,
   );
 
 export const promptSchema = string({ error: "Prompt must be a string!" })
