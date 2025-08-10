@@ -15,7 +15,6 @@
   "dependencies": {
     "@repo/schema": "workspace:",
     "drizzle-orm": "^0.44.4",
-    "hono": "^4.8.10",
     "jose": "^6.0.12",
     "postgres": "^3.4.7"
   },
