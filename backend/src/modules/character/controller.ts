@@ -8,8 +8,8 @@ import { updateCharacter } from "./services/update-character";
 
 export const characterController = new Hono()
   // create new character (TODO AUTH MIDDLEWARE)
-  .post("/character", zValidator("json", createCharacterDto), (ctx) => {
-    return createCharacter(ctx, 1, ctx.req.valid("json"));
+  .post("/character", zValidator("form", createCharacterDto), (ctx) => {
+    return createCharacter(ctx, 1, ctx.req.valid("form"));
   })
   // get full character info
   .get("/character/:id", (ctx) => {
@@ -22,14 +22,14 @@ export const characterController = new Hono()
     return getCharacter(ctx, id);
   })
   // edit character (TODO AUTH MIDDLEWARE)
-  .patch("/character/:id", zValidator("json", updateCharacterDto), (ctx) => {
+  .patch("/character/:id", zValidator("form", updateCharacterDto), (ctx) => {
     const id = Number(ctx.req.param("id"));
 
     if (Number.isNaN(id) || id < 1) {
       return ctx.text("Invalid character id!", 400);
     }
 
-    return updateCharacter(ctx, 1, id, ctx.req.valid("json"));
+    return updateCharacter(ctx, 1, id, ctx.req.valid("form"));
   })
   // delete character (TODO AUTH MIDDLEWARE)
   .delete("/character/:id", (ctx) => {
