@@ -13,7 +13,6 @@ export async function sendEmail(
     headers: emailHeaders,
     body: JSON.stringify({
       from: process.env.RESEND_EMAIL_FROM,
-      // from: "Char Ai <onboarding@resend.dev>",
       to: Array.isArray(to) ? to : [to],
       subject,
       html,
