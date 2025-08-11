@@ -6,9 +6,15 @@ import { characterController } from "./modules/character/controller";
 // === ENVS ===
 const requiredEnvs = [
   "FRONTEND_ORIGIN",
+
   "DB_URL",
+
+  "SUPABASE_URL",
+  "SUPABASE_KEY",
+
   "ARGON_SECRET",
   "JWK_SIGN",
+
   "RESEND_KEY",
   "RESEND_EMAIL_FROM",
 ] as const;
