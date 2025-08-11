@@ -34,18 +34,26 @@ export const promptSchema = string({ error: "Prompt must be a string!" })
   .max(promptBase.maxLen, `Must be at most ${promptBase.maxLen} characters!`);
 
 // === dtos ===
+export const pfpDto = z_instanceof(File).transform(async (val) =>
+  Buffer.from(await val.arrayBuffer()),
+);
+
+export const coverImageDto = z_instanceof(File).transform(async (val) =>
+  Buffer.from(await val.arrayBuffer()),
+);
+
 export const createCharacterDto = object({
   name: characterNameSchema,
   description: descriptionSchema,
   prompt: promptSchema,
-  pfp: z_instanceof(Buffer),
-  image: z_instanceof(Buffer),
+  pfp: pfpDto,
+  coverImage: coverImageDto,
 });
 
 export const updateCharacterDto = object({
   name: characterNameSchema.optional(),
   description: descriptionSchema.optional(),
   prompt: promptSchema.optional(),
-  pfp: z_instanceof(Buffer).optional(),
-  image: z_instanceof(Buffer).optional(),
+  pfp: pfpDto.optional(),
+  coverImage: coverImageDto.optional(),
 });
