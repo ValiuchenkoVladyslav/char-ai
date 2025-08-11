@@ -4,48 +4,49 @@ import type { infer as z_infer } from "zod/v4";
 
 import { db } from "~/lib/db";
 import { characterTbl } from "~/lib/db/schema";
-import { isImage } from "~/lib/image";
+import { logErrWithFallback } from "~/lib/utils";
+
+import { CharacterImage } from "../lib/character-image";
 
 export async function createCharacter(
   ctx: Context,
-  userId: number,
+  creatorId: number,
   data: z_infer<typeof createCharacterDto>,
 ) {
-  if ((await isImage(data.pfp)) === false) {
-    return ctx.text("Invalid pfp!", 400);
+  // upload images
+  const [pfpUrl, coverImageUrl] = await Promise.all([
+    CharacterImage.uploadPfp(data.pfp, creatorId),
+    CharacterImage.uploadCoverImage(data.coverImage, creatorId),
+  ]);
+
+  if (pfpUrl instanceof Error) {
+    return ctx.text("Failed to process character pfp!", 500);
   }
 
-  if ((await isImage(data.image)) === false) {
-    return ctx.text("Invalid image!", 400);
+  if (coverImageUrl instanceof Error) {
+    return ctx.text("Failed to process character cover image!", 500);
   }
 
-  // TODO compress & upload images => get urls
-  const pfpUrl = "";
-  const imageUrl = "";
-
-  const res = await db
+  // insert into db
+  const insertionRes = await db
     .insert(characterTbl)
     .values({
       name: data.name,
       description: data.description,
       prompt: data.prompt,
 
-      pfp: pfpUrl,
-      image: imageUrl,
+      pfpUrl,
+      coverImageUrl,
 
-      creatorId: userId,
+      creatorId,
     })
     .returning()
     .then((res) => res.at(0))
-    .catch((err) => {
-      console.error(err);
+    .catch(logErrWithFallback("Failed to create character!", undefined));
 
-      return new Error();
-    });
-
-  if (res instanceof Error || res === undefined) {
+  if (insertionRes === undefined) {
     return ctx.text("Failed to create character!", 500);
   }
 
-  return ctx.json(res, 201);
+  return ctx.json(insertionRes, 201);
 }

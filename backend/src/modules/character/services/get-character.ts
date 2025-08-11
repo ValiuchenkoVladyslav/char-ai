@@ -3,6 +3,7 @@ import type { Context } from "hono";
 
 import { db } from "~/lib/db";
 import { characterTbl } from "~/lib/db/schema";
+import { logErrWithFallback } from "~/lib/utils";
 
 export async function getCharacter(ctx: Context, id: number) {
   const res = await db
@@ -10,11 +11,12 @@ export async function getCharacter(ctx: Context, id: number) {
     .from(characterTbl)
     .where(eq(characterTbl.id, id))
     .then((res) => res.at(0))
-    .catch((err) => {
-      console.error(err);
-
-      return new Error("Failed to get character info!");
-    });
+    .catch(
+      logErrWithFallback(
+        "Failed to select character!",
+        new Error("Failed to get character info!"),
+      ),
+    );
 
   if (res instanceof Error) {
     return ctx.text(res.message, 500);

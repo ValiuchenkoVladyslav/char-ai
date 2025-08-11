@@ -5,7 +5,9 @@ import type { infer as z_infer } from "zod/v4";
 
 import { db } from "~/lib/db";
 import { characterTbl } from "~/lib/db/schema";
-import { isImage } from "~/lib/image";
+import { logErrWithFallback } from "~/lib/utils";
+
+import { CharacterImage } from "../lib/character-image";
 
 export async function updateCharacter(
   ctx: Context,
@@ -13,18 +15,58 @@ export async function updateCharacter(
   characterId: number,
   data: z_infer<typeof updateCharacterDto>,
 ) {
-  if (data.pfp && (await isImage(data.pfp)) === false) {
-    return ctx.text("Invalid pfp!", 400);
+  // check if exists
+  const existing = await db
+    .select({
+      oldPfp: characterTbl.pfpUrl,
+      oldCover: characterTbl.coverImageUrl,
+    })
+    .from(characterTbl)
+    .where(
+      and(eq(characterTbl.creatorId, userId), eq(characterTbl.id, characterId)),
+    )
+    .then((res) => res.at(0))
+    .catch(
+      logErrWithFallback(
+        "Failed to select character!",
+        new Error("Unknown error occured!"),
+      ),
+    );
+
+  if (existing instanceof Error) {
+    return ctx.text(existing.message, 500);
   }
 
-  if (data.image && (await isImage(data.image)) === false) {
-    return ctx.text("Invalid image!", 400);
+  if (existing === undefined) {
+    return ctx.text("Character not found!", 404);
   }
 
-  // TODO compress & upload images => get urls
-  const pfpUrl = data.pfp ? "" : undefined;
-  const imageUrl = data.image ? "" : undefined;
+  // upload new images
+  let newPfpUrl: string | undefined;
+  if (data.pfp) {
+    const pfpUrl = await CharacterImage.uploadPfp(data.pfp, userId);
 
+    if (pfpUrl instanceof Error) {
+      return ctx.text("Failed to process character pfp!", 500);
+    }
+
+    newPfpUrl = pfpUrl;
+  }
+
+  let newCoverImageUrl: string | undefined;
+  if (data.coverImage) {
+    const coverUrl = await CharacterImage.uploadCoverImage(
+      data.coverImage,
+      userId,
+    );
+    if (coverUrl instanceof Error) {
+      return ctx.text("Failed to process character cover image!", 500);
+    }
+
+    newCoverImageUrl = coverUrl;
+  }
+
+  // update in db
   const res = await db
     .update(characterTbl)
     .set({
@@ -32,21 +74,26 @@ export async function updateCharacter(
       description: data.description,
       prompt: data.prompt,
 
-      pfp: pfpUrl,
-      image: imageUrl,
+      pfpUrl: newPfpUrl,
+      coverImageUrl: newCoverImageUrl,
     })
     .where(
       and(eq(characterTbl.creatorId, userId), eq(characterTbl.id, characterId)),
     )
-    .catch((err) => {
-      console.error(err);
+    .returning()
+    .then((res) => res.at(0))
+    .catch(logErrWithFallback("Failed to update character!", undefined));
 
-      return new Error();
-    });
-
-  if (res instanceof Error || res === undefined) {
+  if (res === undefined) {
     return ctx.text("Failed to update character!", 500);
   }
+
+  // delete old images without waiting
+  CharacterImage.remove([existing.oldPfp, existing.oldCover]).then((res) => {
+    if (res.error) {
+      console.error("Failed to delete character images:", res.error);
+    }
+  });
 
   return ctx.json(res, 200);
 }
