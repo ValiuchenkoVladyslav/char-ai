@@ -85,6 +85,17 @@ export async function updateCharacter(
     .catch(logErrWithFallback("Failed to update character!", undefined));
 
   if (res === undefined) {
+    // remove new images if insertion failed
+    const toRemove: string[] = [];
+    if (typeof newPfpUrl === "string") toRemove.push(newPfpUrl);
+    if (typeof newCoverImageUrl === "string") toRemove.push(newCoverImageUrl);
+
+    if (toRemove.length) {
+      CharacterImage.remove(toRemove).catch((err) =>
+        console.error("Failed to remove images after failed insertion", err),
+      );
+    }
+
     return ctx.text("Failed to update character!", 500);
   }
 
