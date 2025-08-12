@@ -1,4 +1,4 @@
-import { object, string, instanceof as z_instanceof } from "zod/v4";
+import { strictObject, string, instanceof as z_instanceof } from "zod/v4";
 import { base } from "../utils";
 
 // === base ===
@@ -42,7 +42,7 @@ export const coverImageDto = z_instanceof(File).transform(async (val) =>
   Buffer.from(await val.arrayBuffer()),
 );
 
-export const createCharacterDto = object({
+export const createCharacterDto = strictObject({
   name: characterNameSchema,
   description: descriptionSchema,
   prompt: promptSchema,
@@ -50,7 +50,7 @@ export const createCharacterDto = object({
   coverImage: coverImageDto,
 });
 
-export const updateCharacterDto = object({
+export const updateCharacterDto = strictObject({
   name: characterNameSchema.optional(),
   description: descriptionSchema.optional(),
   prompt: promptSchema.optional(),
