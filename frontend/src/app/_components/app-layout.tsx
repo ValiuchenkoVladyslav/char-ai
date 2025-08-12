@@ -1,5 +1,7 @@
 import "../_styles/main.css";
 import { ThemeProvider } from "next-themes";
+import { TheFooter } from "@/widgets/TheFooter";
+import { TheHeader } from "@/widgets/TheHeader";
 
 /**
  * required in:
@@ -16,7 +18,11 @@ export function AppLayout(props: WithChildren) {
           defaultTheme="system"
           enableSystem={true}
         >
-          {props.children}
+          <TheHeader />
+          <main>
+            {props.children}
+            <TheFooter />
+          </main>
         </ThemeProvider>
       </body>
     </html>
