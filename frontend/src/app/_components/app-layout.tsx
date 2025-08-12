@@ -1,7 +1,8 @@
 import "../_styles/main.css";
 import { ThemeProvider } from "next-themes";
-import { TheFooter } from "@/widgets/TheFooter";
-import { TheHeader } from "@/widgets/TheHeader";
+import AppMain from "@/app/_components/app-main";
+import { AppSidebar } from "@/app/_components/app-sidebar";
+import { AppHeader } from "./app-header";
 
 /**
  * required in:
@@ -12,16 +13,16 @@ import { TheHeader } from "@/widgets/TheHeader";
 export function AppLayout(props: WithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className="flex flex-col min-h-screen">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem={true}
         >
-          <TheHeader />
-          <main>
-            {props.children}
-            <TheFooter />
+          <AppHeader />
+          <main className="container-custom flex-1 sm:relative flex flex-row overflow-hidden">
+            <AppSidebar />
+            <AppMain>{props.children}</AppMain>
           </main>
         </ThemeProvider>
       </body>
