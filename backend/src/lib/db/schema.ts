@@ -2,7 +2,7 @@ import {
   characterNameBase,
   descriptionBase,
   emailBase,
-  masterPromptBase,
+  promptBase,
   tagBase,
   userNameBase,
 } from "@repo/schema";
@@ -23,7 +23,7 @@ export const userTbl = pgTable("User", {
   name: varchar("name", { length: userNameBase.maxLen }).notNull(),
   pfp: varchar("pfp"),
 
-  email: varchar("email", { length: emailBase.maxLen }).unique().notNull(),
+  email: varchar("email", { length: emailBase.maxLen }).notNull().unique(),
   passwordHash: varchar("passwordHash"),
   googleId: varchar("googleId").unique(),
   authMethod: smallint("authMethod").notNull(),
@@ -33,21 +33,18 @@ export const characterTbl = pgTable("Character", {
   id: serial("id").primaryKey(),
 
   name: varchar("name", { length: characterNameBase.maxLen }).notNull(),
-  phonetics: varchar("phonetics", { length: characterNameBase.maxLen })
-    .generatedAlwaysAs(
-      (): SQL =>
-        sql`metaphone(${characterTbl.name}, ${characterNameBase.maxLen}::int)`,
-    )
+  phonetics: varchar("phonetics", { length: 32 })
+    .generatedAlwaysAs((): SQL => sql`metaphone(${characterTbl.name}, 32)`)
     .notNull(),
 
   description: varchar("description", {
     length: descriptionBase.maxLen,
   }).notNull(),
-  masterPrompt: varchar("masterPrompt", {
-    length: masterPromptBase.maxLen,
-  }).notNull(),
-  image: varchar("image").notNull(),
-  pfp: varchar("pfp").notNull(),
+
+  pfpUrl: varchar("pfpUrl").notNull(),
+  coverImageUrl: varchar("coverImageUrl").notNull(),
+
+  prompt: varchar("prompt", { length: promptBase.maxLen }).notNull(),
 
   likesCount: integer("likesCount").notNull().default(0),
 

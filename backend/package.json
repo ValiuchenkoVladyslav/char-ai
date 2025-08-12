@@ -13,10 +13,14 @@
     "db:gen": "drizzle-kit generate"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.7.2",
     "@repo/schema": "workspace:",
+    "@repo/slug": "workspace:",
+    "@supabase/supabase-js": "^2.54.0",
     "drizzle-orm": "^0.44.4",
     "jose": "^6.0.12",
-    "postgres": "^3.4.7"
+    "postgres": "^3.4.7",
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
     "@types/bun": "1.2.19",
