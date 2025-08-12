@@ -103,11 +103,12 @@ export async function updateCharacter(
   const toRemove: string[] = [];
   if (newPfpUrl !== undefined) toRemove.push(existing.oldPfp);
   if (newCoverImageUrl !== undefined) toRemove.push(existing.oldCover);
-  if (toRemove.length) CharacterImage.remove(toRemove).then((res) => {
-    if (res.error) {
-      console.error("Failed to delete character images:", res.error);
-    }
-  });
+  if (toRemove.length)
+    CharacterImage.remove(toRemove).then((res) => {
+      if (res.error) {
+        console.error("Failed to delete character images:", res.error);
+      }
+    });
 
   return ctx.json(res, 200);
 }
