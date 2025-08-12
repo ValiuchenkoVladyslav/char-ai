@@ -29,7 +29,7 @@ export const descriptionSchema = string("Description must be a string!")
     `Must be at most ${descriptionBase.maxLen} characters!`,
   );
 
-export const promptSchema = string({ error: "Prompt must be a string!" })
+export const promptSchema = string("Prompt must be a string!")
   .min(promptBase.minLen, `Must be at least ${promptBase.minLen} characters!`)
   .max(promptBase.maxLen, `Must be at most ${promptBase.maxLen} characters!`);
 
