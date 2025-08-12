@@ -1,6 +1,4 @@
-import clsx from "clsx";
-import { LogOut, Menu, User } from "lucide-react";
-import { AppSideBarButton } from "@/app/_components/app-sidebar";
+import { LogOut, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import {
@@ -11,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 import { LinkButton } from "@/shared/ui/link";
+import { AppSideBarButton } from "./app-sidebar";
 
 const isAccount: boolean = true;
 export const AppHeader = () => {

@@ -1,8 +1,8 @@
 import "../_styles/main.css";
 import { ThemeProvider } from "next-themes";
-import AppMain from "@/app/_components/app-main";
-import { AppSidebar } from "@/app/_components/app-sidebar";
 import { AppHeader } from "./app-header";
+import { AppMain } from "./app-main";
+import { AppSidebar } from "./app-sidebar";
 
 /**
  * required in:
@@ -20,7 +20,7 @@ export function AppLayout(props: WithChildren) {
           enableSystem={true}
         >
           <AppHeader />
-          <main className="container-custom flex-1 sm:relative flex flex-row overflow-hidden">
+          <main className="sm:px-2 flex-1 sm:relative flex flex-row overflow-hidden">
             <AppSidebar />
             <AppMain>{props.children}</AppMain>
           </main>
