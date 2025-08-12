@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 import { LinkButton } from "@/shared/ui/link";
-import { AppSideBarButton } from "./app-sidebar";
+import { AppSidebarButton } from "./app-sidebar";
 
 const isAccount: boolean = true;
 export const AppHeader = () => {
@@ -20,7 +20,7 @@ export const AppHeader = () => {
       <div className="flex gap-1 items-center">
         {isAccount && (
           <>
-            <AppSideBarButton />
+            <AppSidebarButton />
             <span className="font-extrabold text-neutral-800">/</span>
           </>
         )}

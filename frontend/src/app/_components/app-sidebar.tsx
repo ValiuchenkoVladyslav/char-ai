@@ -5,11 +5,11 @@ import { memo } from "react";
 import { create } from "zustand";
 import { Button } from "@/shared/ui/button";
 
-type SideBarStore = {
+type SidebarStore = {
   isOpen: boolean;
   toggleIsOpen: () => void;
 };
-export const useSidebarStore = create<SideBarStore>((set) => ({
+export const useSidebarStore = create<SidebarStore>((set) => ({
   isOpen: false,
   toggleIsOpen: () =>
     set((state) => ({
@@ -17,7 +17,7 @@ export const useSidebarStore = create<SideBarStore>((set) => ({
     })),
 }));
 
-export const AppSideBarButton = memo(
+export const AppSidebarButton = memo(
   ({ className }: { className?: string }) => {
     const isOpen = useSidebarStore((s) => s.isOpen);
     const toggleIsOpen = useSidebarStore((s) => s.toggleIsOpen);
