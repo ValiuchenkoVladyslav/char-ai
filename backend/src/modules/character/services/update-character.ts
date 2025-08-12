@@ -99,8 +99,11 @@ export async function updateCharacter(
     return ctx.text("Failed to update character!", 500);
   }
 
-  // delete old images without waiting
-  CharacterImage.remove([existing.oldPfp, existing.oldCover]).then((res) => {
+  // delete replaced images without waiting
+  const toRemove: string[] = [];
+  if (newPfpUrl !== undefined) toRemove.push(existing.oldPfp);
+  if (newCoverImageUrl !== undefined) toRemove.push(existing.oldCover);
+  if (toRemove.length) CharacterImage.remove(toRemove).then((res) => {
     if (res.error) {
       console.error("Failed to delete character images:", res.error);
     }
