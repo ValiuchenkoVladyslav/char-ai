@@ -45,6 +45,14 @@ export async function createCharacter(
     .catch(logErrWithFallback("Failed to create character!", undefined));
 
   if (insertionRes === undefined) {
+    const toRemove: string[] = [];
+    if (typeof pfpUrl === "string") toRemove.push(pfpUrl);
+    if (typeof coverImageUrl === "string") toRemove.push(coverImageUrl);
+    if (toRemove.length) {
+      CharacterImage.remove(toRemove).catch((e) =>
+        console.error("Cleanup after create failed:", e),
+      );
+    }
     return ctx.text("Failed to create character!", 500);
   }
 
