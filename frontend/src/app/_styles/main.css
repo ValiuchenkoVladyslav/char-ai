@@ -112,7 +112,7 @@
 
 @layer components {
   .container-custom {
-    @apply mx-3 py-2 w-full;
+    @apply mx-3 py-2;
   }
 }
 @layer base {

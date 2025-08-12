@@ -17,24 +17,26 @@ export const useSidebarStore = create<SideBarStore>((set) => ({
     })),
 }));
 
-export const AppSideBarButton = memo(() => {
-  const isOpen = useSidebarStore((s) => s.isOpen);
-  const toggleIsOpen = useSidebarStore((s) => s.toggleIsOpen);
-  return (
-    <Button
-      onClick={toggleIsOpen}
-      variant="ghost"
-      className="!px-2 h-max cursor-pointer"
-      aria-controls="app-sidebar"
-      aria-expanded={isOpen}
-      aria-label="Toggle sidebar"
-      title="Toggle sidebar"
-    >
-      <Menu aria-hidden="true" />
-      <span className="sr-only">Toggle sidebar</span>
-    </Button>
-  );
-});
+export const AppSideBarButton = memo(
+  ({ className }: { className?: string }) => {
+    const isOpen = useSidebarStore((s) => s.isOpen);
+    const toggleIsOpen = useSidebarStore((s) => s.toggleIsOpen);
+    return (
+      <Button
+        onClick={toggleIsOpen}
+        variant="ghost"
+        className={clsx("cursor-pointer", className)}
+        aria-controls="app-sidebar"
+        aria-expanded={isOpen}
+        aria-label="Toggle sidebar"
+        title="Toggle sidebar"
+      >
+        <Menu aria-hidden="true" />
+        <span className="sr-only">Toggle sidebar</span>
+      </Button>
+    );
+  },
+);
 
 export const AppSidebar = () => {
   const { isOpen, toggleIsOpen } = useSidebarStore();
