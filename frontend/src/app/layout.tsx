@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout(props: WithChildren) {
   return (
-    <AppLayout>
-      <ReactQueryProvider>{props.children}</ReactQueryProvider>
-    </AppLayout>
+    <ReactQueryProvider>
+      <AppLayout>{props.children}</AppLayout>
+    </ReactQueryProvider>
   );
 }
