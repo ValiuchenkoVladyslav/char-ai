@@ -1,4 +1,5 @@
 import { LogOut, User } from "lucide-react";
+import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import {
@@ -22,10 +23,8 @@ export const AppHeader = () => {
             <span className="font-extrabold text-neutral-800">/</span>
           </>
         )}
-        <LinkButton className="px-2" variant="ghost" href="/">
-          <div className="w-6 h-6">
-            <img className="w-full h-full" src="/favicon.ico" alt="logo" />
-          </div>
+        <LinkButton className="px-2 w-10" variant="ghost" href="/">
+          <Image width={26} height={26} src="/favicon.ico" alt="logo" />
         </LinkButton>
       </div>
 
