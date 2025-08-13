@@ -1,45 +1,43 @@
 "use client";
 import clsx from "clsx";
 import { Menu, X } from "lucide-react";
-import { memo } from "react";
 import { create } from "zustand";
 import { Button } from "@/shared/ui/button";
 
-type SidebarStore = {
+interface SidebarStore {
   isOpen: boolean;
-  toggleIsOpen: () => void;
-};
+  toggleOpen: () => void;
+}
+
 export const useSidebarStore = create<SidebarStore>((set) => ({
   isOpen: false,
-  toggleIsOpen: () =>
+  toggleOpen: () =>
     set((state) => ({
       isOpen: !state.isOpen,
     })),
 }));
 
-export const AppSidebarButton = memo(
-  ({ className }: { className?: string }) => {
-    const isOpen = useSidebarStore((s) => s.isOpen);
-    const toggleIsOpen = useSidebarStore((s) => s.toggleIsOpen);
-    return (
-      <Button
-        onClick={toggleIsOpen}
-        variant="ghost"
-        className={clsx("cursor-pointer", className)}
-        aria-controls="app-sidebar"
-        aria-expanded={isOpen}
-        aria-label="Toggle sidebar"
-        title="Toggle sidebar"
-      >
-        <Menu aria-hidden="true" />
-        <span className="sr-only">Toggle sidebar</span>
-      </Button>
-    );
-  },
-);
+export const AppSidebarButton = () => {
+  const { isOpen, toggleOpen } = useSidebarStore();
+
+  return (
+    <Button
+      onClick={toggleOpen}
+      variant="ghost"
+      className="cursor-pointer"
+      aria-controls="app-sidebar"
+      aria-expanded={isOpen}
+      aria-label="Toggle sidebar"
+      title="Toggle sidebar"
+    >
+      <Menu aria-hidden="true" />
+      <span className="sr-only">Toggle sidebar</span>
+    </Button>
+  );
+};
 
 export const AppSidebar = () => {
-  const { isOpen, toggleIsOpen } = useSidebarStore();
+  const { isOpen, toggleOpen } = useSidebarStore();
 
   return (
     <aside
@@ -47,14 +45,13 @@ export const AppSidebar = () => {
       aria-label="Sidebar"
       className={clsx(
         "absolute top-0 left-0 right-0 bottom-2 flex flex-col w-full bg-background transform duration-500 overflow-y-auto not-sm:px-3 not-sm:py-2 sm:w-80 sm:left-3",
-        isOpen && "translate-x-0",
-        !isOpen && "-translate-x-full sm:-translate-x-85",
+        isOpen ? "translate-x-0" : "-translate-x-full sm:-translate-x-85",
       )}
     >
       <div className="flex justify-end sm:hidden">
         <Button
           variant="ghost"
-          onClick={toggleIsOpen}
+          onClick={toggleOpen}
           aria-label="Close sidebar"
           title="Close sidebar"
         >

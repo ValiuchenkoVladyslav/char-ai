@@ -14,9 +14,7 @@ import { AppSidebarButton } from "./app-sidebar";
 const isAccount: boolean = true;
 export const AppHeader = () => {
   return (
-    <header
-      className={"container-custom flex justify-between items-center gap-x-4"}
-    >
+    <header className="container-custom flex justify-between items-center gap-x-4">
       <div className="flex gap-1 items-center">
         {isAccount && (
           <>
@@ -30,6 +28,7 @@ export const AppHeader = () => {
           </div>
         </LinkButton>
       </div>
+
       <div className="flex items-center gap-x-2">
         {isAccount ? (
           <DropdownMenu>
