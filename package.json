@@ -1,7 +1,7 @@
 {
   "name": "char-ai",
   "private": true,
-  "packageManager": "bun@1.2.19",
+  "packageManager": "bun@1.2.20",
   "workspaces": [
     "backend",
     "frontend",
