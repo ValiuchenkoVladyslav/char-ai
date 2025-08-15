@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { and, eq } from "drizzle-orm/sql";
+import { and, eq } from "drizzle-orm";
 import type { Context } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 

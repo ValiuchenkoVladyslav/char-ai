@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm/sql";
+import { eq } from "drizzle-orm";
 import type { Context } from "hono";
 
 import { db } from "~/lib/db";

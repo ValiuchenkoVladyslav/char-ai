@@ -1,5 +1,5 @@
 import type { updateCharacterDto } from "@repo/schema";
-import { and, eq } from "drizzle-orm/sql";
+import { and, eq } from "drizzle-orm";
 import type { Context } from "hono";
 import type { infer as z_infer } from "zod/v4";
 

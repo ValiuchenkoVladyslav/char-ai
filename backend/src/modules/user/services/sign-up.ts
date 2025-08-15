@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import { AuthMethod, type SignUpDto } from "@repo/schema";
-import { eq, or } from "drizzle-orm/sql";
+import { eq, or } from "drizzle-orm";
 import type { Context } from "hono";
 
 import { Argon2 } from "~/lib/crypto";

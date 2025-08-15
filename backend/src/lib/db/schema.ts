@@ -6,6 +6,7 @@ import {
   tagBase,
   userNameBase,
 } from "@repo/schema";
+import { type SQL, sql } from "drizzle-orm";
 import {
   index,
   integer,
@@ -16,7 +17,6 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
-import { type SQL, sql } from "drizzle-orm/sql";
 
 export const userTbl = pgTable(
   "User",
