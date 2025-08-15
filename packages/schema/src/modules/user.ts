@@ -1,6 +1,7 @@
-import { email, string, url } from "zod/v4";
+import { email, object, string, url, type infer as z_infer } from "zod/v4";
 import { base } from "../utils";
 
+// === base ===
 export enum AuthMethod {
   EmailPass,
   GoogleId,
@@ -15,6 +16,7 @@ export const emailBase = base(5, 32);
 
 export const passwordBase = base(8, 128);
 
+// === schemas ===
 export const userNameSchema = string({ error: "Name must be a string!" })
   .min(userNameBase.minLen, {
     error: `Must be at least ${userNameBase.minLen} characters!`,
@@ -48,3 +50,13 @@ export const passwordSchema = string({ error: "Must be a string!" })
   .max(passwordBase.maxLen, {
     error: `Must be at most ${passwordBase.maxLen} characters!`,
   });
+
+// === dtos ===
+export const signUpDto = object({
+  tag: tagSchema,
+  name: userNameSchema,
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export type SignUpDto = z_infer<typeof signUpDto>;

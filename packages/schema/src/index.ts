@@ -17,6 +17,8 @@ export {
   passwordBase,
   passwordSchema,
   pfpSchema,
+  SignUpDto,
+  signUpDto,
   tagBase,
   tagSchema,
   userNameBase,
