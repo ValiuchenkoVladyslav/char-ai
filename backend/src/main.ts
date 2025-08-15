@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 
+import { authController } from "./modules/auth/controller";
 import { characterController } from "./modules/character/controller";
 
 // === ENVS ===
@@ -12,8 +13,7 @@ const requiredEnvs = [
   "SUPABASE_URL",
   "SUPABASE_KEY",
 
-  "ARGON_SECRET",
-  "JWK_SIGN",
+  "HMAC_SECRET",
 
   "RESEND_KEY",
   "RESEND_EMAIL_FROM",
@@ -38,7 +38,10 @@ const corsPolicy = cors({
   credentials: true,
 });
 
-const app = new Hono().use("*", corsPolicy).route("/", characterController);
+const app = new Hono()
+  .use("*", corsPolicy)
+  .route("/auth", authController)
+  .route("/", characterController);
 
 export type HonoApp = typeof app;
 
