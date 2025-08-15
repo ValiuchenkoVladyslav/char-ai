@@ -1,6 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { createCharacterDto, updateCharacterDto } from "@repo/schema";
 import { Hono } from "hono";
+import { isId } from "~/lib/utils";
+import { authGuard } from "~/modules/auth/middleware/authGuard";
 import { CharacterImage } from "./lib/character-image";
 import { createCharacter } from "./services/create-character";
 import { deleteCharacter } from "./services/delete-character";
@@ -9,33 +11,38 @@ import { updateCharacter } from "./services/update-character";
 
 export const characterController = new Hono()
   // create new character (TODO AUTH MIDDLEWARE)
-  .post("/character", zValidator("form", createCharacterDto), async (ctx) => {
-    const data = ctx.req.valid("form");
+  .post(
+    "/character",
+    authGuard,
+    zValidator("form", createCharacterDto),
+    async (ctx) => {
+      const data = ctx.req.valid("form");
 
-    // validate images
-    const [pfpValidationRes, coverValidationRes] = await Promise.all([
-      CharacterImage.validatePfp(data.pfp),
-      CharacterImage.validateCover(data.coverImage),
-    ]);
+      // validate images
+      const [pfpValidationRes, coverValidationRes] = await Promise.all([
+        CharacterImage.validatePfp(data.pfp),
+        CharacterImage.validateCover(data.coverImage),
+      ]);
 
-    if (pfpValidationRes instanceof Error) {
-      return ctx.text(`Invalid pfp! ${pfpValidationRes.message}`, 400);
-    }
+      if (pfpValidationRes instanceof Error) {
+        return ctx.text(`Invalid pfp! ${pfpValidationRes.message}`, 400);
+      }
 
-    if (coverValidationRes instanceof Error) {
-      return ctx.text(
-        `Invalid cover image! ${coverValidationRes.message}`,
-        400,
-      );
-    }
+      if (coverValidationRes instanceof Error) {
+        return ctx.text(
+          `Invalid cover image! ${coverValidationRes.message}`,
+          400,
+        );
+      }
 
-    return createCharacter(ctx, 1, data);
-  })
+      return createCharacter(ctx, ctx.get("userId"), data);
+    },
+  )
   // get full character info
   .get("/character/:id", (ctx) => {
     const characterId = Number(ctx.req.param("id"));
 
-    if (Number.isNaN(characterId) || characterId < 1) {
+    if (!isId(characterId)) {
       return ctx.text("Invalid character id!", 400);
     }
 
@@ -44,11 +51,12 @@ export const characterController = new Hono()
   // edit character (TODO AUTH MIDDLEWARE)
   .patch(
     "/character/:id",
+    authGuard,
     zValidator("form", updateCharacterDto),
     async (ctx) => {
       const characterId = Number(ctx.req.param("id"));
 
-      if (Number.isNaN(characterId) || characterId < 1) {
+      if (!isId(characterId)) {
         return ctx.text("Invalid character id!", 400);
       }
 
@@ -71,16 +79,16 @@ export const characterController = new Hono()
         }
       }
 
-      return updateCharacter(ctx, 1, characterId, data);
+      return updateCharacter(ctx, ctx.get("userId"), characterId, data);
     },
   )
   // delete character (TODO AUTH MIDDLEWARE)
-  .delete("/character/:id", (ctx) => {
+  .delete("/character/:id", authGuard, (ctx) => {
     const characterId = Number(ctx.req.param("id"));
 
-    if (Number.isNaN(characterId) || characterId < 1) {
+    if (!isId(characterId)) {
       return ctx.text("Invalid character id!", 400);
     }
 
-    return deleteCharacter(ctx, 1, characterId);
+    return deleteCharacter(ctx, ctx.get("userId"), characterId);
   });
