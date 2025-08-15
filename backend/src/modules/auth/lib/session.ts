@@ -86,8 +86,8 @@ export namespace Session {
       .from(sessionTbl)
       .where(
         and(
-          eq(sessionTbl.tokenHash, AuthToken.hash(token)),
           eq(sessionTbl.userId, userId),
+          eq(sessionTbl.tokenHash, AuthToken.hash(token)),
         ),
       )
       .then((res) => res.at(0))
@@ -153,8 +153,8 @@ export namespace Session {
       .delete(sessionTbl)
       .where(
         and(
-          eq(sessionTbl.tokenHash, AuthToken.hash(token)),
           eq(sessionTbl.userId, userId),
+          eq(sessionTbl.tokenHash, AuthToken.hash(token)),
         ),
       )
       .then((res) => res.at(0))

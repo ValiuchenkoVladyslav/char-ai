@@ -50,7 +50,7 @@ export const sessionTbl = pgTable(
     }),
   },
   (table) => [
-    index("tokenHashIdx").on(table.tokenHash), // session lookups
+    index("tokenHashIdx").on(table.userId, table.tokenHash), // session lookups
   ],
 );
 
