@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { createCharacterDto, updateCharacterDto } from "@repo/schema";
 import { Hono } from "hono";
 import { isId } from "~/lib/utils";
-import { authGuard } from "~/modules/auth/middleware/authGuard";
+import { authGuard } from "~/modules/auth/middleware/auth-guard";
 import { CharacterImage } from "./lib/character-image";
 import { createCharacter } from "./services/create-character";
 import { deleteCharacter } from "./services/delete-character";
