@@ -5,8 +5,7 @@
     "dev": "bun run --hot src/main.ts",
     "build": "bun tsc --noEmit && bun build src/main.ts --outfile dist/main.js --target bun",
     "start": "bun run build && bun run dist/main.js",
-    "gen:jwks": "bun scripts/gen-jwks.ts",
-    "gen:argon-secret": "bun scripts/gen-argon-secret.ts",
+    "gen:hmac-secret": "bun scripts/gen-hmac-secret.ts",
     "db:push": "drizzle-kit push",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
@@ -18,7 +17,6 @@
     "@repo/slug": "workspace:",
     "@supabase/supabase-js": "^2.54.0",
     "drizzle-orm": "^0.44.4",
-    "jose": "^6.0.12",
     "postgres": "^3.4.7",
     "sharp": "^0.34.3"
   },
