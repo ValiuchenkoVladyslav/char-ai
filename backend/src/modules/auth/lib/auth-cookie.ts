@@ -14,10 +14,11 @@ export namespace AuthCookie {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       expires: expiresAt,
+      path: "/",
     });
   }
 
   export function del(ctx: Context) {
-    return deleteCookie(ctx, COOKIE_NAME);
+    return deleteCookie(ctx, COOKIE_NAME, { path: "/" });
   }
 }
