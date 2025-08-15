@@ -1,7 +1,9 @@
+import { randomBytes } from "node:crypto";
 import { AuthMethod, type SignUpDto } from "@repo/schema";
 import { eq, or } from "drizzle-orm/sql";
 import type { Context } from "hono";
-import { Argon2, randomBytesB64 } from "~/lib/crypto";
+
+import { Argon2 } from "~/lib/crypto";
 import { db, redis } from "~/lib/db";
 import { userTbl } from "~/lib/db/schema";
 import { sendEmail } from "~/lib/email";
@@ -39,7 +41,7 @@ export async function handleSignUpForm(ctx: Context, signUpData: SignUpDto) {
 
   signUpData.password = Argon2.hash(signUpData.password);
 
-  const token = randomBytesB64(6); // we use 6 byte token instead of digit-only security code
+  const token = randomBytes(6).toString("base64url"); // we use 6 byte token instead of digit-only security code
   redis.setex(token, 60 * 15, JSON.stringify(signUpData));
 
   sendEmail(

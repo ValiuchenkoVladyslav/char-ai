@@ -1,15 +1,16 @@
+import { randomBytes } from "node:crypto";
 import { and, eq } from "drizzle-orm/sql";
 import type { Context } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
-import { hmac, randomBytesB64 } from "~/lib/crypto";
+import { hmac } from "~/lib/crypto";
 import { db } from "~/lib/db";
 import { sessionTbl } from "~/lib/db/schema";
 import { isId, logErrWithFallback } from "~/lib/utils";
 
 namespace AuthToken {
   export function create(userId: number) {
-    return `${userId}-${randomBytesB64(16)}`;
+    return `${userId}-${randomBytes(16).toBase64()}`;
   }
 
   export function getUserId(token: string) {
