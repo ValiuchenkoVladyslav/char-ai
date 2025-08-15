@@ -17,6 +17,7 @@
     "@repo/slug": "workspace:",
     "@supabase/supabase-js": "^2.54.0",
     "drizzle-orm": "^0.44.4",
+    "ioredis": "^5.7.0",
     "postgres": "^3.4.7",
     "sharp": "^0.34.3"
   },
