@@ -1,9 +1,13 @@
-import { createHmac } from "node:crypto";
+import { createHmac, randomBytes } from "node:crypto";
 
 export function hmac(password: string) {
   return createHmac("sha256", process.env.HMAC_SECRET)
     .update(password)
     .digest();
+}
+
+export function randomBytesB64(size: number) {
+  return randomBytes(size).toString("base64");
 }
 
 export namespace Argon2 {
