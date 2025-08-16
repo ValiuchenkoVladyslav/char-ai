@@ -7,7 +7,7 @@ export function hmac(password: string) {
 }
 
 export function randomBase64(bytesCount: number) {
-  return randomBytes(bytesCount).toBase64();
+  return randomBytes(bytesCount).toString("base64");
 }
 
 export namespace Argon2 {
