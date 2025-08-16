@@ -1,14 +1,13 @@
-import { randomBytes } from "node:crypto";
-import { AuthMethod, type SignUpDto } from "@repo/schema";
+import { AuthMethod, type ConfirmEmailDto, type SignUpDto } from "@repo/schema";
 import { eq, or } from "drizzle-orm";
 import type { Context } from "hono";
 
-import { Argon2 } from "~/lib/crypto";
-import { db, redis } from "~/lib/db";
-import { userTbl } from "~/lib/db/schema";
+import { Argon2, randomBase64 } from "~/lib/crypto";
 import { sendEmail } from "~/lib/email";
+import { db, redis } from "~/lib/storage";
+import { userTbl } from "~/lib/storage/schema";
 import { logErrWithFallback } from "~/lib/utils";
-
+import type { AuthData } from "~/modules/auth/lib/auth-data";
 import { Session } from "~/modules/auth/lib/session";
 
 export async function handleSignUpForm(ctx: Context, signUpData: SignUpDto) {
@@ -41,7 +40,7 @@ export async function handleSignUpForm(ctx: Context, signUpData: SignUpDto) {
 
   signUpData.password = Argon2.hash(signUpData.password);
 
-  const token = randomBytes(6).toString("base64url"); // we use 6 byte token instead of digit-only security code
+  const token = randomBase64(6); // we use 6 byte token instead of digit-only security code
   redis.setex(token, 60 * 15, JSON.stringify(signUpData));
 
   sendEmail(
@@ -53,8 +52,11 @@ export async function handleSignUpForm(ctx: Context, signUpData: SignUpDto) {
   return ctx.text("OK", 200);
 }
 
-export async function signUpEmailPass(ctx: Context, token: string) {
-  const userData = await redis.getdel(token);
+export async function signUpEmailPass(
+  ctx: Context,
+  confirmData: ConfirmEmailDto,
+) {
+  const userData = await redis.getdel(confirmData.token);
   if (!userData) {
     return ctx.text("Invalid or expired confirmation code!", 400);
   }
@@ -82,11 +84,11 @@ export async function signUpEmailPass(ctx: Context, token: string) {
 
   return ctx.json(
     {
-      userId: res.id,
+      id: res.id,
       name: data.name,
       email: data.email,
-      pfp: null,
-    },
+      pfpUrl: null,
+    } satisfies AuthData,
     201,
   );
 }

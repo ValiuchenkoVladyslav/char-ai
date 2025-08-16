@@ -12,6 +12,8 @@ export {
 } from "./modules/character";
 export {
   AuthMethod,
+  type ConfirmEmailDto,
+  confirmEmailDto,
   emailBase,
   emailSchema,
   passwordBase,
