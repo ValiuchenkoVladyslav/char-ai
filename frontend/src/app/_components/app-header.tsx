@@ -1,6 +1,6 @@
 import { LogOut, User } from "lucide-react";
 import Image from "next/image";
-import { ThemeSwitcher } from "@/features/theme-switcher";
+import { AppThemeSwitcher } from "@/app/_components/app-theme-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import {
@@ -30,6 +30,7 @@ export const AppHeader = () => {
       </div>
 
       <div className="flex items-center gap-x-2">
+        <AppThemeSwitcher />
         {isAccount ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
