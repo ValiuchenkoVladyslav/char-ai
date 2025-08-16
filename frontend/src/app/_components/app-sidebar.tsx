@@ -44,7 +44,7 @@ export const AppSidebar = () => {
       id="app-sidebar"
       aria-label="Sidebar"
       className={clsx(
-        "absolute top-0 left-0 right-0 bottom-2 flex flex-col w-full bg-background transform duration-500 overflow-y-auto not-sm:px-3 not-sm:py-2 sm:w-80 sm:left-3",
+        "absolute top-0 left-0 right-0 bottom-2 flex flex-col w-full bg-background transition-transform duration-500 overflow-y-auto not-sm:px-3 not-sm:py-2 sm:w-80 sm:left-3",
         isOpen ? "translate-x-0" : "-translate-x-full sm:-translate-x-85",
       )}
     >

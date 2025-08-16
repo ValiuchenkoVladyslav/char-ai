@@ -1,5 +1,6 @@
 import { LogOut, User } from "lucide-react";
 import Image from "next/image";
+import { ThemeSwitcher } from "@/features/theme-switcher";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 import { Button } from "@/shared/ui/button";
 import {
@@ -20,7 +21,7 @@ export const AppHeader = () => {
         {isAccount && (
           <>
             <AppSidebarButton />
-            <span className="font-extrabold text-neutral-800">/</span>
+            <span className="font-extrabold text-foreground">/</span>
           </>
         )}
         <LinkButton className="px-2 w-10" variant="ghost" href="/">
