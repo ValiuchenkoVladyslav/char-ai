@@ -12,11 +12,15 @@ export {
 } from "./modules/character";
 export {
   AuthMethod,
+  type ConfirmEmailDto,
+  confirmEmailDto,
   emailBase,
   emailSchema,
   passwordBase,
   passwordSchema,
   pfpSchema,
+  type SignUpDto,
+  signUpDto,
   tagBase,
   tagSchema,
   userNameBase,
