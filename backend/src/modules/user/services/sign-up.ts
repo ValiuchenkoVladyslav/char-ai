@@ -10,6 +10,13 @@ import { logErrWithFallback } from "~/lib/utils";
 import type { AuthData } from "~/modules/auth/lib/auth-data";
 import { Session } from "~/modules/auth/lib/session";
 
+import { UserImage } from "../lib/user-image";
+
+interface ProccessedSignUpData extends Omit<SignUpDto, "password"> {
+  passwordHash: string;
+  pfpUrl: string | null;
+}
+
 export async function handleSignUpForm(ctx: Context, signUpData: SignUpDto) {
   const taken = await db
     .select({ tag: userTbl.tag, email: userTbl.email })
@@ -38,10 +45,27 @@ export async function handleSignUpForm(ctx: Context, signUpData: SignUpDto) {
     );
   }
 
-  signUpData.password = Argon2.hash(signUpData.password);
+  const pfpUrl = signUpData.pfp
+    ? await UserImage.uploadPfp(signUpData.pfp)
+    : null;
+
+  if (pfpUrl instanceof Error) {
+    console.error("Failed to upload user pfp!", pfpUrl);
+    return ctx.text(pfpUrl.message, 500);
+  }
 
   const token = randomBase64(6); // we use 6 byte token instead of digit-only security code
-  redis.setex(token, 60 * 15, JSON.stringify(signUpData));
+  redis.setex(
+    token,
+    60 * 15,
+    JSON.stringify({
+      email: signUpData.email,
+      tag: signUpData.tag,
+      name: signUpData.name,
+      passwordHash: Argon2.hash(signUpData.password),
+      pfpUrl,
+    } satisfies ProccessedSignUpData),
+  );
 
   sendEmail(
     signUpData.email,
@@ -61,7 +85,7 @@ export async function signUpEmailPass(
     return ctx.text("Invalid or expired confirmation code!", 400);
   }
 
-  const data: SignUpDto = JSON.parse(userData);
+  const data: ProccessedSignUpData = JSON.parse(userData);
 
   const res = await db
     .insert(userTbl)
@@ -69,14 +93,23 @@ export async function signUpEmailPass(
       tag: data.tag,
       name: data.name,
       email: data.email,
-      passwordHash: data.password, // already hashed
+      passwordHash: data.passwordHash,
       authMethod: AuthMethod.EmailPass,
+      pfpUrl: data.pfpUrl,
     })
     .returning({ id: userTbl.id })
     .then((res) => res.at(0))
     .catch(logErrWithFallback("Failed to create user", undefined));
 
   if (!res) {
+    if (data.pfpUrl) {
+      UserImage.remove([data.pfpUrl]).then((res) => {
+        if (res.error) {
+          console.error("Failed to remove user pfp!", res.error);
+        }
+      });
+    }
+
     return ctx.text("Unknown error occurred!", 500);
   }
 

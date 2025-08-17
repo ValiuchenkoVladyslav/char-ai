@@ -1,3 +1,4 @@
+import { randomBase64 } from "~/lib/crypto";
 import { Image } from "~/lib/image";
 import { s3 } from "~/lib/storage";
 
@@ -13,14 +14,14 @@ export namespace UserImage {
     return Image.validate(pfp, USER_PFP_DIMENSIONS);
   }
 
-  export async function uploadPfp(inputBuffer: Buffer, creatorId: number) {
+  export async function uploadPfp(inputBuffer: Buffer) {
     const pfpBuffer = await Image.toWebp(inputBuffer, USER_PFP_DIMENSIONS);
     if (pfpBuffer instanceof Error) {
       console.error("Failed to convert user pfp!", pfpBuffer);
       return pfpBuffer;
     }
 
-    const pfpPath = `pfp-${creatorId}-${Date.now()}.webp`;
+    const pfpPath = `pfp-${randomBase64(9)}-${Date.now()}.webp`;
     const { error: pfpUploadErr } = await userBucket.upload(
       pfpPath,
       pfpBuffer,
