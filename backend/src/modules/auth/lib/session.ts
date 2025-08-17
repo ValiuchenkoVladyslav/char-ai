@@ -128,6 +128,7 @@ export namespace Session {
         tokenHash: AuthToken.hash(token),
         expiresAt,
       })
+      .returning({ id: sessionTbl.id })
       .then((res) => res.at(0))
       .catch(
         logErrWithFallback(
