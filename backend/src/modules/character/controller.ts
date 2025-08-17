@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { createCharacterDto, updateCharacterDto } from "@repo/schema";
 import { Hono } from "hono";
 import { isId } from "~/lib/utils";
-import { authGuard } from "~/modules/auth/middleware/auth-guard";
+import { authGuard } from "~/modules/user/middleware/auth-guard";
 import { CharacterImage } from "./lib/character-image";
 import { createCharacter } from "./services/create-character";
 import { deleteCharacter } from "./services/delete-character";
@@ -10,7 +10,7 @@ import { getCharacter } from "./services/get-character";
 import { updateCharacter } from "./services/update-character";
 
 export const characterController = new Hono()
-  // create new character (TODO AUTH MIDDLEWARE)
+  // create new character
   .post(
     "/character",
     authGuard,
@@ -48,7 +48,7 @@ export const characterController = new Hono()
 
     return getCharacter(ctx, characterId);
   })
-  // edit character (TODO AUTH MIDDLEWARE)
+  // edit character
   .patch(
     "/character/:id",
     authGuard,
@@ -82,7 +82,7 @@ export const characterController = new Hono()
       return updateCharacter(ctx, ctx.get("userId"), characterId, data);
     },
   )
-  // delete character (TODO AUTH MIDDLEWARE)
+  // delete character
   .delete("/character/:id", authGuard, (ctx) => {
     const characterId = Number(ctx.req.param("id"));
 

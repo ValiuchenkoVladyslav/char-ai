@@ -7,8 +7,8 @@ import { sendEmail } from "~/lib/email";
 import { db, redis } from "~/lib/storage";
 import { userTbl } from "~/lib/storage/schema";
 import { logErrWithFallback } from "~/lib/utils";
-import type { AuthData } from "~/modules/auth/lib/auth-data";
-import { Session } from "~/modules/auth/lib/session";
+import type { AuthData } from "~/modules/user/lib/auth-data";
+import { Session } from "~/modules/user/lib/session";
 
 import { UserImage } from "../lib/user-image";
 
