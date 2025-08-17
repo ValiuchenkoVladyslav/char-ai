@@ -1,5 +1,5 @@
-import { email, object, string, url, type infer as z_infer } from "zod/v4";
-import { base } from "../utils";
+import { email, type infer as Infer, object, string, url } from "zod/v4";
+import { base, fileDto } from "../utils";
 
 // === base ===
 export enum AuthMethod {
@@ -55,12 +55,13 @@ export const signUpDto = object({
   name: userNameSchema,
   email: emailSchema,
   password: passwordSchema,
+  pfp: fileDto.optional(),
 });
 
-export type SignUpDto = z_infer<typeof signUpDto>;
+export type SignUpDto = Infer<typeof signUpDto>;
 
 export const confirmEmailDto = object({
   token: string("Token must be a string!"),
 });
 
-export type ConfirmEmailDto = z_infer<typeof confirmEmailDto>;
+export type ConfirmEmailDto = Infer<typeof confirmEmailDto>;
