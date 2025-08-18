@@ -9,3 +9,10 @@ export function logErrWithFallback<FB>(errPrefix: string, fallback: FB) {
 export function isId(num: number) {
   return Number.isInteger(num) && num > 0;
 }
+
+export async function fileToBuffer(file: File) {
+  return file
+    .arrayBuffer()
+    .then(Buffer.from)
+    .catch(() => new Error("Invalid file!"));
+}

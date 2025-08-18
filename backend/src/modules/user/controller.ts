@@ -1,6 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { confirmEmailDto, signInDto, signUpDto } from "@repo/schema";
 import { Hono } from "hono";
+import { fileToBuffer } from "~/lib/utils";
 import { UserImage } from "./lib/user-image";
 import { handleSignInForm, signInEmailPass } from "./services/sign-in";
 import { handleSignUpForm, signUpEmailPass } from "./services/sign-up";
@@ -11,7 +12,10 @@ export const userController = new Hono()
     const data = ctx.req.valid("form");
 
     // validate pfp
-    const pfpBuffer = Buffer.from(await data.pfp.arrayBuffer());
+    const pfpBuffer = await fileToBuffer(data.pfp);
+    if (pfpBuffer instanceof Error) {
+      return ctx.text("Invalid pfp!", 400);
+    }
 
     const pfpValidationRes = await UserImage.validatePfp(pfpBuffer);
     if (pfpValidationRes instanceof Error) {

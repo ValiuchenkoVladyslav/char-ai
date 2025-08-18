@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { createCharacterDto, updateCharacterDto } from "@repo/schema";
 import { Hono } from "hono";
-import { isId } from "~/lib/utils";
+import { fileToBuffer, isId } from "~/lib/utils";
 import { authGuard } from "~/modules/user/middleware/auth-guard";
 import { CharacterImage } from "./lib/character-image";
 import { createCharacter } from "./services/create-character";
@@ -19,8 +19,15 @@ export const characterController = new Hono()
       const data = ctx.req.valid("form");
 
       // validate images
-      const pfpBuffer = Buffer.from(await data.pfp.arrayBuffer());
-      const coverBuffer = Buffer.from(await data.coverImage.arrayBuffer());
+      const pfpBuffer = await fileToBuffer(data.pfp);
+      if (pfpBuffer instanceof Error) {
+        return ctx.text("Invalid pfp!", 400);
+      }
+
+      const coverBuffer = await fileToBuffer(data.coverImage);
+      if (coverBuffer instanceof Error) {
+        return ctx.text("Invalid cover image!", 400);
+      }
 
       const [pfpValidationRes, coverValidationRes] = await Promise.all([
         CharacterImage.validatePfp(pfpBuffer),
@@ -74,7 +81,12 @@ export const characterController = new Hono()
 
       let pfpBuffer: Buffer | undefined;
       if (data.pfp) {
-        pfpBuffer = Buffer.from(await data.pfp.arrayBuffer());
+        const pfpBufferRes = await fileToBuffer(data.pfp);
+        if (pfpBufferRes instanceof Error) {
+          return ctx.text("Invalid pfp!", 400);
+        }
+
+        pfpBuffer = pfpBufferRes;
 
         const res = await CharacterImage.validatePfp(pfpBuffer);
 
@@ -85,7 +97,12 @@ export const characterController = new Hono()
 
       let coverBuffer: Buffer | undefined;
       if (data.coverImage) {
-        coverBuffer = Buffer.from(await data.coverImage.arrayBuffer());
+        const coverBufferRes = await fileToBuffer(data.coverImage);
+        if (coverBufferRes instanceof Error) {
+          return ctx.text("Invalid cover image!", 400);
+        }
+
+        coverBuffer = coverBufferRes;
 
         const res = await CharacterImage.validateCover(coverBuffer);
 
