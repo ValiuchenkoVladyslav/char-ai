@@ -19,9 +19,12 @@ export const characterController = new Hono()
       const data = ctx.req.valid("form");
 
       // validate images
+      const pfpBuffer = Buffer.from(await data.pfp.arrayBuffer());
+      const coverBuffer = Buffer.from(await data.coverImage.arrayBuffer());
+
       const [pfpValidationRes, coverValidationRes] = await Promise.all([
-        CharacterImage.validatePfp(data.pfp),
-        CharacterImage.validateCover(data.coverImage),
+        CharacterImage.validatePfp(pfpBuffer),
+        CharacterImage.validateCover(coverBuffer),
       ]);
 
       if (pfpValidationRes instanceof Error) {
@@ -35,7 +38,13 @@ export const characterController = new Hono()
         );
       }
 
-      return createCharacter(ctx, ctx.get("userId"), data);
+      return createCharacter(
+        ctx,
+        ctx.get("userId"),
+        data,
+        pfpBuffer,
+        coverBuffer,
+      );
     },
   )
   // get full character info
@@ -63,23 +72,36 @@ export const characterController = new Hono()
       // validate images
       const data = ctx.req.valid("form");
 
+      let pfpBuffer: Buffer | undefined;
       if (data.pfp) {
-        const res = await CharacterImage.validatePfp(data.pfp);
+        pfpBuffer = Buffer.from(await data.pfp.arrayBuffer());
+
+        const res = await CharacterImage.validatePfp(pfpBuffer);
 
         if (res instanceof Error) {
           return ctx.text(`Invalid pfp! ${res.message}`, 400);
         }
       }
 
+      let coverBuffer: Buffer | undefined;
       if (data.coverImage) {
-        const res = await CharacterImage.validateCover(data.coverImage);
+        coverBuffer = Buffer.from(await data.coverImage.arrayBuffer());
+
+        const res = await CharacterImage.validateCover(coverBuffer);
 
         if (res instanceof Error) {
           return ctx.text(`Invalid cover image! ${res.message}`, 400);
         }
       }
 
-      return updateCharacter(ctx, ctx.get("userId"), characterId, data);
+      return updateCharacter(
+        ctx,
+        ctx.get("userId"),
+        characterId,
+        data,
+        pfpBuffer,
+        coverBuffer,
+      );
     },
   )
   // delete character

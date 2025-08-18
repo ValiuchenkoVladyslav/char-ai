@@ -12,11 +12,13 @@ export async function createCharacter(
   ctx: Context,
   creatorId: number,
   data: z_infer<typeof createCharacterDto>,
+  pfpBuffer: Buffer,
+  coverBuffer: Buffer,
 ) {
   // upload images
   const [pfpUrl, coverImageUrl] = await Promise.all([
-    CharacterImage.uploadPfp(data.pfp, creatorId),
-    CharacterImage.uploadCoverImage(data.coverImage, creatorId),
+    CharacterImage.uploadPfp(pfpBuffer, creatorId),
+    CharacterImage.uploadCoverImage(coverBuffer, creatorId),
   ]);
 
   if (pfpUrl instanceof Error) {

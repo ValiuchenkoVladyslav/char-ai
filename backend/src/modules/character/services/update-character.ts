@@ -14,6 +14,8 @@ export async function updateCharacter(
   userId: number,
   characterId: number,
   data: z_infer<typeof updateCharacterDto>,
+  pfpBuffer: Buffer | undefined,
+  coverBuffer: Buffer | undefined,
 ) {
   // check if exists
   const existing = await db
@@ -43,8 +45,8 @@ export async function updateCharacter(
 
   // upload new images
   let newPfpUrl: string | undefined;
-  if (data.pfp) {
-    const pfpUrl = await CharacterImage.uploadPfp(data.pfp, userId);
+  if (pfpBuffer) {
+    const pfpUrl = await CharacterImage.uploadPfp(pfpBuffer, userId);
 
     if (pfpUrl instanceof Error) {
       return ctx.text("Failed to process character pfp!", 500);
@@ -54,11 +56,8 @@ export async function updateCharacter(
   }
 
   let newCoverImageUrl: string | undefined;
-  if (data.coverImage) {
-    const coverUrl = await CharacterImage.uploadCoverImage(
-      data.coverImage,
-      userId,
-    );
+  if (coverBuffer) {
+    const coverUrl = await CharacterImage.uploadCoverImage(coverBuffer, userId);
     if (coverUrl instanceof Error) {
       return ctx.text("Failed to process character cover image!", 500);
     }

@@ -12,12 +12,16 @@ import { Session } from "~/modules/user/lib/session";
 
 import { UserImage } from "../lib/user-image";
 
-interface ProccessedSignUpData extends Omit<SignUpDto, "password"> {
+interface ProccessedSignUpData extends Omit<SignUpDto, "password" | "pfp"> {
   passwordHash: string;
   pfpUrl: string | null;
 }
 
-export async function handleSignUpForm(ctx: Context, signUpData: SignUpDto) {
+export async function handleSignUpForm(
+  ctx: Context,
+  signUpData: SignUpDto,
+  pfpBuffer: Buffer,
+) {
   const taken = await db
     .select({ tag: userTbl.tag, email: userTbl.email })
     .from(userTbl)
@@ -45,9 +49,7 @@ export async function handleSignUpForm(ctx: Context, signUpData: SignUpDto) {
     );
   }
 
-  const pfpUrl = signUpData.pfp
-    ? await UserImage.uploadPfp(signUpData.pfp)
-    : null;
+  const pfpUrl = signUpData.pfp ? await UserImage.uploadPfp(pfpBuffer) : null;
 
   if (pfpUrl instanceof Error) {
     console.error("Failed to upload user pfp!", pfpUrl);

@@ -4,6 +4,4 @@ export function base(minLen: number, maxLen: number) {
   return { minLen, maxLen };
 }
 
-export const fileDto = z_instanceof(File).transform(async (val) =>
-  Buffer.from(await val.arrayBuffer()),
-);
+export const fileDto = z_instanceof(File);
