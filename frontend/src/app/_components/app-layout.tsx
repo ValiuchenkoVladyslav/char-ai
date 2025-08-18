@@ -1,5 +1,6 @@
 import "../_styles/main.css";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/shared/ui/sonner";
 import { AppFooter } from "./app-footer";
 import { AppHeader } from "./app-header";
 import { AppMain } from "./app-main";
@@ -21,14 +22,13 @@ export function AppLayout(props: WithChildren) {
           enableSystem={true}
         >
           <AppHeader />
-
           <div className="sm:px-2 flex-1 sm:relative flex flex-row overflow-hidden">
             <AppSidebar />
 
             <AppMain>{props.children}</AppMain>
           </div>
-
           <AppFooter />
+          <Toaster richColors={true} />
         </ThemeProvider>
       </body>
     </html>

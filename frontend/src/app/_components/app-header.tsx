@@ -12,7 +12,7 @@ import {
 import { LinkButton } from "@/shared/ui/link";
 import { AppSidebarButton } from "./app-sidebar";
 
-const isAccount: boolean = true;
+const isAccount: boolean = false;
 export const AppHeader = () => {
   return (
     <header className="container-custom flex justify-between items-center gap-x-4">
@@ -27,7 +27,6 @@ export const AppHeader = () => {
           <Image width={26} height={26} src="/favicon.ico" alt="logo" />
         </LinkButton>
       </div>
-
       <div className="flex items-center gap-x-2">
         {isAccount ? (
           <DropdownMenu>
@@ -66,11 +65,11 @@ export const AppHeader = () => {
           </DropdownMenu>
         ) : (
           <>
-            <LinkButton href="#" className="h-8" variant="outline">
-              sign in
+            <LinkButton href="/login" className="h-8" variant="outline">
+              Sign in
             </LinkButton>
-            <LinkButton href="#" className="h-8" variant="default">
-              sign up
+            <LinkButton href="/register" className="h-8" variant="default">
+              Sign up
             </LinkButton>
           </>
         )}
