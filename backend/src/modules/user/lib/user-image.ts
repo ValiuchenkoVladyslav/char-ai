@@ -1,4 +1,4 @@
-import { randomBase64 } from "~/lib/crypto";
+import { Base64 } from "~/lib/crypto";
 import { Image } from "~/lib/image";
 import { s3 } from "~/lib/storage";
 
@@ -21,7 +21,7 @@ export namespace UserImage {
       return pfpBuffer;
     }
 
-    const pfpPath = `pfp-${randomBase64(9)}-${Date.now()}.webp`;
+    const pfpPath = `pfp-${Base64.randomBytesUrl(9)}-${Date.now()}.webp`;
     const { error: pfpUploadErr } = await userBucket.upload(
       pfpPath,
       pfpBuffer,
