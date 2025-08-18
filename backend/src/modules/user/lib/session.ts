@@ -2,14 +2,14 @@ import { and, eq } from "drizzle-orm";
 import type { Context } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
-import { hmac, randomBase64 } from "~/lib/crypto";
+import { Base64, hmac } from "~/lib/crypto";
 import { db } from "~/lib/storage";
 import { sessionTbl } from "~/lib/storage/schema";
 import { isId, logErrWithFallback } from "~/lib/utils";
 
 namespace AuthToken {
   export function create(userId: number) {
-    return `${userId}-${randomBase64(16)}`;
+    return `${userId}-${Base64.randomBytes(16)}`;
   }
 
   export function getUserId(token: string) {

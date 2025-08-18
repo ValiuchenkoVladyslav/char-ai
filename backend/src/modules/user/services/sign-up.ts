@@ -2,7 +2,7 @@ import { AuthMethod, type ConfirmEmailDto, type SignUpDto } from "@repo/schema";
 import { eq, or } from "drizzle-orm";
 import type { Context } from "hono";
 
-import { Argon2, randomBase64 } from "~/lib/crypto";
+import { Argon2, Base64 } from "~/lib/crypto";
 import { sendEmail } from "~/lib/email";
 import { db, redis } from "~/lib/storage";
 import { userTbl } from "~/lib/storage/schema";
@@ -56,7 +56,7 @@ export async function handleSignUpForm(
     return ctx.text(pfpUrl.message, 500);
   }
 
-  const token = randomBase64(6); // we use 6 byte token instead of digit-only security code
+  const token = Base64.randomBytes(6); // we use 6 byte token instead of digit-only security code
   redis.setex(
     token,
     60 * 15,
