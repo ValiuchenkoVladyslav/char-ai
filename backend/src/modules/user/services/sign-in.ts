@@ -66,7 +66,7 @@ export async function handleSignInForm(ctx: Context, signInData: SignInDto) {
   sendEmail(
     signInData.email,
     "Sign-In Security Code",
-    `<h3>Your Security Code:</h3>\n<h2>${token}</h2><br/><p>Ignore this email if it wasn't you!</p>`,
+    `<h3>Your Security Code:</h3><h2><code>${token}</code></h2><p>Ignore this email if it wasn't you!</p>`,
   );
 
   return ctx.text("OK", 200);
