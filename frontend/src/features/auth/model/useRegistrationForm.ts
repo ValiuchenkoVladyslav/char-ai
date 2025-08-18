@@ -1,5 +1,6 @@
 import { confirmEmailDto, signUpDto } from "@repo/schema";
 import { useState } from "react";
+import { toast } from "sonner";
 import { treeifyError, type ZodObject } from "zod/v4";
 import {
   useRegisterMutation,
@@ -23,8 +24,29 @@ export function useRegisterForm() {
       const formData = new FormData(e.currentTarget);
       const result = await parseFormData(formData, signUpDto);
       if (result.success) {
-        registerMutation.mutate(result.data);
-        setStage("verification");
+        toast.promise(
+          new Promise<string>((resolve, reject) => {
+            registerMutation.mutateAsync(result.data).then((data) => {
+              if (data.status === 200) {
+                resolve("The code has been sent successfully.");
+              } else if (data.status === 400) {
+                reject("Invalid registration data.");
+              } else {
+                reject("Unable to connect to the server.");
+              }
+              setStage("verification");
+            });
+          }),
+          {
+            loading: "Sending a verification token to your email...",
+            success: (data: string) => {
+              return data;
+            },
+            error: (err) => {
+              return err;
+            },
+          },
+        );
       } else {
         const treeErrors = treeifyError(result.error).properties;
         if (treeErrors) {
@@ -48,8 +70,30 @@ export function useRegisterForm() {
       const formData = new FormData(e.currentTarget);
       const result = await parseFormData(formData, confirmEmailDto);
       if (result.success) {
-        registerVerifiedMutation.mutate(result.data.token);
-        setStage("verification");
+        toast.promise(
+          new Promise<string>((resolve, reject) => {
+            registerVerifiedMutation
+              .mutateAsync(result.data.token)
+              .then((data) => {
+                if (data.status === 201) {
+                  resolve("Registration completed successfully");
+                } else if (data.status === 400) {
+                  reject("Invalid code");
+                } else {
+                  reject("Unable to connect to the server.");
+                }
+              });
+          }),
+          {
+            loading: "Checking code...",
+            success: (data: string) => {
+              return data;
+            },
+            error: (err) => {
+              return err;
+            },
+          },
+        );
       } else {
         const treeErrors = treeifyError(result.error).properties;
         if (treeErrors) {
