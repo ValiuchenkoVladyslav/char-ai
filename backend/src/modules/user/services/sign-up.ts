@@ -14,7 +14,7 @@ import { UserImage } from "../lib/user-image";
 
 interface ProccessedSignUpData extends Omit<SignUpDto, "password" | "pfp"> {
   passwordHash: string;
-  pfpUrl: string | null;
+  pfpUrl: string;
 }
 
 export async function handleSignUpForm(
