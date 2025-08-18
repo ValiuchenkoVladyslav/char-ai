@@ -49,7 +49,7 @@ export async function handleSignUpForm(
     );
   }
 
-  const pfpUrl = signUpData.pfp ? await UserImage.uploadPfp(pfpBuffer) : null;
+  const pfpUrl = await UserImage.uploadPfp(pfpBuffer);
 
   if (pfpUrl instanceof Error) {
     console.error("Failed to upload user pfp!", pfpUrl);
