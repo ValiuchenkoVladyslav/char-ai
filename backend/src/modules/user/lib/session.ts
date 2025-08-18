@@ -138,7 +138,7 @@ export namespace Session {
       );
   }
 
-  /** delete auth cookie & remove session from db */
+  /** delete login cookie & remove session from db */
   export async function del(ctx: Context) {
     const tokenRes = AuthCookie.get(ctx);
 
