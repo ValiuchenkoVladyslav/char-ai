@@ -158,6 +158,7 @@ export namespace Session {
           eq(sessionTbl.tokenHash, AuthToken.hash(token)),
         ),
       )
+      .returning({ id: sessionTbl.id })
       .then((res) => res.at(0))
       .catch(
         logErrWithFallback(
