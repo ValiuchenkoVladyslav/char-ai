@@ -55,7 +55,7 @@ export const signUpDto = object({
   name: userNameSchema,
   email: emailSchema,
   password: passwordSchema,
-  pfp: fileDto.optional(),
+  pfp: fileDto,
 });
 
 export type SignUpDto = Infer<typeof signUpDto>;
@@ -65,3 +65,10 @@ export const confirmEmailDto = object({
 });
 
 export type ConfirmEmailDto = Infer<typeof confirmEmailDto>;
+
+export const signInDto = object({
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export type SignInDto = Infer<typeof signInDto>;
