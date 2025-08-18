@@ -6,5 +6,5 @@ export function base(minLen: number, maxLen: number) {
 
 export const fileDto = z_instanceof(File).refine(
   (file) => file.size !== 0,
-  "File cannot be empty",
+  "Cannot be empty",
 );
