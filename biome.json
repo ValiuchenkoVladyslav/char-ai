@@ -16,5 +16,13 @@
     "formatter": {
       "quoteStyle": "double"
     }
+  },
+
+  "linter": {
+    "rules": {
+      "correctness": {
+        "noUnusedImports": "error"
+      }
+    }
   }
 }
