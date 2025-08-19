@@ -26,9 +26,10 @@ export function useRegisterForm() {
           new Promise<string>((resolve, reject) => {
             registerMutation.mutateAsync(result.data).then((data) => {
               console.log(data);
-              if (data.status === 200) resolve(data.statusText);
-              else reject(data.statusText);
-              setStage("verification");
+              if (data.status === 200) {
+                resolve(data.statusText);
+                setStage("verification");
+              } else reject(data.statusText);
             });
           }),
           {
