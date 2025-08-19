@@ -1,11 +1,11 @@
-import { create } from "zustand/index";
+import { create } from "zustand";
 
 type StageVariant = "credentials" | "verification";
-type LoginFormStore = {
+type RegisterFormStore = {
   stage: StageVariant;
   setStage: (value: StageVariant) => void;
 };
-export const useLoginFormStore = create<LoginFormStore>((set) => ({
+export const useRegisterFormStore = create<RegisterFormStore>((set) => ({
   stage: "credentials",
   setStage: (value: StageVariant) => {
     set(() => ({

@@ -1,15 +1,11 @@
 "use client";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import clsx from "clsx";
-import { jwtDecode } from "jwt-decode";
 import { MoveLeft } from "lucide-react";
-import React from "react";
 import GoggleOAuth from "@/features/auth/components/GoggleOAuth";
+import { useLoginForm } from "@/features/auth/hooks/useLoginForm";
 import { useLoginFormStore } from "@/features/auth/model/LoginFormStore";
-import { useLoginForm } from "@/features/auth/model/useLoginForm";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/shared/ui/card";
-import { Divider } from "@/shared/ui/custom/divider";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 

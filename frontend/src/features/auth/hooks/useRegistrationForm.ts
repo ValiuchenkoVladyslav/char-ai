@@ -1,17 +1,15 @@
 import { confirmEmailDto, signUpDto } from "@repo/schema";
 import { useState } from "react";
 import { toast } from "sonner";
-import { treeifyError, type ZodObject } from "zod/v4";
+import { treeifyError } from "zod/v4";
 import {
   useRegisterMutation,
   useRegisterVerifiedMutation,
 } from "@/features/auth/api/useRegisterMutation";
 import type { FormError } from "@/features/auth/interface/formError";
 import { useRegisterFormStore } from "@/features/auth/model/RegisterFormStore";
+import { parseFormData } from "@/shared/lib/parseFormData";
 
-export function parseFormData<S extends ZodObject>(data: FormData, schema: S) {
-  return schema.safeParseAsync(Object.fromEntries(data));
-}
 export function useRegisterForm() {
   const { setStage, stage } = useRegisterFormStore();
   const [errors, setErrors] = useState<FormError[]>([]);
@@ -27,13 +25,9 @@ export function useRegisterForm() {
         toast.promise(
           new Promise<string>((resolve, reject) => {
             registerMutation.mutateAsync(result.data).then((data) => {
-              if (data.status === 200) {
-                resolve("The code has been sent successfully.");
-              } else if (data.status === 400) {
-                reject("Invalid registration data.");
-              } else {
-                reject("Unable to connect to the server.");
-              }
+              console.log(data);
+              if (data.status === 200) resolve(data.statusText);
+              else reject(data.statusText);
               setStage("verification");
             });
           }),
@@ -48,6 +42,7 @@ export function useRegisterForm() {
           },
         );
       } else {
+        result.error;
         const treeErrors = treeifyError(result.error).properties;
         if (treeErrors) {
           const arrayError: FormError[] = [];
@@ -75,13 +70,8 @@ export function useRegisterForm() {
             registerVerifiedMutation
               .mutateAsync(result.data.token)
               .then((data) => {
-                if (data.status === 201) {
-                  resolve("Registration completed successfully");
-                } else if (data.status === 400) {
-                  reject("Invalid code");
-                } else {
-                  reject("Unable to connect to the server.");
-                }
+                if (data.status === 201) resolve(data.statusText);
+                else reject(data.statusText);
               });
           }),
           {

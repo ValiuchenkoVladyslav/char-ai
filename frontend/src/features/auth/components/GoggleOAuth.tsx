@@ -1,7 +1,5 @@
 "use client";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import React from "react";
 import { Divider } from "@/shared/ui/custom/divider";
 
 const GoggleOAuth = () => {
@@ -16,9 +14,7 @@ const GoggleOAuth = () => {
           size="large"
           shape="circle"
           text="signup_with"
-          onSuccess={(credentialResponse) => {
-            const decoded = jwtDecode(credentialResponse.credential || "");
-          }}
+          onSuccess={() => {}}
           onError={() => {}}
         />
       </GoogleOAuthProvider>

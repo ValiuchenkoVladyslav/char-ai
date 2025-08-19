@@ -1,11 +1,11 @@
 "use client";
 import clsx from "clsx";
 import { MoveLeft } from "lucide-react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 import GoggleOAuth from "@/features/auth/components/GoggleOAuth";
+import { useRegisterForm } from "@/features/auth/hooks/useRegistrationForm";
 import { useRegisterFormStore } from "@/features/auth/model/RegisterFormStore";
-import { useRegisterForm } from "@/features/auth/model/useRegistrationForm";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/shared/ui/card";
 import { Input } from "@/shared/ui/input";

@@ -26,7 +26,7 @@ export function useLoginForm() {
   const { stage, setStage } = useLoginFormStore();
 
   const onSubmitCredentials: SubmitHandler<ILoginCredentialsData> = async (
-    data,
+    _data,
   ) => {
     if (stage === "credentials") {
       await new Promise<void>((resolve, _) => setTimeout(resolve, 1000));
@@ -34,7 +34,7 @@ export function useLoginForm() {
     setStage("verification");
   };
   const onSubmitVerification: SubmitHandler<ILoginVerificationData> = async (
-    data,
+    _data,
   ) => {
     if (stage === "verification") {
       await new Promise<void>((resolve, _) => setTimeout(resolve, 1000));
