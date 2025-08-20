@@ -25,7 +25,6 @@ export function useRegisterForm() {
         toast.promise(
           new Promise<string>((resolve, reject) => {
             registerMutation.mutateAsync(result.data).then((data) => {
-              console.log(data);
               if (data.status === 200) {
                 resolve(data.statusText);
                 setStage("verification");
@@ -43,7 +42,6 @@ export function useRegisterForm() {
           },
         );
       } else {
-        result.error;
         const treeErrors = treeifyError(result.error).properties;
         if (treeErrors) {
           const arrayError: FormError[] = [];
@@ -68,12 +66,10 @@ export function useRegisterForm() {
       if (result.success) {
         toast.promise(
           new Promise<string>((resolve, reject) => {
-            registerVerifiedMutation
-              .mutateAsync(result.data.token)
-              .then((data) => {
-                if (data.status === 201) resolve(data.statusText);
-                else reject(data.statusText);
-              });
+            registerVerifiedMutation.mutateAsync(result.data).then((data) => {
+              if (data.status === 201) resolve(data.statusText);
+              else reject(data.statusText);
+            });
           }),
           {
             loading: "Checking code...",

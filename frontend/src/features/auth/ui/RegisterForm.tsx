@@ -1,8 +1,8 @@
 "use client";
 import clsx from "clsx";
-import { MoveLeft } from "lucide-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { ConfirmEmailCard } from "@/features/auth/components/ConfirmEmailCard";
 import GoggleOAuth from "@/features/auth/components/GoggleOAuth";
 import { useRegisterForm } from "@/features/auth/hooks/useRegistrationForm";
 import { useRegisterFormStore } from "@/features/auth/model/RegisterFormStore";
@@ -69,31 +69,10 @@ export const RegisterForm = ({ className }: IRegistryFormProps) => {
     );
   }
   return (
-    <Card className={clsx(className)}>
-      <CardContent>
-        <Button
-          onClick={() => {
-            setStage("credentials");
-          }}
-          className="max-w-max"
-          type="button"
-          variant="outline"
-        >
-          <MoveLeft />
-        </Button>
-        <form
-          onSubmit={onSubmitVerified}
-          className="flex flex-col gap-y-4 mt-4"
-        >
-          <div className="grid gap-2.5">
-            <Label htmlFor="token">Verification code</Label>
-            <Input id="token" name="token" />
-          </div>
-          <Button className="cursor-pointer" type="submit">
-            Send
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+    <ConfirmEmailCard
+      className={clsx(className)}
+      setStage={setStage}
+      onSubmit={onSubmitVerified}
+    />
   );
 };

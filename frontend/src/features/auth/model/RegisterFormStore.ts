@@ -1,13 +1,13 @@
 import { create } from "zustand";
+import type { StageForm } from "@/features/auth/interface/StageForm";
 
-type StageVariant = "credentials" | "verification";
 type RegisterFormStore = {
-  stage: StageVariant;
-  setStage: (value: StageVariant) => void;
+  stage: StageForm;
+  setStage: (value: StageForm) => void;
 };
 export const useRegisterFormStore = create<RegisterFormStore>((set) => ({
   stage: "credentials",
-  setStage: (value: StageVariant) => {
+  setStage: (value: StageForm) => {
     set(() => ({
       stage: value,
     }));

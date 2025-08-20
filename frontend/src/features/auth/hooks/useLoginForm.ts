@@ -1,53 +1,107 @@
-import { type SubmitHandler, useForm } from "react-hook-form";
-import { email, object, string, type infer as z_infer } from "zod/v4";
+import { confirmEmailDto, signInDto } from "@repo/schema";
+import { useState } from "react";
+import { toast } from "sonner";
+import { treeifyError } from "zod/v4";
+import {
+  useLoginMutation,
+  useLoginVerifiedMutation,
+} from "@/features/auth/api/useLoginMutation";
+import type { FormError } from "@/features/auth/interface/formError";
 import { useLoginFormStore } from "@/features/auth/model/LoginFormStore";
-
-const LoginCredentialsDataSchema = object({
-  email: email(),
-  password: string(),
-});
-const LoginVerificationDataSchema = object({
-  code: string().max(6),
-});
-type ILoginCredentialsData = z_infer<typeof LoginCredentialsDataSchema>;
-type ILoginVerificationData = z_infer<typeof LoginVerificationDataSchema>;
+import { parseFormData } from "@/shared/lib/parseFormData";
 
 export function useLoginForm() {
-  const {
-    register: registerCredentials,
-    handleSubmit: handleSubmitCredentials,
-  } = useForm<ILoginCredentialsData>();
-  const {
-    register: registerVerification,
-    handleSubmit: handleSubmitVerification,
-  } = useForm<ILoginVerificationData>({
-    defaultValues: { code: "" },
-  });
   const { stage, setStage } = useLoginFormStore();
+  const [errors, setErrors] = useState<FormError[]>([]);
+  const loginMutation = useLoginMutation();
+  const loginVerifiedMutation = useLoginVerifiedMutation();
 
-  const onSubmitCredentials: SubmitHandler<ILoginCredentialsData> = async (
-    _data,
-  ) => {
+  async function onSubmitCredentials(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (stage === "credentials") {
-      await new Promise<void>((resolve, _) => setTimeout(resolve, 1000));
+      const formData = new FormData(e.currentTarget);
+      const result = await parseFormData(formData, signInDto);
+      if (result.success) {
+        toast.promise(
+          new Promise<string>((resolve, reject) => {
+            loginMutation.mutateAsync(result.data).then((data) => {
+              if (data.status === 200) {
+                resolve(data.statusText);
+                setStage("verification");
+              } else reject(data.statusText);
+            });
+          }),
+          {
+            loading: "Checking your password…",
+            success: (data: string) => {
+              return data;
+            },
+            error: (err) => {
+              return err;
+            },
+          },
+        );
+      } else {
+        const treeErrors = treeifyError(result.error).properties;
+        if (treeErrors) {
+          const arrayError: FormError[] = [];
+          const keys = Object.keys(treeErrors) as (keyof typeof treeErrors)[];
+          keys.forEach((key) => {
+            if (treeErrors?.[key]) {
+              treeErrors?.[key]?.errors.forEach((error) => {
+                arrayError.push({ title: key, message: error });
+              });
+            }
+          });
+          setErrors(arrayError);
+        }
+      }
     }
-    setStage("verification");
-  };
-  const onSubmitVerification: SubmitHandler<ILoginVerificationData> = async (
-    _data,
-  ) => {
+  }
+  async function onSubmitVerified(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (stage === "verification") {
-      await new Promise<void>((resolve, _) => setTimeout(resolve, 1000));
+      const formData = new FormData(e.currentTarget);
+      const result = await parseFormData(formData, confirmEmailDto);
+      if (result.success) {
+        toast.promise(
+          new Promise<string>((resolve, reject) => {
+            loginVerifiedMutation.mutateAsync(result.data).then((data) => {
+              if (data.status === 201) resolve(data.statusText);
+              else reject(data.statusText);
+            });
+          }),
+          {
+            loading: "Checking code...",
+            success: (data: string) => {
+              return data;
+            },
+            error: (err) => {
+              return err;
+            },
+          },
+        );
+      } else {
+        const treeErrors = treeifyError(result.error).properties;
+        if (treeErrors) {
+          const arrayError: FormError[] = [];
+          const keys = Object.keys(treeErrors) as (keyof typeof treeErrors)[];
+          keys.forEach((key) => {
+            if (treeErrors?.[key]) {
+              treeErrors?.[key]?.errors.forEach((error) => {
+                arrayError.push({ title: key, message: error });
+              });
+            }
+          });
+          setErrors(arrayError);
+        }
+      }
     }
-  };
+  }
 
   return {
-    registerCredentials,
-    handleSubmitCredentials,
     onSubmitCredentials,
-
-    registerVerification,
-    handleSubmitVerification,
-    onSubmitVerification,
+    onSubmitVerified,
+    errors,
   };
 }

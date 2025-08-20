@@ -1,4 +1,4 @@
-import type { SignUpDto } from "@repo/schema";
+import type { ConfirmEmailDto, SignUpDto } from "@repo/schema";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/shared/api/api";
 
@@ -13,8 +13,8 @@ export function useRegisterMutation() {
   });
 }
 
-function registerVerifiedMutation(token: string) {
-  return api.user["sign-up"].confirm.$post({ form: { token } });
+function registerVerifiedMutation(confirmEmailDto: ConfirmEmailDto) {
+  return api.user["sign-up"].confirm.$post({ form: confirmEmailDto });
 }
 export function useRegisterVerifiedMutation() {
   return useMutation({
