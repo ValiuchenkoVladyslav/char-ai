@@ -24,11 +24,12 @@ export function useRegisterForm() {
       if (result.success) {
         toast.promise(
           new Promise<string>((resolve, reject) => {
-            registerMutation.mutateAsync(result.data).then((data) => {
+            registerMutation.mutateAsync(result.data).then(async (data) => {
+              const text = await data.text();
               if (data.status === 200) {
-                resolve(data.statusText);
+                resolve(text);
                 setStage("verification");
-              } else reject(data.statusText);
+              } else reject(text);
             });
           }),
           {
@@ -66,10 +67,13 @@ export function useRegisterForm() {
       if (result.success) {
         toast.promise(
           new Promise<string>((resolve, reject) => {
-            registerVerifiedMutation.mutateAsync(result.data).then((data) => {
-              if (data.status === 201) resolve(data.statusText);
-              else reject(data.statusText);
-            });
+            registerVerifiedMutation
+              .mutateAsync(result.data)
+              .then(async (data) => {
+                const text = await data.text();
+                if (data.status === 201) resolve(text);
+                else reject(text);
+              });
           }),
           {
             loading: "Checking code...",
