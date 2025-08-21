@@ -2,8 +2,8 @@ import type { createCharacterDto } from "@repo/schema";
 import type { Context } from "hono";
 import type { infer as z_infer } from "zod/v4";
 
-import { db } from "~/lib/db";
-import { characterTbl } from "~/lib/db/schema";
+import { db } from "~/lib/storage";
+import { characterTbl } from "~/lib/storage/schema";
 import { logErrWithFallback } from "~/lib/utils";
 
 import { CharacterImage } from "../lib/character-image";
@@ -12,11 +12,13 @@ export async function createCharacter(
   ctx: Context,
   creatorId: number,
   data: z_infer<typeof createCharacterDto>,
+  pfpBuffer: Buffer,
+  coverBuffer: Buffer,
 ) {
   // upload images
   const [pfpUrl, coverImageUrl] = await Promise.all([
-    CharacterImage.uploadPfp(data.pfp, creatorId),
-    CharacterImage.uploadCoverImage(data.coverImage, creatorId),
+    CharacterImage.uploadPfp(pfpBuffer, creatorId),
+    CharacterImage.uploadCoverImage(coverBuffer, creatorId),
   ]);
 
   if (pfpUrl instanceof Error) {

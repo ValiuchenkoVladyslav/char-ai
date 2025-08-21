@@ -1,5 +1,5 @@
-import { strictObject, string, instanceof as z_instanceof } from "zod/v4";
-import { base } from "../utils";
+import { strictObject, string } from "zod/v4";
+import { base, fileDto } from "../utils";
 
 // === base ===
 export const characterNameBase = base(3, 32);
@@ -34,26 +34,18 @@ export const promptSchema = string("Prompt must be a string!")
   .max(promptBase.maxLen, `Must be at most ${promptBase.maxLen} characters!`);
 
 // === dtos ===
-export const pfpDto = z_instanceof(File).transform(async (val) =>
-  Buffer.from(await val.arrayBuffer()),
-);
-
-export const coverImageDto = z_instanceof(File).transform(async (val) =>
-  Buffer.from(await val.arrayBuffer()),
-);
-
 export const createCharacterDto = strictObject({
   name: characterNameSchema,
   description: descriptionSchema,
   prompt: promptSchema,
-  pfp: pfpDto,
-  coverImage: coverImageDto,
+  pfp: fileDto,
+  coverImage: fileDto,
 });
 
 export const updateCharacterDto = strictObject({
   name: characterNameSchema.optional(),
   description: descriptionSchema.optional(),
   prompt: promptSchema.optional(),
-  pfp: pfpDto.optional(),
-  coverImage: coverImageDto.optional(),
+  pfp: fileDto.optional(),
+  coverImage: fileDto.optional(),
 });

@@ -1,5 +1,5 @@
 import { Image } from "~/lib/image";
-import { storage } from "~/lib/storage";
+import { s3 } from "~/lib/storage";
 
 const CHARACTER_PFP_DIMENSIONS: Image.Dimensions = {
   width: 128,
@@ -11,7 +11,7 @@ const CHARACTER_COVER_IMG_DIMENSIONS: Image.Dimensions = {
   height: 512,
 };
 
-const characterBucket = storage.from("characters");
+const characterBucket = s3.from("characters");
 
 export namespace CharacterImage {
   export async function validatePfp(pfp: Buffer) {
