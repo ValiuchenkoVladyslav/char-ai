@@ -14,7 +14,7 @@ export function useLoginMutation() {
 }
 
 function loginVerifiedMutation(confirmEmailDto: ConfirmEmailDto) {
-  return api.user["sign-up"].confirm.$post({ form: confirmEmailDto });
+  return api.user["sign-in"].confirm.$post({ form: confirmEmailDto });
 }
 export function useLoginVerifiedMutation() {
   return useMutation({

@@ -23,22 +23,22 @@ export function useLoginForm() {
       const result = await parseFormData(formData, signInDto);
       if (result.success) {
         toast.promise(
-          new Promise<string>((resolve, reject) => {
-            loginMutation.mutateAsync(result.data).then(async (data) => {
-              const text = await data.text();
-              if (data.status === 200) {
-                resolve(text);
-                setStage("verification");
-              } else reject(text);
-            });
-          }),
+          (async () => {
+            const res = await loginMutation.mutateAsync(result.data);
+            const text = await res.text();
+            if (res.status === 200) {
+              setStage("verification");
+              return text;
+            }
+            throw new Error(text);
+          })(),
           {
             loading: "Checking your password…",
             success: (data: string) => {
               return data;
             },
             error: (err) => {
-              return err;
+              return err instanceof Error ? err.message : String(err);
             },
           },
         );
@@ -66,22 +66,21 @@ export function useLoginForm() {
       const result = await parseFormData(formData, confirmEmailDto);
       if (result.success) {
         toast.promise(
-          new Promise<string>((resolve, reject) => {
-            loginVerifiedMutation
-              .mutateAsync(result.data)
-              .then(async (data) => {
-                const text = await data.text();
-                if (data.status === 201) resolve(text);
-                else reject(text);
-              });
-          }),
+          (async () => {
+            const res = await loginVerifiedMutation.mutateAsync(result.data);
+            const text = await res.text();
+            if (res.status === 200) {
+              return text;
+            }
+            throw new Error(text);
+          })(),
           {
             loading: "Checking code...",
             success: (data: string) => {
               return data;
             },
             error: (err) => {
-              return err;
+              return err instanceof Error ? err.message : String(err);
             },
           },
         );

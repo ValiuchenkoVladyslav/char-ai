@@ -23,22 +23,22 @@ export function useRegisterForm() {
       const result = await parseFormData(formData, signUpDto);
       if (result.success) {
         toast.promise(
-          new Promise<string>((resolve, reject) => {
-            registerMutation.mutateAsync(result.data).then(async (data) => {
-              const text = await data.text();
-              if (data.status === 200) {
-                resolve(text);
-                setStage("verification");
-              } else reject(text);
-            });
-          }),
+          (async () => {
+            const res = await registerMutation.mutateAsync(result.data);
+            const text = await res.text();
+            if (res.status === 200) {
+              setStage("verification");
+              return text;
+            }
+            throw new Error(text);
+          })(),
           {
             loading: "Sending a verification token to your email...",
             success: (data: string) => {
               return data;
             },
             error: (err) => {
-              return err;
+              return err instanceof Error ? err.message : String(err);
             },
           },
         );
@@ -66,22 +66,21 @@ export function useRegisterForm() {
       const result = await parseFormData(formData, confirmEmailDto);
       if (result.success) {
         toast.promise(
-          new Promise<string>((resolve, reject) => {
-            registerVerifiedMutation
-              .mutateAsync(result.data)
-              .then(async (data) => {
-                const text = await data.text();
-                if (data.status === 201) resolve(text);
-                else reject(text);
-              });
-          }),
+          (async () => {
+            const res = await registerVerifiedMutation.mutateAsync(result.data);
+            const text = await res.text();
+            if (res.status === 201) {
+              return text;
+            }
+            throw new Error(text);
+          })(),
           {
             loading: "Checking code...",
             success: (data: string) => {
               return data;
             },
             error: (err) => {
-              return err;
+              return err instanceof Error ? err.message : String(err);
             },
           },
         );
